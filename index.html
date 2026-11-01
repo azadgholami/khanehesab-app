@@ -1961,7 +1961,7 @@ textarea{width:100%;padding:12px;border:1px solid #cbd3d2;border-radius:9px;font
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-/* KhaneHesab cloud sync. The publishable key is intended for browser use; RLS protects each user's row. */
+/* KhaneHesab cloud sync: explicit first transfer, then automatic two-way polling. */
 (function(){
   const PROJECT_URL='https://yzzqufmthxnxfbrbbhmg.supabase.co';
   const PUBLISHABLE_KEY='sb_publishable_KVqEtO44lqaBm0jKSNClKw_XTVOffJR';
@@ -1975,11 +1975,16 @@ textarea{width:100%;padding:12px;border:1px solid #cbd3d2;border-radius:9px;font
     'khanehesab_installments_v1',
     'khanehesab_installment_alert_date_v1'
   ];
+  const SYNC_FLAG='khanehesab_cloud_sync_enabled_v1';
+  const DIRTY_FLAG='khanehesab_cloud_sync_dirty_v1';
+  const LAST_SYNC='khanehesab_cloud_last_sync_at_v1';
   const $=id=>document.getElementById(id);
   const status=message=>{const el=$('cloudStatus');if(el)el.textContent=message};
-  if(!window.supabase||!window.supabase.createClient){status('کتابخانه اتصال ابری بارگذاری نشد. اتصال اینترنت و دسترسی به cdn.jsdelivr.net را بررسی کن.');return;}
+  if(!window.supabase||!window.supabase.createClient){status('کتابخانه اتصال ابری بارگذاری نشد. اتصال اینترنت را بررسی کن.');return;}
   const client=window.supabase.createClient(PROJECT_URL,PUBLISHABLE_KEY);
-  let currentUser=null,cloudHasData=false,syncEnabled=false,suppressStorageEvents=false,syncTimer=null;
+  let currentUser=null,cloudHasData=false,syncEnabled=false,suppressStorageEvents=false;
+  let syncTimer=null,pollTimer=null,syncInFlight=false,localRevision=0,lastCloudUpdatedAt='';
+
   function snapshot(){
     const data={};
     DATA_KEYS.forEach(key=>{const raw=localStorage.getItem(key);if(raw!==null){try{data[key]=JSON.parse(raw)}catch(e){data[key]=raw}}});
@@ -1995,14 +2000,73 @@ textarea{width:100%;padding:12px;border:1px solid #cbd3d2;border-radius:9px;font
     $('cloudUser').hidden=!signed;
     if(signed)$('cloudUser').textContent='واردشده با: '+currentUser.email;
   }
+  function stopAutoSync(){
+    syncEnabled=false;
+    if(pollTimer)clearInterval(pollTimer);
+    pollTimer=null;
+  }
+  async function fetchCloud(){
+    if(!currentUser)return {data:null,error:new Error('not signed in')};
+    return await client.from('user_app_data').select('app_data,updated_at').eq('user_id',currentUser.id).maybeSingle();
+  }
+  function applyCloudPayload(row,quiet=false){
+    if(!row||!row.app_data||!row.app_data.data)return false;
+    const cloudData=row.app_data.data;
+    suppressStorageEvents=true;
+    try{
+      DATA_KEYS.forEach(key=>{
+        if(Object.prototype.hasOwnProperty.call(cloudData,key))localStorage.setItem(key,JSON.stringify(cloudData[key]));
+        else localStorage.removeItem(key);
+      });
+    }catch(e){
+      suppressStorageEvents=false;
+      status('دریافت اطلاعات ناموفق بود؛ فضای ذخیره‌سازی دستگاه را بررسی کن.');
+      return false;
+    }
+    suppressStorageEvents=false;
+    cloudHasData=true;
+    lastCloudUpdatedAt=row.updated_at||'';
+    localStorage.setItem(LAST_SYNC,lastCloudUpdatedAt);
+    localStorage.setItem(SYNC_FLAG,'1');
+    localStorage.removeItem(DIRTY_FLAG);
+    if(!quiet){
+      status('اطلاعات ابری دریافت شد؛ همگام‌سازی خودکار این دستگاه فعال است.');
+      setTimeout(()=>location.reload(),500);
+    }
+    return true;
+  }
+  function startAutoSync(){
+    if(!currentUser||syncEnabled)return;
+    syncEnabled=true;
+    localStorage.setItem(SYNC_FLAG,'1');
+    lastCloudUpdatedAt=localStorage.getItem(LAST_SYNC)||'';
+    if(pollTimer)clearInterval(pollTimer);
+    pollTimer=setInterval(checkForCloudChanges,5000);
+    status('همگام‌سازی خودکار فعال است؛ تغییرات این دستگاه و دستگاه دیگر به‌طور خودکار منتقل می‌شوند.');
+  }
   async function inspectCloud(){
     if(!currentUser)return;
-    const {data,error}=await client.from('user_app_data').select('app_data,updated_at').eq('user_id',currentUser.id).maybeSingle();
-    if(error){cloudHasData=false;setButtons();status('ورود انجام شد، اما خواندن فضای ابری ممکن نیست: '+error.message+' — سیاست‌های RLS و جدول user_app_data را بررسی می‌کنیم.');return;}
+    status('در حال بررسی فضای ابری...');
+    const {data,error}=await fetchCloud();
+    if(error){cloudHasData=false;setButtons();status('ورود انجام شد، اما خواندن فضای ابری ممکن نیست: '+error.message+'؛ جدول user_app_data و دسترسی‌های آن باید بررسی شود.');return;}
     cloudHasData=!!(data&&data.app_data&&data.app_data.data);
     setButtons();
-    if(cloudHasData){status('حساب متصل است و نسخه‌ای از اطلاعات در فضای ابری وجود دارد. برای جلوگیری از حذف یا جایگزینی ناخواسته، انتخاب با شماست: «دریافت از ابر» اطلاعات این دستگاه را با نسخه ابری جایگزین می‌کند؛ «ارسال اطلاعات این دستگاه به ابر» نسخه ابری را جایگزین می‌کند.');}
-    else{status(hasLocalData()?'حساب متصل است و هنوز داده‌ای در ابر نیست. با زدن «ارسال اطلاعات این دستگاه به ابر»، اطلاعات فعلی این دستگاه ذخیره می‌شود.':'حساب متصل است و هنوز اطلاعاتی در ابر یا این دستگاه پیدا نشد.');}
+    if(localStorage.getItem(SYNC_FLAG)==='1'){
+      lastCloudUpdatedAt=localStorage.getItem(LAST_SYNC)||'';
+      startAutoSync();
+      if(localStorage.getItem(DIRTY_FLAG)==='1'){
+        status('در حال ارسال تغییرات ذخیره‌نشده این دستگاه به ابر...');
+        await saveToCloud(false);
+      }else if(cloudHasData){
+        await checkForCloudChanges(true);
+      }
+      return;
+    }
+    if(cloudHasData){
+      status('حساب متصل است و اطلاعات ابری موجود است. برای راه‌اندازی اولیه روی این دستگاه، «دریافت اطلاعات از ابر» را بزن.');
+    }else{
+      status(hasLocalData()?'حساب متصل است. برای راه‌اندازی اولیه، یک‌بار «ارسال اطلاعات این دستگاه به ابر» را بزن.':'حساب متصل است؛ هنوز اطلاعاتی در ابر یا این دستگاه وجود ندارد.');
+    }
   }
   async function signIn(){
     const email=$('cloudEmail').value.trim(),password=$('cloudPassword').value;
@@ -2010,7 +2074,7 @@ textarea{width:100%;padding:12px;border:1px solid #cbd3d2;border-radius:9px;font
     status('در حال ورود...');
     const {data,error}=await client.auth.signInWithPassword({email,password});
     if(error){status('ورود انجام نشد: '+error.message);return;}
-    currentUser=data.user;syncEnabled=false;setButtons();await inspectCloud();
+    currentUser=data.user;setButtons();await inspectCloud();
   }
   async function signUp(){
     const email=$('cloudEmail').value.trim(),password=$('cloudPassword').value;
@@ -2022,34 +2086,57 @@ textarea{width:100%;padding:12px;border:1px solid #cbd3d2;border-radius:9px;font
     else{status('حساب ساخته شد. ایمیل تأیید Supabase را باز کن و لینک تأیید را بزن؛ سپس با همین ایمیل و رمز وارد شو.');}
   }
   async function saveToCloud(showMessage=true){
-    if(!currentUser)return;
+    if(!currentUser||syncInFlight)return false;
+    syncInFlight=true;
+    const revisionAtStart=localRevision;
     const payload=snapshot();
-    const {error}=await client.from('user_app_data').upsert({user_id:currentUser.id,app_data:payload,updated_at:new Date().toISOString()},{onConflict:'user_id'});
+    const {data,error}=await client.from('user_app_data')
+      .upsert({user_id:currentUser.id,app_data:payload,updated_at:new Date().toISOString()},{onConflict:'user_id'})
+      .select('updated_at').single();
+    syncInFlight=false;
     if(error){if(showMessage)status('ذخیره ابری انجام نشد: '+error.message);return false;}
-    cloudHasData=true;setButtons();if(showMessage)status('اطلاعات این دستگاه با موفقیت در فضای ابری ذخیره شد. از این پس تغییرات جدید نیز به‌صورت خودکار همگام می‌شوند.');
-    syncEnabled=true;return true;
+    cloudHasData=true;
+    lastCloudUpdatedAt=data&&data.updated_at?data.updated_at:new Date().toISOString();
+    localStorage.setItem(LAST_SYNC,lastCloudUpdatedAt);
+    if(revisionAtStart===localRevision){localStorage.removeItem(DIRTY_FLAG);}
+    else{localStorage.setItem(DIRTY_FLAG,'1');scheduleSync();}
+    setButtons();
+    if(showMessage)status('اطلاعات با موفقیت در ابر ذخیره شد؛ همگام‌سازی خودکار فعال است.');
+    startAutoSync();
+    return true;
   }
   async function loadFromCloud(){
     if(!currentUser)return;
     status('در حال دریافت اطلاعات از ابر...');
-    const {data,error}=await client.from('user_app_data').select('app_data,updated_at').eq('user_id',currentUser.id).maybeSingle();
+    const {data,error}=await fetchCloud();
     if(error){status('دریافت اطلاعات انجام نشد: '+error.message);return;}
     if(!data||!data.app_data||!data.app_data.data){status('هنوز اطلاعاتی در فضای ابری ذخیره نشده است.');return;}
-    const cloudData=data.app_data.data;
     if(!confirm('اطلاعات فعلی این دستگاه با نسخه ذخیره‌شده در ابر جایگزین می‌شود. برای جلوگیری از ازدست‌رفتن داده‌ها، ابتدا از بخش پشتیبان‌گیری نسخه پشتیبان بگیر. ادامه می‌دهی؟'))return;
-    suppressStorageEvents=true;syncEnabled=false;
-    try{
-      DATA_KEYS.forEach(key=>{if(Object.prototype.hasOwnProperty.call(cloudData,key))localStorage.setItem(key,JSON.stringify(cloudData[key]));else localStorage.removeItem(key);});
-    }catch(e){suppressStorageEvents=false;status('ذخیره اطلاعات دریافت‌شده روی دستگاه ناموفق بود. فضای مرورگر را بررسی کن.');return;}
-    suppressStorageEvents=false;cloudHasData=true;syncEnabled=true;
-    status('اطلاعات ابری با موفقیت روی این دستگاه بارگذاری شد. صفحه برای نمایش همه بخش‌ها تازه‌سازی می‌شود.');
-    setTimeout(()=>location.reload(),700);
+    if(applyCloudPayload(data,false))startAutoSync();
+  }
+  async function checkForCloudChanges(silent=false){
+    if(!currentUser||!syncEnabled||document.visibilityState==='hidden'||syncInFlight)return;
+    if(localStorage.getItem(DIRTY_FLAG)==='1'){
+      await saveToCloud(false);
+      return;
+    }
+    const {data,error}=await fetchCloud();
+    if(error){if(!silent)status('بررسی تغییرات ابری ناموفق بود: '+error.message);return;}
+    if(!data||!data.app_data||!data.app_data.data)return;
+    const remoteTime=data.updated_at||'';
+    if(remoteTime&&remoteTime!==lastCloudUpdatedAt&&(!lastCloudUpdatedAt||Date.parse(remoteTime)>Date.parse(lastCloudUpdatedAt))){
+      if(localStorage.getItem(DIRTY_FLAG)==='1')return;
+      status('تغییرات دستگاه دیگر دریافت شد؛ در حال به‌روزرسانی...');
+      applyCloudPayload(data,false);
+    }
   }
   function scheduleSync(){
     if(!currentUser||!syncEnabled||suppressStorageEvents)return;
-    clearTimeout(syncTimer);syncTimer=setTimeout(()=>saveToCloud(false),1200);
+    localRevision++;
+    localStorage.setItem(DIRTY_FLAG,'1');
+    clearTimeout(syncTimer);
+    syncTimer=setTimeout(()=>saveToCloud(false),900);
   }
-  // Watch app writes without changing the existing finance/planning modules.
   const originalSet=Storage.prototype.setItem,originalRemove=Storage.prototype.removeItem,originalClear=Storage.prototype.clear;
   Storage.prototype.setItem=function(key,value){const result=originalSet.call(this,key,value);if(this===localStorage&&DATA_KEYS.includes(String(key)))scheduleSync();return result;};
   Storage.prototype.removeItem=function(key){const result=originalRemove.call(this,key);if(this===localStorage&&DATA_KEYS.includes(String(key)))scheduleSync();return result;};
@@ -2059,12 +2146,19 @@ textarea{width:100%;padding:12px;border:1px solid #cbd3d2;border-radius:9px;font
   $('cloudUpload').addEventListener('click',async()=>{
     const warning=cloudHasData?'نسخه موجود در ابر با اطلاعات این دستگاه جایگزین می‌شود. مطمئنی؟':'اطلاعات فعلی این دستگاه به فضای ابری حساب شما ارسال می‌شود. ادامه می‌دهی؟';
     if(!confirm(warning))return;
-    status('در حال ارسال اطلاعات به ابر...');await saveToCloud(true);
+    status('در حال ارسال اطلاعات به ابر...');
+    await saveToCloud(true);
   });
   $('cloudDownload').addEventListener('click',loadFromCloud);
-  $('cloudSignOut').addEventListener('click',async()=>{syncEnabled=false;await client.auth.signOut();currentUser=null;cloudHasData=false;setButtons();status('از حساب خارج شدی. اطلاعات محلی این دستگاه پاک نشده است.');});
+  $('cloudSignOut').addEventListener('click',async()=>{
+    stopAutoSync();clearTimeout(syncTimer);await client.auth.signOut();currentUser=null;cloudHasData=false;
+    localStorage.removeItem(SYNC_FLAG);localStorage.removeItem(DIRTY_FLAG);setButtons();
+    status('از حساب خارج شدی. اطلاعات محلی این دستگاه پاک نشده است.');
+  });
+  document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'&&syncEnabled)checkForCloudChanges(true)});
+  window.addEventListener('online',()=>{if(syncEnabled)checkForCloudChanges(true)});
   client.auth.onAuthStateChange((event,session)=>{
-    if(event==='SIGNED_OUT'){currentUser=null;syncEnabled=false;cloudHasData=false;setButtons();}
+    if(event==='SIGNED_OUT'){stopAutoSync();currentUser=null;cloudHasData=false;setButtons();}
     else if(session&&session.user){currentUser=session.user;setButtons();if(event==='INITIAL_SESSION'||event==='SIGNED_IN')setTimeout(()=>inspectCloud(),0);}
   });
   client.auth.getSession().then(({data,error})=>{
