@@ -222,6 +222,15 @@ textarea{width:100%;padding:12px;border:1px solid #cbd3d2;border-radius:9px;font
 #secureBackupFile{width:100%;margin-top:6px}
 @media(max-width:650px){.secure-actions{flex-direction:column}.secure-actions button{width:100%}}
 
+
+.cloud-panel{background:#fff;border:1px solid #dce5e1;border-radius:16px;padding:17px;margin:0 0 18px;box-shadow:0 4px 18px #17283f0b}
+.cloud-head{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.cloud-head h2{margin:0}.cloud-status{font-size:12px;line-height:1.9;color:#52645f;margin-top:9px;padding:10px 12px;background:#f4f8f6;border-radius:9px;overflow-wrap:anywhere}
+.cloud-fields{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}.cloud-fields label{margin-top:0}
+.cloud-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.cloud-actions button{min-width:140px}
+.cloud-user{font-size:12px;color:#176b68;margin-top:7px;overflow-wrap:anywhere}
+@media(max-width:650px){.cloud-fields{grid-template-columns:1fr}.cloud-actions{display:grid;grid-template-columns:1fr 1fr}.cloud-actions button{min-width:0;width:100%}}
+
 </style>
 
 <meta name="theme-color" content="#17283f">
@@ -233,6 +242,24 @@ textarea{width:100%;padding:12px;border:1px solid #cbd3d2;border-radius:9px;font
 <body>
 <header><div class="brand">خانه‌حساب <span style="color:#d8c58f">•</span> Family Finance</div><p>نسخه آزمایشی رایگان مدیریت مالی خانواده</p></header>
 <main>
+
+  <section class="cloud-panel" aria-label="حساب و همگام‌سازی ابری">
+    <div class="cloud-head"><h2>حساب کاربری و ذخیره‌سازی ابری</h2><span class="muted">ورود امن • همگام‌سازی بین دستگاه‌ها</span></div>
+    <p class="muted">برای نگهداری اطلاعات در حساب شخصی و دسترسی از دستگاه‌های دیگر، وارد حساب خانه‌حساب شو. اطلاعات فعلی دستگاه تا انتخاب صریح شما تغییر نمی‌کند.</p>
+    <div class="cloud-fields">
+      <div><label for="cloudEmail">ایمیل</label><input id="cloudEmail" type="email" autocomplete="username" placeholder="ایمیل شما"></div>
+      <div><label for="cloudPassword">رمز عبور</label><input id="cloudPassword" type="password" autocomplete="current-password" placeholder="حداقل ۸ نویسه"></div>
+    </div>
+    <div class="cloud-actions">
+      <button type="button" id="cloudSignIn">ورود</button>
+      <button type="button" class="secondary" id="cloudSignUp">ساخت حساب</button>
+      <button type="button" class="secondary" id="cloudUpload" disabled>ارسال اطلاعات این دستگاه به ابر</button>
+      <button type="button" class="secondary" id="cloudDownload" disabled>دریافت اطلاعات از ابر</button>
+      <button type="button" class="danger" id="cloudSignOut" disabled>خروج از حساب</button>
+    </div>
+    <div id="cloudUser" class="cloud-user" hidden></div>
+    <div id="cloudStatus" class="cloud-status" role="status" aria-live="polite">برای شروع، با ایمیل خود وارد شو یا حساب جدید بساز. اطلاعات فعلی فقط روی همین دستگاه ذخیره می‌شود تا زمانی که ارسال به ابر را انتخاب کنی.</div>
+  </section>
   <nav class="appnav" aria-label="بخش‌های برنامه">
     <button type="button" class="navbtn active" data-tab="dashboard">خانه</button>
     <button type="button" class="navbtn" data-tab="finance">مدیریت مالی</button>
@@ -1930,6 +1957,122 @@ textarea{width:100%;padding:12px;border:1px solid #cbd3d2;border-radius:9px;font
 })();
 </script>
 
+
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+/* KhaneHesab cloud sync. The publishable key is intended for browser use; RLS protects each user's row. */
+(function(){
+  const PROJECT_URL='https://yzzqufmthxnxfbrbbhmg.supabase.co';
+  const PUBLISHABLE_KEY='sb_publishable_KVqEtO44lqaBm0jKSNClKw_XTVOffJR';
+  const DATA_KEYS=[
+    'khanehesab_currency_v1',
+    'khanehesab_transactions_v1',
+    'khanehesab_monthly_budgets_v1',
+    'khanehesab_life_v1',
+    'khanehesab_reminders_v1',
+    'khanehesab_debts_v1',
+    'khanehesab_installments_v1',
+    'khanehesab_installment_alert_date_v1'
+  ];
+  const $=id=>document.getElementById(id);
+  const status=message=>{const el=$('cloudStatus');if(el)el.textContent=message};
+  if(!window.supabase||!window.supabase.createClient){status('کتابخانه اتصال ابری بارگذاری نشد. اتصال اینترنت و دسترسی به cdn.jsdelivr.net را بررسی کن.');return;}
+  const client=window.supabase.createClient(PROJECT_URL,PUBLISHABLE_KEY);
+  let currentUser=null,cloudHasData=false,syncEnabled=false,suppressStorageEvents=false,syncTimer=null;
+  function snapshot(){
+    const data={};
+    DATA_KEYS.forEach(key=>{const raw=localStorage.getItem(key);if(raw!==null){try{data[key]=JSON.parse(raw)}catch(e){data[key]=raw}}});
+    return {format:'khanehesab-cloud-data',version:1,updatedAt:new Date().toISOString(),data};
+  }
+  function hasLocalData(){return Object.keys(snapshot().data).length>0;}
+  function setButtons(){
+    const signed=!!currentUser;
+    $('cloudSignIn').disabled=signed;$('cloudSignUp').disabled=signed;
+    $('cloudUpload').disabled=!signed;$('cloudDownload').disabled=!signed||!cloudHasData;
+    $('cloudSignOut').disabled=!signed;
+    $('cloudEmail').disabled=signed;$('cloudPassword').disabled=signed;
+    $('cloudUser').hidden=!signed;
+    if(signed)$('cloudUser').textContent='واردشده با: '+currentUser.email;
+  }
+  async function inspectCloud(){
+    if(!currentUser)return;
+    const {data,error}=await client.from('user_app_data').select('app_data,updated_at').eq('user_id',currentUser.id).maybeSingle();
+    if(error){cloudHasData=false;setButtons();status('ورود انجام شد، اما خواندن فضای ابری ممکن نیست: '+error.message+' — سیاست‌های RLS و جدول user_app_data را بررسی می‌کنیم.');return;}
+    cloudHasData=!!(data&&data.app_data&&data.app_data.data);
+    setButtons();
+    if(cloudHasData){status('حساب متصل است و نسخه‌ای از اطلاعات در فضای ابری وجود دارد. برای جلوگیری از حذف یا جایگزینی ناخواسته، انتخاب با شماست: «دریافت از ابر» اطلاعات این دستگاه را با نسخه ابری جایگزین می‌کند؛ «ارسال اطلاعات این دستگاه به ابر» نسخه ابری را جایگزین می‌کند.');}
+    else{status(hasLocalData()?'حساب متصل است و هنوز داده‌ای در ابر نیست. با زدن «ارسال اطلاعات این دستگاه به ابر»، اطلاعات فعلی این دستگاه ذخیره می‌شود.':'حساب متصل است و هنوز اطلاعاتی در ابر یا این دستگاه پیدا نشد.');}
+  }
+  async function signIn(){
+    const email=$('cloudEmail').value.trim(),password=$('cloudPassword').value;
+    if(!email||!password){status('ایمیل و رمز عبور را وارد کن.');return;}
+    status('در حال ورود...');
+    const {data,error}=await client.auth.signInWithPassword({email,password});
+    if(error){status('ورود انجام نشد: '+error.message);return;}
+    currentUser=data.user;syncEnabled=false;setButtons();await inspectCloud();
+  }
+  async function signUp(){
+    const email=$('cloudEmail').value.trim(),password=$('cloudPassword').value;
+    if(!email||password.length<8){status('ایمیل معتبر و رمز عبور حداقل ۸ نویسه‌ای وارد کن.');return;}
+    status('در حال ساخت حساب...');
+    const {data,error}=await client.auth.signUp({email,password});
+    if(error){status('ساخت حساب انجام نشد: '+error.message);return;}
+    if(data.session){currentUser=data.user;setButtons();await inspectCloud();}
+    else{status('حساب ساخته شد. ایمیل تأیید Supabase را باز کن و لینک تأیید را بزن؛ سپس با همین ایمیل و رمز وارد شو.');}
+  }
+  async function saveToCloud(showMessage=true){
+    if(!currentUser)return;
+    const payload=snapshot();
+    const {error}=await client.from('user_app_data').upsert({user_id:currentUser.id,app_data:payload,updated_at:new Date().toISOString()},{onConflict:'user_id'});
+    if(error){if(showMessage)status('ذخیره ابری انجام نشد: '+error.message);return false;}
+    cloudHasData=true;setButtons();if(showMessage)status('اطلاعات این دستگاه با موفقیت در فضای ابری ذخیره شد. از این پس تغییرات جدید نیز به‌صورت خودکار همگام می‌شوند.');
+    syncEnabled=true;return true;
+  }
+  async function loadFromCloud(){
+    if(!currentUser)return;
+    status('در حال دریافت اطلاعات از ابر...');
+    const {data,error}=await client.from('user_app_data').select('app_data,updated_at').eq('user_id',currentUser.id).maybeSingle();
+    if(error){status('دریافت اطلاعات انجام نشد: '+error.message);return;}
+    if(!data||!data.app_data||!data.app_data.data){status('هنوز اطلاعاتی در فضای ابری ذخیره نشده است.');return;}
+    const cloudData=data.app_data.data;
+    if(!confirm('اطلاعات فعلی این دستگاه با نسخه ذخیره‌شده در ابر جایگزین می‌شود. برای جلوگیری از ازدست‌رفتن داده‌ها، ابتدا از بخش پشتیبان‌گیری نسخه پشتیبان بگیر. ادامه می‌دهی؟'))return;
+    suppressStorageEvents=true;syncEnabled=false;
+    try{
+      DATA_KEYS.forEach(key=>{if(Object.prototype.hasOwnProperty.call(cloudData,key))localStorage.setItem(key,JSON.stringify(cloudData[key]));else localStorage.removeItem(key);});
+    }catch(e){suppressStorageEvents=false;status('ذخیره اطلاعات دریافت‌شده روی دستگاه ناموفق بود. فضای مرورگر را بررسی کن.');return;}
+    suppressStorageEvents=false;cloudHasData=true;syncEnabled=true;
+    status('اطلاعات ابری با موفقیت روی این دستگاه بارگذاری شد. صفحه برای نمایش همه بخش‌ها تازه‌سازی می‌شود.');
+    setTimeout(()=>location.reload(),700);
+  }
+  function scheduleSync(){
+    if(!currentUser||!syncEnabled||suppressStorageEvents)return;
+    clearTimeout(syncTimer);syncTimer=setTimeout(()=>saveToCloud(false),1200);
+  }
+  // Watch app writes without changing the existing finance/planning modules.
+  const originalSet=Storage.prototype.setItem,originalRemove=Storage.prototype.removeItem,originalClear=Storage.prototype.clear;
+  Storage.prototype.setItem=function(key,value){const result=originalSet.call(this,key,value);if(this===localStorage&&DATA_KEYS.includes(String(key)))scheduleSync();return result;};
+  Storage.prototype.removeItem=function(key){const result=originalRemove.call(this,key);if(this===localStorage&&DATA_KEYS.includes(String(key)))scheduleSync();return result;};
+  Storage.prototype.clear=function(){const result=originalClear.call(this);if(this===localStorage)scheduleSync();return result;};
+  $('cloudSignIn').addEventListener('click',signIn);
+  $('cloudSignUp').addEventListener('click',signUp);
+  $('cloudUpload').addEventListener('click',async()=>{
+    const warning=cloudHasData?'نسخه موجود در ابر با اطلاعات این دستگاه جایگزین می‌شود. مطمئنی؟':'اطلاعات فعلی این دستگاه به فضای ابری حساب شما ارسال می‌شود. ادامه می‌دهی؟';
+    if(!confirm(warning))return;
+    status('در حال ارسال اطلاعات به ابر...');await saveToCloud(true);
+  });
+  $('cloudDownload').addEventListener('click',loadFromCloud);
+  $('cloudSignOut').addEventListener('click',async()=>{syncEnabled=false;await client.auth.signOut();currentUser=null;cloudHasData=false;setButtons();status('از حساب خارج شدی. اطلاعات محلی این دستگاه پاک نشده است.');});
+  client.auth.onAuthStateChange((event,session)=>{
+    if(event==='SIGNED_OUT'){currentUser=null;syncEnabled=false;cloudHasData=false;setButtons();}
+    else if(session&&session.user){currentUser=session.user;setButtons();if(event==='INITIAL_SESSION'||event==='SIGNED_IN')setTimeout(()=>inspectCloud(),0);}
+  });
+  client.auth.getSession().then(({data,error})=>{
+    if(error){status('بررسی نشست کاربری ناموفق بود: '+error.message);return;}
+    if(data.session){currentUser=data.session.user;setButtons();inspectCloud();}else{setButtons();}
+  });
+})();
+</script>
 
 <script>
 if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost')) {
