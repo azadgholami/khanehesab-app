@@ -1,0 +1,2180 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>خانه‌حساب | مدیریت مالی خانواده</title>
+<style>
+:root{--navy:#17283f;--teal:#176b68;--gold:#b39a5b;--cream:#fbf8f1;--ink:#263442;--muted:#6b7780;--line:#d9dedc;--white:#fff;--red:#b84a4a}
+*{box-sizing:border-box}body{margin:0;background:#f2f4f2;color:var(--ink);font-family:Tahoma,Arial,sans-serif}
+header{background:var(--navy);color:white;padding:22px max(18px,calc((100% - 1080px)/2));border-bottom:4px solid var(--gold)}
+header .brand{font-size:22px;font-weight:700}header p{margin:7px 0 0;color:#e6e0d0;font-size:13px}
+main{max-width:1080px;margin:22px auto;padding:0 16px 36px}
+.hero{display:flex;gap:14px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin-bottom:18px}
+h1{font-size:22px;margin:0 0 5px}h2{font-size:16px;margin:0 0 14px;color:var(--navy)}.muted{color:var(--muted);font-size:13px;line-height:1.8}
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px}
+.card,.panel{background:var(--white);border:1px solid var(--line);border-radius:14px;padding:17px;box-shadow:0 3px 12px #17283f0a}
+.metric{font-size:22px;font-weight:700;margin-top:9px;overflow-wrap:anywhere}.metric small{font-size:12px;font-weight:400;color:var(--muted)}
+.layout{display:grid;grid-template-columns:0.9fr 1.1fr;gap:16px}
+label{display:block;font-size:13px;margin:12px 0 6px;color:#394955}
+input,select{width:100%;padding:12px;border:1px solid #cbd3d2;border-radius:9px;font:inherit;background:white;color:var(--ink)}
+button{border:0;border-radius:9px;background:var(--teal);color:white;padding:12px 15px;font:inherit;cursor:pointer}
+button.secondary{background:#e9efed;color:var(--teal);border:1px solid #cbdad6}
+button.danger{background:#fff1f1;color:var(--red);border:1px solid #f0cece}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}.formgrid{display:grid;grid-template-columns:1fr 1fr;gap:0 10px}
+.list{display:flex;flex-direction:column;gap:8px}.transaction{display:flex;justify-content:space-between;gap:10px;align-items:center;border:1px solid #e5e9e7;border-radius:10px;padding:11px}
+.transaction strong{display:block;font-size:14px}.transaction .meta{font-size:12px;color:var(--muted);margin-top:5px}
+.amount{font-weight:700;white-space:nowrap}.expense{color:var(--red)}.income{color:var(--teal)}
+.empty{padding:24px;text-align:center;color:var(--muted);border:1px dashed var(--line);border-radius:10px;line-height:1.9}
+footer{max-width:1080px;margin:0 auto;padding:0 16px 28px;color:var(--muted);font-size:12px;line-height:1.8}
+.notice{background:#fff8e8;border:1px solid #ead9ad;padding:12px;border-radius:10px;margin-bottom:16px;font-size:12px;line-height:1.9}
+@media(max-width:760px){.cards{grid-template-columns:1fr}.layout{grid-template-columns:1fr}.metric{font-size:20px}.hero{align-items:flex-start}header{padding:18px}main{margin-top:14px}.formgrid{grid-template-columns:1fr 1fr}}
+
+.appnav{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+.navbtn{background:#e8efed;color:var(--navy);border:1px solid var(--line)}
+.navbtn.active{background:var(--teal);color:white}
+.tabcontent[hidden]{display:none!important}
+textarea{width:100%;padding:12px;border:1px solid #cbd3d2;border-radius:9px;font:inherit;background:white;color:var(--ink);resize:vertical}
+.taskrow,.goalrow,.habitrow{display:flex;align-items:center;gap:10px;justify-content:space-between;border:1px solid #e5e9e7;border-radius:10px;padding:12px;background:#fff}
+.taskleft,.goalleft,.habitleft{display:flex;align-items:center;gap:10px;min-width:0}
+.taskleft span,.goalleft span,.habitleft span{overflow-wrap:anywhere}
+.taskrow input[type=checkbox],.habitrow input[type=checkbox]{width:20px;height:20px;flex-shrink:0}
+.smallbtn{padding:6px 9px;font-size:12px;flex-shrink:0}
+.progress{height:8px;background:#e7ecea;border-radius:99px;overflow:hidden;margin-top:8px}
+.progress>div{height:100%;background:var(--teal)}
+.watercups{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0}
+.cup{width:34px;height:42px;border:2px solid var(--teal);border-radius:4px 4px 10px 10px;background:#fff;cursor:pointer}
+.cup.filled{background:linear-gradient(to top,#91d4ca 75%,#fff 75%)}
+@media(max-width:760px){.appnav{display:grid;grid-template-columns:repeat(2,1fr)}.navbtn{width:100%}.taskrow,.goalrow,.habitrow{align-items:flex-start}}
+
+
+.jalali-picker{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:8px;padding:10px;border:1px solid #d9dedc;border-radius:10px;background:#f9fbfa}
+.jalali-picker .jp-title{width:100%;font-size:12px;color:#176b68}
+.jalali-picker select{flex:1;min-width:90px;padding:9px}
+.datehint{line-height:1.8}
+
+
+.budget-heading{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;flex-wrap:wrap}
+.budget-month{min-width:180px}
+.budget-form{display:grid;grid-template-columns:1fr 1fr auto;gap:10px;align-items:end;margin:12px 0 16px}
+.budget-form label{margin-top:0}
+.budget-submit{padding-bottom:0}
+.budget-summary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:12px 0}
+.budget-stat{border:1px solid #e3e8e5;background:#f8faf9;border-radius:10px;padding:12px}
+.budget-stat .muted{font-size:12px}
+.budget-stat strong{display:block;margin-top:6px;font-size:17px;overflow-wrap:anywhere}
+.budget-list{display:grid;gap:10px}
+.budget-item{border:1px solid #e5e9e7;border-radius:11px;padding:12px}
+.budget-item-top{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
+.budget-item-title{font-weight:700}
+.budget-item-detail{font-size:12px;color:var(--muted);margin-top:5px;line-height:1.8}
+.budget-track{height:9px;border-radius:99px;background:#e9eeec;overflow:hidden;margin-top:10px}
+.budget-track>div{height:100%;background:var(--teal);border-radius:99px}
+.budget-track>div.over{background:var(--red)}
+.budget-actions{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+@media(max-width:760px){.budget-form{grid-template-columns:1fr}.budget-summary{grid-template-columns:1fr}.budget-month{width:100%}.budget-submit button{width:100%}}
+
+
+.report-heading{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;flex-wrap:wrap}
+.report-month{min-width:180px}
+.report-stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:14px 0}
+.report-stat{background:#f8faf9;border:1px solid #e2e8e5;border-radius:11px;padding:12px}
+.report-stat .muted{font-size:12px}
+.report-stat strong{display:block;font-size:17px;margin-top:6px;overflow-wrap:anywhere}
+.report-comparison{background:#f8faf9;border:1px solid #e2e8e5;border-radius:11px;padding:12px;line-height:1.9;font-size:13px}
+.report-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.category-chart{display:grid;gap:13px;margin-top:16px}
+.category-row{display:grid;grid-template-columns:85px 1fr;gap:9px;align-items:center}
+.category-label{font-size:12px;overflow-wrap:anywhere}
+.category-track{height:12px;background:#edf1ef;border-radius:99px;overflow:hidden}
+.category-track>div{height:100%;background:var(--teal);border-radius:99px}
+.category-value{grid-column:2;font-size:12px;color:var(--muted);margin-top:-7px}
+.trend-chart{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:8px;align-items:end;min-height:220px;padding-top:16px}
+.trend-month{display:flex;flex-direction:column;align-items:center;justify-content:flex-end;min-width:0;height:220px}
+.trend-bars{height:170px;width:100%;display:flex;align-items:flex-end;justify-content:center;gap:4px;border-bottom:1px solid #dce3e0;padding:0 2px}
+.trend-bar{width:40%;max-width:24px;min-height:2px;border-radius:5px 5px 0 0;position:relative}
+.trend-bar.income-bar{background:var(--teal)}
+.trend-bar.expense-bar{background:#c77969}
+.trend-label{font-size:10px;margin-top:7px;text-align:center;color:var(--muted)}
+.chart-legend{display:flex;gap:16px;flex-wrap:wrap;font-size:12px;color:var(--muted);margin-top:10px}
+.chart-legend span{display:flex;align-items:center;gap:6px}
+.chart-legend i{display:inline-block;width:10px;height:10px;border-radius:3px}
+.legend-income{background:var(--teal)}.legend-expense{background:#c77969}
+@media(max-width:760px){.report-stats{grid-template-columns:1fr 1fr}.report-grid{grid-template-columns:1fr}.trend-chart{gap:4px}.category-row{grid-template-columns:75px 1fr}}
+
+
+.reminder-alert{margin-top:12px;padding:12px;border-radius:10px;background:#fff4dc;border:1px solid #ead49c;color:#59461c;line-height:1.8}
+.reminder-row{display:flex;justify-content:space-between;gap:12px;align-items:center;border:1px solid #e5e9e7;border-radius:10px;padding:12px}
+.reminder-row strong{display:block}.reminder-meta{font-size:12px;color:var(--muted);margin-top:5px}
+.reminder-actions{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.habit-week-summary{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.habit-week-stat{background:#f8faf9;border:1px solid #e2e8e5;border-radius:10px;padding:12px}
+.habit-week-stat strong{display:block;font-size:20px;margin-top:5px}
+.habit-week-row{border:1px solid #e5e9e7;border-radius:10px;padding:11px}
+.habit-week-row-head{display:flex;justify-content:space-between;gap:8px;font-size:13px}
+.habit-week-dots{display:flex;gap:6px;margin-top:9px;flex-wrap:wrap}
+.habit-day-dot{width:23px;height:23px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;background:#edf0ef;color:#77817e}
+.habit-day-dot.done{background:#cfe9df;color:#176b68}
+@media(max-width:760px){.reminder-row{align-items:flex-start;flex-direction:column}.habit-week-summary{grid-template-columns:1fr 1fr}}
+
+
+.calendar-panel{overflow:hidden}
+.calendar-head,.calendar-day-heading{display:flex;justify-content:space-between;align-items:flex-start;gap:14px;flex-wrap:wrap}
+.calendar-controls{display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+.calendar-controls input{max-width:180px}
+.calendar-month-title{font-size:17px;font-weight:700;margin:15px 0 10px;color:var(--navy)}
+.calendar-legend{display:flex;gap:14px;flex-wrap:wrap;margin:10px 0 14px;font-size:12px;color:var(--muted)}
+.calendar-legend span{display:flex;align-items:center;gap:6px}
+.cal-dot{display:inline-block;width:9px;height:9px;border-radius:50%}
+.task-dot{background:#287e73}.transaction-dot{background:#c77969}.reminder-dot{background:#c5a34a}
+.calendar-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px}
+.calendar-weekday{font-size:12px;text-align:center;color:var(--muted);padding:8px 0}
+.calendar-cell{min-height:86px;border:1px solid #e1e7e4;border-radius:10px;padding:7px;background:#fff;text-align:right;cursor:pointer;color:var(--ink);display:flex;flex-direction:column;gap:4px;min-width:0}
+.calendar-cell:hover{border-color:var(--teal)}
+.calendar-cell.selected{outline:2px solid var(--teal);background:#f0f8f5}
+.calendar-cell.today{box-shadow:inset 0 0 0 1px #c5a34a}
+.calendar-cell.outside{opacity:.42}
+.cal-greg{font-weight:700;font-size:16px;line-height:1.2}
+.cal-jalali{font-size:11px;color:var(--teal);white-space:nowrap}
+.cal-markers{display:flex;gap:4px;flex-wrap:wrap;margin-top:auto}
+.cal-markers i{width:6px;height:6px;border-radius:50%;display:inline-block}
+.calendar-day-heading{align-items:center}
+.calendar-details-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:16px}
+.calendar-detail-block{min-width:0;border:1px solid #e5e9e7;border-radius:11px;padding:12px}
+.calendar-detail-block h3{font-size:15px;margin:0 0 10px}
+.calendar-detail-block .list{display:grid;gap:8px}
+.calendar-entry{border-bottom:1px solid #edf0ef;padding:7px 0;font-size:13px;line-height:1.7;overflow-wrap:anywhere}
+.calendar-entry:last-child{border-bottom:0}
+.calendar-summary{background:#f8faf9;border-radius:10px;padding:12px;margin-top:14px;line-height:1.9;font-size:13px}
+@media(max-width:760px){.calendar-cell{min-height:68px;padding:5px 3px}.cal-greg{font-size:14px}.cal-jalali{font-size:10px}.calendar-grid{gap:3px}.calendar-details-grid{grid-template-columns:1fr}.calendar-controls{width:100%}.calendar-controls input{flex:1;min-width:120px}}
+
+
+.debt-summary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:14px}
+.debt-stat{border:1px solid #e2e8e5;background:#f8faf9;border-radius:11px;padding:13px}
+.debt-stat .muted{font-size:12px}.debt-stat strong{display:block;font-size:18px;margin-top:6px;overflow-wrap:anywhere}
+.debt-item{border:1px solid #e1e7e4;border-radius:12px;padding:13px;margin-bottom:10px}
+.debt-item-head{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.debt-badge{font-size:11px;border-radius:999px;padding:4px 8px;background:#fbe9e7;color:#a64036;white-space:nowrap}
+.debt-badge.receivable{background:#e2f2e9;color:#237b5b}
+.debt-meta{font-size:12px;color:var(--muted);line-height:1.8;margin-top:6px;overflow-wrap:anywhere}
+.debt-progress{height:8px;border-radius:99px;background:#edf1ef;overflow:hidden;margin-top:10px}
+.debt-progress>div{height:100%;background:var(--teal)}
+.debt-pay-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;align-items:end;margin-top:12px}
+.debt-pay-row label{margin-top:0}.debt-buttons{display:flex;gap:6px;flex-wrap:wrap;margin-top:9px}
+@media(max-width:760px){.debt-summary{grid-template-columns:1fr}.debt-item-head{flex-direction:column}.debt-pay-row{grid-template-columns:1fr}.debt-pay-row button{width:100%}}
+
+
+.backup-warning{padding:12px 14px;border:1px solid #ead49c;background:#fff7e5;border-radius:10px;line-height:1.8;margin:14px 0}
+.backup-cards{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:16px}
+.backup-card{border:1px solid #e2e8e5;border-radius:12px;padding:16px;min-width:0}
+.backup-card h3{margin:8px 0;font-size:16px}
+.backup-card p{font-size:13px;line-height:1.8;min-height:48px}
+.backup-icon{width:40px;height:40px;border-radius:10px;background:#eaf1ef;color:#176b68;display:flex;align-items:center;justify-content:center;font-size:25px;font-weight:700}
+.backup-file-label{display:block;border:1px dashed #9aa9a3;padding:10px;border-radius:8px;text-align:center;cursor:pointer;margin:10px 0}
+#backupFile{width:100%;font-size:12px;margin-bottom:10px}
+.backup-status{margin-top:16px;padding:12px;border-radius:10px;background:#f5f7f6;line-height:1.8;font-size:13px;overflow-wrap:anywhere}
+.backup-preview{margin-top:12px;border:1px solid #e2e8e5;border-radius:10px;padding:12px;line-height:1.9;font-size:13px}
+@media(max-width:760px){.backup-cards{grid-template-columns:1fr}.backup-card p{min-height:0}}
+
+
+.dashboard-welcome{display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:16px}
+.dashboard-welcome h1{margin:4px 0;font-size:27px}
+.dashboard-kicker{font-size:12px;font-weight:700;color:var(--teal);letter-spacing:.4px}
+.dashboard-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-bottom:16px}
+.dashboard-card{background:#fff;border:1px solid #e1e8e4;border-radius:14px;padding:15px;min-width:0;box-shadow:0 3px 14px rgba(23,50,43,.035)}
+.dashboard-icon{display:flex;width:32px;height:32px;align-items:center;justify-content:center;border-radius:9px;background:#eaf3ef;color:#176b68;font-size:20px;font-weight:700;margin-bottom:11px}
+.dashboard-card .muted{font-size:12px}
+.dashboard-card strong{display:block;margin-top:7px;font-size:clamp(16px,2vw,22px);overflow-wrap:anywhere}
+.dashboard-panels{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.dashboard-panel-heading{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.dashboard-panel-heading h2{margin:0 0 10px}
+.text-action{background:transparent;border:0;color:var(--teal);font-size:12px;padding:4px;cursor:pointer}
+.dashboard-list{display:grid;gap:8px}
+.dashboard-entry{border-bottom:1px solid #edf0ef;padding:8px 0;display:flex;justify-content:space-between;align-items:flex-start;gap:10px;font-size:13px;line-height:1.7}
+.dashboard-entry:last-child{border-bottom:0}
+.dashboard-entry-main{min-width:0;overflow-wrap:anywhere}
+.dashboard-entry-meta{font-size:11px;color:var(--muted)}
+.dashboard-pill{font-size:11px;white-space:nowrap;border-radius:99px;padding:3px 8px;background:#edf5f1;color:#176b68}
+.dashboard-pill.pending{background:#fff1dc;color:#8b6417}
+.dashboard-empty{color:var(--muted);font-size:13px;line-height:1.8;padding:8px 0}
+.dashboard-footnote{font-size:12px;color:var(--muted);line-height:1.8;margin:14px 0}
+@media(max-width:760px){.dashboard-grid{grid-template-columns:1fr 1fr;gap:8px}.dashboard-card{padding:12px}.dashboard-panels{grid-template-columns:1fr}.dashboard-welcome h1{font-size:23px}}
+
+
+.inst-summary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:14px}
+.inst-stat{border:1px solid #e2e8e5;background:#f8faf9;border-radius:11px;padding:13px}
+.inst-stat .muted{font-size:12px}.inst-stat strong{display:block;font-size:18px;margin-top:6px;overflow-wrap:anywhere}
+.inst-item{border:1px solid #e1e7e4;border-radius:12px;padding:13px;margin-bottom:10px}
+.inst-item-head{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.inst-chip{font-size:11px;border-radius:999px;padding:4px 8px;background:#fbe9e7;color:#a64036;white-space:nowrap}
+.inst-chip.incoming{background:#e2f2e9;color:#237b5b}.inst-chip.paid{background:#eaf0fa;color:#4169a1}.inst-chip.late{background:#fff0d8;color:#8b6417}
+.inst-meta{font-size:12px;color:var(--muted);line-height:1.9;margin-top:6px;overflow-wrap:anywhere}
+.inst-actions{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}
+@media(max-width:760px){.inst-summary{grid-template-columns:1fr}.inst-item-head{flex-direction:column}}
+
+
+.secure-transfer-card{border:1px solid #dce7e2;background:#f8fbf9;border-radius:12px;padding:16px;margin:16px 0}
+.secure-transfer-card h3{margin:0 0 6px;font-size:16px}
+.secure-transfer-card p{font-size:13px;line-height:1.8}
+.secure-transfer-card label{display:block;margin-top:10px}
+.secure-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.secure-actions button{flex:1;min-width:190px}
+#secureBackupFile{width:100%;margin-top:6px}
+@media(max-width:650px){.secure-actions{flex-direction:column}.secure-actions button{width:100%}}
+
+
+.cloud-panel{background:#fff;border:1px solid #dce5e1;border-radius:16px;padding:17px;margin:0 0 18px;box-shadow:0 4px 18px #17283f0b}
+.cloud-head{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.cloud-head h2{margin:0}.cloud-status{font-size:12px;line-height:1.9;color:#52645f;margin-top:9px;padding:10px 12px;background:#f4f8f6;border-radius:9px;overflow-wrap:anywhere}
+.cloud-fields{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}.cloud-fields label{margin-top:0}
+.cloud-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.cloud-actions button{min-width:140px}
+.cloud-user{font-size:12px;color:#176b68;margin-top:7px;overflow-wrap:anywhere}
+@media(max-width:650px){.cloud-fields{grid-template-columns:1fr}.cloud-actions{display:grid;grid-template-columns:1fr 1fr}.cloud-actions button{min-width:0;width:100%}}
+
+</style>
+
+<meta name="theme-color" content="#17283f">
+<meta name="description" content="خانه‌حساب؛ مدیریت مالی خانواده، درآمد و هزینه، بدهی و طلب، اقساط، اهداف و برنامه روزانه">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+
+</head>
+<body>
+<header><div class="brand">خانه‌حساب <span style="color:#d8c58f">•</span> Family Finance</div><p>نسخه آزمایشی رایگان مدیریت مالی خانواده</p></header>
+<main>
+
+  <section class="cloud-panel" aria-label="حساب و همگام‌سازی ابری">
+    <div class="cloud-head"><h2>حساب کاربری و ذخیره‌سازی ابری</h2><span class="muted">ورود امن • همگام‌سازی بین دستگاه‌ها</span></div>
+    <p class="muted">برای نگهداری اطلاعات در حساب شخصی و دسترسی از دستگاه‌های دیگر، وارد حساب خانه‌حساب شو. اطلاعات فعلی دستگاه تا انتخاب صریح شما تغییر نمی‌کند.</p>
+    <div class="cloud-fields">
+      <div><label for="cloudEmail">ایمیل</label><input id="cloudEmail" type="email" autocomplete="username" placeholder="ایمیل شما"></div>
+      <div><label for="cloudPassword">رمز عبور</label><input id="cloudPassword" type="password" autocomplete="current-password" placeholder="حداقل ۸ نویسه"></div>
+    </div>
+    <div class="cloud-actions">
+      <button type="button" id="cloudSignIn">ورود</button>
+      <button type="button" class="secondary" id="cloudSignUp">ساخت حساب</button>
+      <button type="button" class="secondary" id="cloudUpload" disabled>ارسال اطلاعات این دستگاه به ابر</button>
+      <button type="button" class="secondary" id="cloudDownload" disabled>دریافت اطلاعات از ابر</button>
+      <button type="button" class="danger" id="cloudSignOut" disabled>خروج از حساب</button>
+    </div>
+    <div id="cloudUser" class="cloud-user" hidden></div>
+    <div id="cloudStatus" class="cloud-status" role="status" aria-live="polite">برای شروع، با ایمیل خود وارد شو یا حساب جدید بساز. اطلاعات فعلی فقط روی همین دستگاه ذخیره می‌شود تا زمانی که ارسال به ابر را انتخاب کنی.</div>
+  </section>
+  <nav class="appnav" aria-label="بخش‌های برنامه">
+    <button type="button" class="navbtn active" data-tab="dashboard">خانه</button>
+    <button type="button" class="navbtn" data-tab="finance">مدیریت مالی</button>
+    <button type="button" class="navbtn" data-tab="daily">برنامه روزانه</button>
+    <button type="button" class="navbtn" data-tab="goals">هدف‌ها</button>
+    <button type="button" class="navbtn" data-tab="habits">عادت‌ها و آب</button>
+    <button type="button" class="navbtn" data-tab="journal">شرح روز</button>
+    <button type="button" class="navbtn" data-tab="reports">گزارش‌های مالی</button>
+    <button type="button" class="navbtn" data-tab="reminders">یادآورها و پیشرفت</button>
+    <button type="button" class="navbtn" data-tab="calendar">تقویم یکپارچه</button>
+    <button type="button" class="navbtn" data-tab="debts">بدهی‌ها و طلب‌ها</button>
+    <button type="button" class="navbtn" data-tab="backup">پشتیبان‌گیری</button>
+    <button type="button" class="navbtn" data-tab="installments">اقساط و سررسیدها</button>
+  </nav>
+  
+  <section id="dashboardTab" class="tabcontent">
+    <div class="dashboard-welcome">
+      <div>
+        <div class="dashboard-kicker">خانه‌حساب</div>
+        <h1>خلاصه امروزت</h1>
+        <p id="dashboardDate" class="muted">نمای کلی امور مالی و برنامه روزانه</p>
+      </div>
+      <button type="button" id="dashboardRefresh" class="secondary">به‌روزرسانی اطلاعات</button>
+    </div>
+    <div class="dashboard-grid">
+      <div class="dashboard-card money-card"><span class="dashboard-icon">↗</span><div class="muted">درآمد این ماه</div><strong id="dashIncome">—</strong></div>
+      <div class="dashboard-card money-card"><span class="dashboard-icon">↘</span><div class="muted">هزینه این ماه</div><strong id="dashExpense">—</strong></div>
+      <div class="dashboard-card money-card"><span class="dashboard-icon">＝</span><div class="muted">مانده خالص این ماه</div><strong id="dashNet">—</strong></div>
+      <div class="dashboard-card money-card"><span class="dashboard-icon">◷</span><div class="muted">بدهی باقی‌مانده</div><strong id="dashDebt">—</strong></div>
+      <div class="dashboard-card money-card"><span class="dashboard-icon">＋</span><div class="muted">طلب وصول‌نشده</div><strong id="dashReceivable">—</strong></div>
+      <div class="dashboard-card money-card"><span class="dashboard-icon">✓</span><div class="muted">کارهای امروز</div><strong id="dashTasks">—</strong></div>
+    </div>
+    <div class="dashboard-panels">
+      <div class="panel">
+        <div class="dashboard-panel-heading"><h2>برنامه‌های امروز</h2><button type="button" class="text-action" data-goto="daily">رفتن به برنامه‌ها ←</button></div>
+        <div id="dashTaskList" class="dashboard-list"></div>
+      </div>
+      <div class="panel">
+        <div class="dashboard-panel-heading"><h2>یادآورهای فعال</h2><button type="button" class="text-action" data-goto="reminders">مدیریت یادآورها ←</button></div>
+        <div id="dashReminderList" class="dashboard-list"></div>
+      </div>
+      <div class="panel">
+        <div class="dashboard-panel-heading"><h2>هدف‌ها</h2><button type="button" class="text-action" data-goto="goals">مشاهده هدف‌ها ←</button></div>
+        <div id="dashGoalList" class="dashboard-list"></div>
+      </div>
+      <div class="panel">
+        <div class="dashboard-panel-heading"><h2>عادت‌های امروز</h2><button type="button" class="text-action" data-goto="habits">پیگیری عادت‌ها ←</button></div>
+        <div id="dashHabitList" class="dashboard-list"></div>
+      </div>
+    </div>
+    <p class="dashboard-footnote">این صفحه اطلاعات موجود در همین مرورگر را خلاصه می‌کند. برای تازه‌سازی پس از تغییر اطلاعات، دکمه «به‌روزرسانی اطلاعات» را بزن.</p>
+  </section>
+
+  <div id="financeTab" class="tabcontent" hidden>
+  <div class="hero">
+    <div><h1>داشبورد مالی من</h1><div class="muted">اولین قدم برای کنترل دخل‌وخرج؛ ساده، خصوصی و بدون نیاز به حساب کاربری.</div></div>
+    <div><label for="currency" style="margin-top:0">واحد پول</label><select id="currency"><option value="تومان">تومان</option><option value="ریال">ریال</option><option value="€">یورو (€)</option><option value="$">دلار ($)</option></select></div>
+  </div>
+  <div class="notice">این یک نمونه اولیه است. اطلاعات فقط در همین مرورگر ذخیره می‌شود؛ با پاک‌کردن داده‌های مرورگر ممکن است از بین برود. فعلاً اطلاعات واقعی حساس یا اطلاعات حساب بانکی وارد نکن.</div>
+  <section class="cards">
+    <div class="card"><div class="muted">درآمد ثبت‌شده</div><div class="metric" id="incomeTotal">۰ <small>تومان</small></div></div>
+    <div class="card"><div class="muted">هزینه ثبت‌شده</div><div class="metric" id="expenseTotal">۰ <small>تومان</small></div></div>
+    <div class="card"><div class="muted">مانده خالص</div><div class="metric" id="balanceTotal">۰ <small>تومان</small></div></div>
+    <div class="card"><div class="muted">خرج‌های اضافی</div><div class="metric" id="extraExpenseTotal">۰ <small>تومان</small></div><div class="muted">هزینه‌های غیرضروری یا قابل کاهش</div></div>
+  </section>
+
+  <section class="panel budget-panel" id="monthlyBudgetPanel" style="margin-bottom:16px">
+    <div class="budget-heading">
+      <div>
+        <h2>بودجه‌بندی ماهانه</h2>
+        <p class="muted">برای هر دسته هزینه سقف ماهانه تعیین کن و مخارج واقعی را با بودجه مقایسه کن.</p>
+      </div>
+      <div class="budget-month">
+        <label for="budgetMonth">ماه گزارش</label>
+        <input id="budgetMonth" type="month">
+      </div>
+    </div>
+    <form id="budgetForm" class="budget-form">
+      <div>
+        <label for="budgetCategory">دسته هزینه</label>
+        <select id="budgetCategory">
+          <option>خوراک</option><option>مسکن</option><option>قبوض</option><option>حمل‌ونقل</option>
+          <option>درمان</option><option>آموزش</option><option>تفریح</option><option>خرج اضافی</option><option>سایر</option>
+        </select>
+      </div>
+      <div>
+        <label for="budgetAmount">سقف بودجه</label>
+        <input id="budgetAmount" type="number" min="1" step="any" placeholder="مثلاً 5000000" required>
+      </div>
+      <div class="budget-submit"><button type="submit">ثبت یا به‌روزرسانی بودجه</button></div>
+    </form>
+    <div id="budgetSummary" class="budget-summary"></div>
+    <div id="budgetList" class="budget-list"></div>
+    <div id="budgetStatus" class="muted" role="status" style="margin-top:10px"></div>
+  </section>
+  <section class="layout">
+    <div class="panel">
+      <h2>ثبت تراکنش جدید</h2>
+      <form id="transactionForm">
+        <label for="kind">نوع تراکنش</label>
+        <select id="kind"><option value="expense">هزینه</option><option value="income">درآمد</option></select>
+        <label for="title">شرح تراکنش</label><input id="title" maxlength="80" placeholder="مثلاً خرید هفتگی" required>
+        <div class="formgrid">
+          <div><label for="amount">مبلغ</label><input id="amount" type="number" min="1" step="any" placeholder="مثلاً 250000" required></div>
+          <div><label for="category">دسته‌بندی</label><select id="category"><option>خوراک</option><option>مسکن</option><option>قبوض</option><option>حمل‌ونقل</option><option>درمان</option><option>آموزش</option><option>تفریح</option><option>خرج اضافی</option><option>پس‌انداز</option><option>حقوق</option><option>فروش</option><option>سایر</option></select></div>
+        </div>
+        <label for="date">تاریخ (میلادی)</label><input id="date" type="date" required><div class="datehint" id="dateHint">میلادی ایران: — | شمسی: —</div><div class="jalali-picker" id="dateJalaliPicker"><div class="jp-title">انتخاب تاریخ شمسی</div><select aria-label="روز شمسی" class="jp-day"></select><select aria-label="ماه شمسی" class="jp-month"></select><select aria-label="سال شمسی" class="jp-year"></select></div>
+        <div class="actions"><button type="submit">ثبت تراکنش</button><button class="secondary" type="reset">پاک‌کردن فرم</button></div>
+      </form>
+    </div>
+    <div class="panel">
+      <h2>تراکنش‌های اخیر</h2>
+      <div class="actions" style="margin:0 0 12px"><button class="secondary" id="exportBtn" type="button">خروجی پشتیبان JSON</button><button class="danger" id="clearBtn" type="button">حذف همه اطلاعات</button></div>
+      <div id="statusMessage" class="muted" role="status" aria-live="polite" style="margin-bottom:10px"></div>
+      <div id="transactionList" class="list"></div>
+    </div>
+  </section>
+  </div>
+  <section id="dailyTab" class="tabcontent" hidden>
+    <div class="panel">
+      <h2>برنامه روزانه من</h2>
+      <p class="muted">کارهای امروز را بنویس و بعد از انجام، تیک بزن. این برنامه برای مدیریت زندگی روزمره است.</p>
+      <form id="taskForm" class="formgrid">
+        <div><label for="taskText">کار یا برنامه</label><input id="taskText" maxlength="120" placeholder="مثلاً ۳۰ دقیقه پیاده‌روی" required></div>
+        <div><label for="taskTime">زمان (اختیاری)</label><input id="taskTime" type="time"></div>
+        <div><label for="taskPriority">اولویت</label><select id="taskPriority"><option>معمولی</option><option>مهم</option><option>ضروری</option></select></div>
+        <div><label for="taskDate">تاریخ (میلادی)</label><input id="taskDate" type="date" required><div class="datehint" id="taskDateHint">میلادی ایران: — | شمسی: —</div><div class="jalali-picker" id="taskDateJalaliPicker"><div class="jp-title">انتخاب تاریخ شمسی</div><select aria-label="روز شمسی" class="jp-day"></select><select aria-label="ماه شمسی" class="jp-month"></select><select aria-label="سال شمسی" class="jp-year"></select></div></div>
+        <div class="actions"><button type="submit">افزودن به برنامه</button></div>
+      </form>
+      <div id="taskList" class="list" style="margin-top:16px"></div>
+    </div>
+  </section>
+  <section id="goalsTab" class="tabcontent" hidden>
+    <div class="panel">
+      <h2>هدف‌های من</h2>
+      <p class="muted">هدف مالی، شخصی، خانوادگی یا یادگیری تعریف کن و میزان پیشرفت را ثبت کن.</p>
+      <form id="goalForm">
+        <label for="goalName">عنوان هدف</label><input id="goalName" maxlength="100" placeholder="مثلاً پس‌انداز برای سفر یا یادگیری زبان" required>
+        <div class="formgrid">
+          <div><label for="goalType">نوع هدف</label><select id="goalType"><option>مالی</option><option>سلامتی</option><option>خانوادگی</option><option>یادگیری</option><option>شخصی</option><option>شغلی</option></select></div>
+          <div><label for="goalDate">تاریخ هدف (میلادی)</label><input id="goalDate" type="date"><div class="datehint" id="goalDateHint">میلادی ایران: — | شمسی: —</div><div class="jalali-picker" id="goalDateJalaliPicker"><div class="jp-title">انتخاب تاریخ شمسی</div><select aria-label="روز شمسی" class="jp-day"></select><select aria-label="ماه شمسی" class="jp-month"></select><select aria-label="سال شمسی" class="jp-year"></select></div></div>
+          <div><label for="goalProgress">پیشرفت (%)</label><input id="goalProgress" type="number" min="0" max="100" value="0" required></div>
+          <div><label for="goalNote">یادداشت (اختیاری)</label><input id="goalNote" maxlength="180" placeholder="قدم بعدی من چیست؟"></div>
+        </div>
+        <div class="actions"><button type="submit">ثبت هدف</button></div>
+      </form>
+      <div id="goalList" class="list" style="margin-top:16px"></div>
+    </div>
+  </section>
+  <section id="habitsTab" class="tabcontent" hidden>
+    <div class="layout">
+      <div class="panel">
+        <h2>ردیاب عادت‌های امروز</h2>
+        <p class="muted">عادت‌هایی که می‌خواهی هر روز انجام بدهی انتخاب کن. وضعیت هر روز جداگانه ذخیره می‌شود.</p>
+        <div id="habitList" class="list"></div>
+        <form id="habitForm" class="formgrid" style="margin-top:16px">
+          <div><label for="habitName">عادت جدید</label><input id="habitName" maxlength="80" placeholder="مثلاً مطالعه ۲۰ دقیقه‌ای" required></div>
+          <div class="actions"><button type="submit">افزودن عادت</button></div>
+        </form>
+      </div>
+      <div class="panel">
+        <h2>ردیاب نوشیدن آب</h2>
+        <p class="muted">هر بار یک لیوان آب نوشیدی، ثبت کن. هدف پیش‌فرض ۸ لیوان است و می‌توانی آن را تغییر بدهی.</p>
+        <label for="waterTarget">هدف روزانه (لیوان)</label><input id="waterTarget" type="number" min="1" max="30" value="8">
+        <div class="metric" id="waterCount">۰ از ۸ لیوان</div>
+        <div id="waterCups" class="watercups"></div>
+        <div class="actions"><button type="button" id="addWater">+ یک لیوان</button><button type="button" class="secondary" id="removeWater">− یک لیوان</button><button type="button" class="secondary" id="resetWater">شروع مجدد امروز</button></div>
+        <p class="muted">این ابزار فقط برای پیگیری عادت است و توصیه پزشکی محسوب نمی‌شود.</p>
+      </div>
+    </div>
+  </section>
+  <section id="journalTab" class="tabcontent" hidden>
+    <div class="panel">
+      <h2>شرح روز و یادداشت شخصی</h2>
+      <p class="muted">می‌توانی اتفاق‌های روز، حال‌وهوایت، چیزهایی که بابتشان قدردانی می‌کنی و نکته‌ای برای فردا را بنویسی.</p>
+      <label for="journalDate">تاریخ یادداشت (میلادی)</label><input id="journalDate" type="date"><div class="datehint" id="journalDateHint">میلادی ایران: — | شمسی: —</div><div class="jalali-picker" id="journalDateJalaliPicker"><div class="jp-title">انتخاب تاریخ شمسی</div><select aria-label="روز شمسی" class="jp-day"></select><select aria-label="ماه شمسی" class="jp-month"></select><select aria-label="سال شمسی" class="jp-year"></select></div>
+      <label for="journalMood">حال امروز من</label><select id="journalMood"><option>خوب</option><option>عالی</option><option>معمولی</option><option>خسته</option><option>نگران</option><option>ناراحت</option></select>
+      <label for="journalText">شرح روز</label><textarea id="journalText" rows="5" maxlength="5000" placeholder="امروز چه اتفاقی افتاد؟ چه چیزی یاد گرفتم؟"></textarea>
+      <label for="gratitudeText">امروز بابت چه چیزی قدردانم؟</label><textarea id="gratitudeText" rows="2" maxlength="1500" placeholder="حتی یک اتفاق کوچک..."></textarea>
+      <label for="tomorrowText">فردا چه چیزی را می‌خواهم پیگیری کنم؟</label><textarea id="tomorrowText" rows="2" maxlength="1500" placeholder="یک قدم کوچک برای فردا"></textarea>
+      <div class="actions"><button type="button" id="saveJournal">ذخیره یادداشت روز</button><button type="button" class="secondary" id="loadJournal">بارگذاری یادداشت این تاریخ</button></div>
+      <div id="journalStatus" class="muted" role="status" style="margin-top:10px"></div>
+    </div>
+  </section>
+
+  <section id="reportsTab" class="tabcontent" hidden>
+    <div class="panel" style="margin-bottom:16px">
+      <div class="report-heading">
+        <div>
+          <h2>گزارش‌های مالی</h2>
+          <p class="muted">درآمد، هزینه، پس‌انداز و دسته‌های پرهزینه را بر اساس تراکنش‌های ثبت‌شده بررسی کن.</p>
+        </div>
+        <div class="report-month">
+          <label for="reportMonth">ماه گزارش</label>
+          <input id="reportMonth" type="month">
+        </div>
+      </div>
+      <div id="reportStats" class="report-stats"></div>
+      <div id="reportComparison" class="report-comparison"></div>
+    </div>
+    <div class="report-grid">
+      <div class="panel">
+        <h2>هزینه‌ها بر اساس دسته‌بندی</h2>
+        <p class="muted">این نمودار نشان می‌دهد در ماه انتخاب‌شده بیشترین هزینه مربوط به کدام دسته بوده است.</p>
+        <div id="categoryChart" class="category-chart"></div>
+      </div>
+      <div class="panel">
+        <h2>روند ۶ ماه اخیر</h2>
+        <p class="muted">مقایسه درآمد و هزینه هر ماه؛ فقط تراکنش‌هایی که ثبت کرده‌ای محاسبه می‌شوند.</p>
+        <div id="trendChart" class="trend-chart"></div>
+        <div class="chart-legend"><span><i class="legend-income"></i> درآمد</span><span><i class="legend-expense"></i> هزینه</span></div>
+      </div>
+    </div>
+    <div id="reportNote" class="muted" style="margin-top:12px"></div>
+  </section>
+
+
+  <section id="remindersTab" class="tabcontent" hidden>
+    <div class="layout">
+      <div class="panel">
+        <h2>یادآورهای روزانه</h2>
+        <p class="muted">برای آب خوردن، ورزش، داروهای غیرتجویزیِ عمومی، مطالعه یا هر کار روزانه یادآور بساز. یادآورها زمانی بررسی می‌شوند که این صفحه باز باشد.</p>
+        <form id="reminderForm">
+          <label for="reminderTitle">عنوان یادآور</label>
+          <input id="reminderTitle" maxlength="100" placeholder="مثلاً یک لیوان آب بنوش" required>
+          <div class="formgrid">
+            <div><label for="reminderTime">ساعت</label><input id="reminderTime" type="time" required></div>
+            <div><label for="reminderType">دسته‌بندی</label><select id="reminderType"><option>سلامتی</option><option>برنامه روزانه</option><option>عادت شخصی</option><option>مالی</option><option>خانواده</option><option>سایر</option></select></div>
+          </div>
+          <div class="actions"><button type="submit">افزودن یادآور</button><button type="button" class="secondary" id="notificationPermission">فعال‌کردن اعلان مرورگر</button></div>
+        </form>
+        <div id="notificationStatus" class="muted" role="status" style="margin-top:10px"></div>
+        <div id="reminderAlert" class="reminder-alert" hidden role="status"></div>
+        <h2 style="margin-top:22px">یادآورهای من</h2>
+        <div id="reminderList" class="list"></div>
+      </div>
+      <div class="panel">
+        <h2>گزارش پیشرفت عادت‌ها</h2>
+        <p class="muted">پیشرفت هفت روز اخیر بر اساس تیک‌هایی که هر روز ثبت کرده‌ای محاسبه می‌شود.</p>
+        <div id="habitWeekSummary" class="habit-week-summary"></div>
+        <div id="habitWeekList" class="list"></div>
+        <p class="muted" style="margin-top:12px">این گزارش از تاریخچه‌ای که در همین مرورگر ذخیره شده استفاده می‌کند؛ روزهایی که قبلاً تیک نزده‌ای، به‌صورت انجام‌نشده حساب می‌شوند.</p>
+      </div>
+    </div>
+  </section>
+
+
+  <section id="calendarTab" class="tabcontent" hidden>
+    <div class="panel calendar-panel">
+      <div class="calendar-head">
+        <div>
+          <h2>تقویم یکپارچه خانه‌حساب</h2>
+          <p class="muted">برنامه‌ها، تراکنش‌ها و یادآورها را در کنار تاریخ میلادی و شمسی ببین.</p>
+        </div>
+        <div class="calendar-controls">
+          <button type="button" class="secondary" id="calendarPrev" aria-label="ماه قبل">ماه قبل</button>
+          <input type="month" id="calendarMonth" aria-label="انتخاب ماه میلادی">
+          <button type="button" class="secondary" id="calendarNext" aria-label="ماه بعد">ماه بعد</button>
+        </div>
+      </div>
+      <div id="calendarMonthTitle" class="calendar-month-title"></div>
+      <div class="calendar-legend">
+        <span><i class="cal-dot task-dot"></i> برنامه</span>
+        <span><i class="cal-dot transaction-dot"></i> تراکنش مالی</span>
+        <span><i class="cal-dot reminder-dot"></i> یادآور فعال</span>
+      </div>
+      <div class="calendar-grid" id="calendarGrid" aria-label="روزهای ماه"></div>
+    </div>
+    <div class="panel calendar-day-panel" style="margin-top:16px">
+      <div class="calendar-day-heading">
+        <div>
+          <h2>جزئیات روز انتخاب‌شده</h2>
+          <div id="calendarSelectedDate" class="muted"></div>
+        </div>
+        <input type="date" id="calendarSelectedInput" aria-label="انتخاب روز میلادی">
+      </div>
+      <div class="calendar-details-grid">
+        <div class="calendar-detail-block"><h3>برنامه‌های روز</h3><div id="calendarTasks" class="list"></div></div>
+        <div class="calendar-detail-block"><h3>تراکنش‌های مالی</h3><div id="calendarTransactions" class="list"></div></div>
+        <div class="calendar-detail-block"><h3>یادآورهای فعال</h3><div id="calendarReminders" class="list"></div></div>
+        <div class="calendar-detail-block"><h3>هدف‌ها</h3><div id="calendarGoals" class="list"></div></div>
+      </div>
+      <div id="calendarDaySummary" class="calendar-summary"></div>
+    </div>
+  </section>
+
+
+  <section id="debtsTab" class="tabcontent" hidden>
+    <div class="panel">
+      <h2>مدیریت بدهی‌ها و طلب‌ها</h2>
+      <p class="muted">بدهی یعنی مبلغی که باید پرداخت کنی؛ طلب یعنی مبلغی که باید دریافت کنی. پرداخت‌ها و دریافت‌های جزئی در گزارش مالی نیز ثبت می‌شوند.</p>
+      <div id="debtSummary" class="debt-summary"></div>
+    </div>
+    <div class="layout" style="margin-top:16px">
+      <div class="panel">
+        <h2>ثبت بدهی یا طلب جدید</h2>
+        <form id="debtForm">
+          <label for="debtType">نوع مورد</label>
+          <select id="debtType"><option value="payable">بدهی من (باید پرداخت کنم)</option><option value="receivable">طلب من (باید دریافت کنم)</option></select>
+          <label for="debtPerson">نام شخص یا سازمان</label>
+          <input id="debtPerson" maxlength="100" placeholder="مثلاً علی یا بانک" required>
+          <label for="debtTitle">شرح</label>
+          <input id="debtTitle" maxlength="120" placeholder="مثلاً قرض، قسط یا پولی که قرض داده‌ام" required>
+          <div class="formgrid">
+            <div><label for="debtAmount">مبلغ کل</label><input id="debtAmount" type="number" min="1" step="any" required></div>
+            <div><label for="debtDueDate">سررسید (میلادی)</label><input id="debtDueDate" type="date"><div class="datehint" id="debtDueHint">معادل شمسی: —</div></div>
+          </div>
+          <label for="debtNote">یادداشت (اختیاری)</label><textarea id="debtNote" rows="2" maxlength="500" placeholder="شرایط، شماره قسط یا توضیح بیشتر"></textarea>
+          <button type="submit">ثبت مورد</button>
+          <div id="debtStatus" class="muted" role="status" style="margin-top:8px"></div>
+        </form>
+      </div>
+      <div class="panel">
+        <h2>فهرست بدهی‌ها و طلب‌ها</h2>
+        <div class="formgrid">
+          <div><label for="debtFilter">نمایش</label><select id="debtFilter"><option value="all">همه</option><option value="payable">فقط بدهی‌ها</option><option value="receivable">فقط طلب‌ها</option><option value="open">تسویه‌نشده‌ها</option><option value="overdue">سررسید گذشته</option><option value="settled">تسویه‌شده‌ها</option></select></div>
+          <div><label for="debtSearch">جست‌وجو</label><input id="debtSearch" placeholder="نام یا شرح"></div>
+        </div>
+        <div id="debtList" class="list" style="margin-top:12px"></div>
+      </div>
+    </div>
+  </section>
+
+
+  <section id="backupTab" class="tabcontent" hidden>
+    <div class="panel">
+      <h2>پشتیبان‌گیری و بازیابی اطلاعات</h2>
+      <p class="muted">یک نسخه از اطلاعات خانه‌حساب را در فایلی روی کامپیوتر یا گوشی ذخیره کن و در صورت نیاز همان فایل را برای بازیابی وارد کن.</p>
+      <div class="backup-warning"><strong>مهم:</strong> فایل پشتیبان ممکن است شامل اطلاعات مالی و یادداشت‌های خصوصی باشد. آن را در جای امن نگه دار و برای دیگران ارسال نکن.</div>
+      <div class="backup-cards">
+        <div class="backup-card">
+          <div class="backup-icon"><span>↓</span></div>
+          <h3>ساخت فایل پشتیبان</h3>
+          <p class="muted">درآمدها، هزینه‌ها، بودجه‌ها، برنامه‌ها، عادت‌ها، یادآورها، بدهی‌ها و طلب‌ها ذخیره می‌شوند.</p>
+          <button type="button" id="backupExport">دانلود فایل پشتیبان</button>
+        </div>
+        <div class="backup-card">
+          <div class="backup-icon"><span>↑</span></div>
+          <h3>بازیابی از فایل</h3>
+          <p class="muted">فایل پشتیبان قبلی را انتخاب کن. قبل از بازیابی، یک پشتیبان از اطلاعات فعلی بگیر.</p>
+          <label for="backupFile" class="backup-file-label">انتخاب فایل پشتیبان</label>
+          <input type="file" id="backupFile" accept=".json,application/json">
+          <button type="button" class="secondary" id="backupImport" disabled>بررسی و بازیابی فایل</button>
+        </div>
+      </div>
+      
+      <div class="secure-transfer-card">
+        <h3>انتقال امن بین دستگاه‌ها</h3>
+        <p class="muted">یک فایل پشتیبان رمزگذاری‌شده بساز و آن را به دستگاه دیگر منتقل کن. برای بازیابی، همان رمز را لازم داری.</p>
+        <label for="secureBackupPassword">رمز عبور پشتیبان</label>
+        <input id="secureBackupPassword" type="password" minlength="10" autocomplete="new-password" placeholder="حداقل ۱۰ نویسه" />
+        <label for="secureBackupFile">فایل پشتیبان رمزگذاری‌شده</label>
+        <input id="secureBackupFile" type="file" accept=".khbackup,.json,application/json" />
+        <div class="secure-actions">
+          <button type="button" id="secureExport">ساخت پشتیبان رمزگذاری‌شده</button>
+          <button type="button" class="secondary" id="secureImport">بازیابی پشتیبان رمزگذاری‌شده</button>
+        </div>
+        <div class="muted" id="secureStatus" role="status" style="margin-top:9px">رمز را در جای امن نگه دار؛ امکان بازیابی بدون آن وجود ندارد.</div>
+      </div>
+
+      <div id="backupStatus" class="backup-status" role="status" aria-live="polite">هنوز عملیاتی انجام نشده است.</div>
+      <div id="backupPreview" class="backup-preview" hidden></div>
+    </div>
+  </section>
+
+
+  <section id="installmentsTab" class="tabcontent" hidden>
+    <div class="panel">
+      <h2>اقساط و سررسیدها</h2>
+      <p class="muted">موعد پرداخت یا دریافت را ثبت کن، وضعیت سررسیدها را ببین و هنگام پرداخت/دریافت، تراکنش مالی متناظر ثبت می‌شود.</p>
+      <div id="instSummary" class="inst-summary"></div>
+    </div>
+    <div class="layout" style="margin-top:16px">
+      <div class="panel">
+        <h2>ثبت قسط یا سررسید جدید</h2>
+        <form id="instForm">
+          <label for="instType">نوع</label>
+          <select id="instType"><option value="payable">قسط پرداختی</option><option value="receivable">مبلغ دریافتی</option></select>
+          <label for="instPerson">شخص یا سازمان</label>
+          <input id="instPerson" maxlength="100" placeholder="مثلاً بانک یا علی" required>
+          <label for="instTitle">شرح قسط</label>
+          <input id="instTitle" maxlength="120" placeholder="مثلاً قسط وام آبان" required>
+          <div class="formgrid">
+            <div><label for="instAmount">مبلغ</label><input id="instAmount" type="number" min="1" step="any" required></div>
+            <div><label for="instDue">تاریخ سررسید (میلادی)</label><input id="instDue" type="date" required><div id="instDueJalali" class="datehint">معادل شمسی: —</div></div>
+          </div>
+          <label for="instNote">یادداشت (اختیاری)</label>
+          <textarea id="instNote" rows="2" maxlength="300" placeholder="شماره قسط یا توضیح"></textarea>
+          <button type="submit">ثبت سررسید</button>
+          <div id="instStatus" class="muted" role="status" style="margin-top:8px"></div>
+        </form>
+      </div>
+      <div class="panel">
+        <h2>فهرست سررسیدها</h2>
+        <div class="formgrid">
+          <div><label for="instFilter">وضعیت</label><select id="instFilter"><option value="all">همه</option><option value="upcoming">آینده</option><option value="today">امروز</option><option value="overdue">عقب‌افتاده</option><option value="paid">تسویه‌شده</option></select></div>
+          <div><label for="instSearch">جست‌وجو</label><input id="instSearch" placeholder="شخص یا شرح"></div>
+        </div>
+        <div id="instList" class="list" style="margin-top:12px"></div>
+      </div>
+    </div>
+  </section>
+
+</main>
+<footer>نسخه آزمایشی ۰٫۲ • ساخته‌شده برای شروع کم‌هزینه. این نمونه هنوز اپلیکیشن منتشرشده در فروشگاه‌ها نیست و برای استفاده تجاری به تست، پشتیبان‌گیری مطمئن، بررسی امنیت و سیاست حریم خصوصی نیاز دارد.</footer>
+<script>
+(function(){
+ const $=id=>document.getElementById(id);
+ function iranToday(){
+   const parts = new Intl.DateTimeFormat('en-CA', {timeZone:'Asia/Tehran',year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(new Date());
+   const p = Object.fromEntries(parts.map(x=>[x.type,x.value]));
+   return `${p.year}-${p.month}-${p.day}`;
+ }
+ const STORAGE_KEY='khanehesab_transactions_v1';
+ const CUR_KEY='khanehesab_currency_v1';
+ let storageAvailable = true;
+ function safeGet(key, fallback) {
+   try {
+     const value = window.localStorage.getItem(key);
+     return value === null ? fallback : value;
+   } catch (e) {
+     storageAvailable = false;
+     return fallback;
+   }
+ }
+ function safeSet(key, value) {
+   try {
+     window.localStorage.setItem(key, value);
+     return true;
+   } catch (e) {
+     storageAvailable = false;
+     return false;
+   }
+ }
+ let transactions=[];
+ try {
+   const saved = JSON.parse(safeGet(STORAGE_KEY, '[]'));
+   if (Array.isArray(saved)) transactions = saved;
+ } catch (e) {
+   transactions = [];
+ }
+ $('currency').value=safeGet(CUR_KEY,'تومان');
+ $('date').value=iranToday();
+ const fmt=n=>new Intl.NumberFormat('fa-IR',{maximumFractionDigits:2}).format(n);
+ const currency=()=> $('currency').value;
+ function save(){
+   const savedTransactions = safeSet(STORAGE_KEY, JSON.stringify(transactions));
+   const savedCurrency = safeSet(CUR_KEY, currency());
+   render();
+   const status = $('statusMessage');
+   if (status) {
+     status.textContent = (savedTransactions && savedCurrency)
+       ? 'تراکنش ثبت و ذخیره شد.'
+       : 'تراکنش در همین صفحه ثبت شد، اما مرورگر ذخیره دائمی را مسدود کرده است. برای نگه‌داشتن اطلاعات، خروجی پشتیبان JSON را دریافت کن.';
+   }
+ }
+ function money(n){return fmt(n)+' '+currency();}
+
+ // Deterministic Gregorian/Jalali conversion based on the standard Jalaali calendar algorithm.
+
+ // Use the browser's Persian-calendar support, with dates anchored at UTC noon to avoid timezone shifts.
+ const persianFormatter=new Intl.DateTimeFormat('en-US-u-ca-persian-nu-latn', {
+   timeZone:'UTC',year:'numeric',month:'numeric',day:'numeric'
+ });
+ function calendarParts(date){
+   const parts=persianFormatter.formatToParts(date),out={};
+   for(const p of parts){if(p.type==='year')out.jy=Number(p.value);if(p.type==='month')out.jm=Number(p.value);if(p.type==='day')out.jd=Number(p.value);}
+   return out;
+ }
+ function gregorianToJalali(gy,gm,gd){
+   return calendarParts(new Date(Date.UTC(gy,gm-1,gd,12)));
+ }
+ function jalaliYearStart(jy){
+   // Jalali new year falls around March 20/21 in Gregorian year jy+621.
+   const gy=jy+621;
+   for(let day=18;day<=23;day++){
+     const date=new Date(Date.UTC(gy,2,day,12)),p=calendarParts(date);
+     if(p.jy===jy && p.jm===1 && p.jd===1)return date;
+   }
+   // Wider fallback window in case a browser calendar implementation differs.
+   for(let day=15;day<=25;day++){
+     const date=new Date(Date.UTC(gy,2,day,12)),p=calendarParts(date);
+     if(p.jy===jy && p.jm===1 && p.jd===1)return date;
+   }
+   return new Date(Date.UTC(gy,2,20,12));
+ }
+ function jalaliToGregorian(jy,jm,jd){
+   const daysBeforeMonth=jm<=7?(jm-1)*31:186+(jm-7)*30;
+   const date=new Date(jalaliYearStart(jy).getTime()+(daysBeforeMonth+jd-1)*86400000);
+   return {gy:date.getUTCFullYear(),gm:date.getUTCMonth()+1,gd:date.getUTCDate()};
+ }
+ function isoParts(iso){if(!iso)return null;const p=iso.split('-').map(Number);return p.length===3&&p.every(Number.isFinite)?{y:p[0],m:p[1],d:p[2]}:null}
+ function pad2(n){return String(n).padStart(2,'0')}
+ function toISO(y,m,d){return `${y}-${pad2(m)}-${pad2(d)}`}
+ function dualDate(iso){
+   const p=isoParts(iso);if(!p)return {gregorian:'—',jalali:'—'};
+   const j=gregorianToJalali(p.y,p.m,p.d);
+   return {gregorian:`${pad2(p.d)}/${pad2(p.m)}/${p.y}`,jalali:`${j.jy}/${pad2(j.jm)}/${pad2(j.jd)}`};
+ }
+ function updateDateHints(){
+   [['date','dateHint'],['taskDate','taskDateHint'],['goalDate','goalDateHint'],['journalDate','journalDateHint']].forEach(([inputId,hintId])=>{
+     const input=$(inputId),hint=$(hintId);
+     if(input && hint) {
+       const dates=dualDate(input.value);
+       hint.textContent='میلادی (ایران): '+dates.gregorian+'  |  شمسی: '+dates.jalali;
+       syncJalaliPicker(inputId);
+     }
+   });
+ }
+ const jalaliMonths=['فروردین','اردیبهشت','خرداد','تیر','مرداد','شهریور','مهر','آبان','آذر','دی','بهمن','اسفند'];
+ function jalaliMonthDays(y,m){
+   if(m<=6)return 31;if(m<=11)return 30;
+   const a=jalaliYearStart(y),b=jalaliYearStart(y+1);
+   return Math.round((b-a)/86400000)-336;
+ }
+
+ function setupJalaliPicker(inputId){
+   const root=$(inputId+'JalaliPicker'); if(!root) return;
+   const day=root.querySelector('.jp-day'), month=root.querySelector('.jp-month'), year=root.querySelector('.jp-year');
+   // Always populate numeric choices first, so controls never appear empty.
+   month.innerHTML=jalaliMonths.map((name,i)=>`<option value="${i+1}">${name}</option>`).join('');
+   const yearOptions=Array.from({length:81},(_,i)=>1370+i);
+   year.innerHTML=yearOptions.map(y=>`<option value="${y}">${y}</option>`).join('');
+   const inputParts=isoParts($(inputId).value);
+   let current;
+   try { current=inputParts ? gregorianToJalali(inputParts.y,inputParts.m,inputParts.d) : null; } catch(e) { current=null; }
+   if(!current || !Number.isFinite(current.jy) || !Number.isFinite(current.jm) || !Number.isFinite(current.jd)) {
+     const now=new Date();
+     const parts=new Intl.DateTimeFormat('en-US-u-ca-persian-nu-latn',{timeZone:'Asia/Tehran',year:'numeric',month:'numeric',day:'numeric'}).formatToParts(now);
+     const o={}; parts.forEach(x=>{if(x.type==='year')o.jy=Number(x.value);if(x.type==='month')o.jm=Number(x.value);if(x.type==='day')o.jd=Number(x.value)});
+     current={jy:o.jy||1405,jm:o.jm||1,jd:o.jd||1};
+   }
+   function refreshDays(preferred){
+     const y=Number(year.value)||current.jy, m=Number(month.value)||current.jm;
+     let max=(m<=6?31:(m<=11?30:29));
+     try { max=jalaliMonthDays(y,m); } catch(e) {}
+     if(!Number.isFinite(max)||max<29||max>31) max=(m<=6?31:(m<=11?30:29));
+     const chosen=Math.max(1,Math.min(Number(preferred)||1,max));
+     day.innerHTML=Array.from({length:max},(_,i)=>i+1).map(n=>`<option value="${n}">${n}</option>`).join('');
+     day.value=String(chosen);
+   }
+   year.value=String(current.jy); month.value=String(current.jm);
+   refreshDays(current.jd);
+   function onChange(){
+     refreshDays(Number(day.value)||1);
+     const jy=Number(year.value), jm=Number(month.value), jd=Number(day.value);
+     try {
+       const g=jalaliToGregorian(jy,jm,jd);
+       if(g && g.gy && g.gm && g.gd) $(inputId).value=toISO(g.gy,g.gm,g.gd);
+     } catch(e) {}
+     updateDateHintsWithoutSync();
+     if(inputId==='taskDate') renderTasks();
+     if(inputId==='journalDate') loadJournal();
+   }
+   month.addEventListener('change',()=>{refreshDays(1);onChange()});
+   year.addEventListener('change',()=>{refreshDays(Number(day.value)||1);onChange()});
+   day.addEventListener('change',onChange);
+   root._sync=(j)=>{
+     if(!j || !Number.isFinite(j.jy)||!Number.isFinite(j.jm)||!Number.isFinite(j.jd)) return;
+     if(![...year.options].some(o=>Number(o.value)===j.jy)){
+       year.add(new Option(String(j.jy),String(j.jy)));
+     }
+     year.value=String(j.jy); month.value=String(j.jm); refreshDays(j.jd);
+   };
+ }
+ function updateDateHintsWithoutSync(){
+   [['date','dateHint'],['taskDate','taskDateHint'],['goalDate','goalDateHint'],['journalDate','journalDateHint']].forEach(([inputId,hintId])=>{
+     const input=$(inputId),hint=$(hintId);
+     if(input&&hint){const d=dualDate(input.value);hint.textContent='میلادی (ایران): '+d.gregorian+'  |  شمسی: '+d.jalali;}
+   });
+ }
+ function syncJalaliPicker(inputId){
+   const root=$(inputId+'JalaliPicker');const input=$(inputId);if(!root||!input||!root._sync)return;
+   const p=isoParts(input.value);if(p)root._sync(gregorianToJalali(p.y,p.m,p.d));
+ }
+ function initializeJalaliPickers(){
+   ['date','taskDate','goalDate','journalDate'].forEach(id=>{
+     const input=$(id);if(!input)return;
+     setupJalaliPicker(id);
+     input.addEventListener('change',()=>{updateDateHints();if(id==='taskDate')renderTasks();if(id==='journalDate')loadJournal()});
+   });
+   updateDateHints();
+ }
+ function render(){
+   const inc=transactions.filter(t=>t.kind==='income').reduce((s,t)=>s+t.amount,0);
+   const exp=transactions.filter(t=>t.kind==='expense').reduce((s,t)=>s+t.amount,0);
+   $('incomeTotal').innerHTML=money(inc);
+   $('expenseTotal').innerHTML=money(exp);
+   $('balanceTotal').innerHTML=money(inc-exp);
+   const extra=transactions.filter(t=>t.kind==='expense' && (t.category==='خرج اضافی' || t.extra===true)).reduce((s,t)=>s+t.amount,0);
+   if($('extraExpenseTotal')) $('extraExpenseTotal').innerHTML=money(extra);
+   const list=$('transactionList');list.replaceChildren();
+   if(!transactions.length){const d=document.createElement('div');d.className='empty';d.textContent='هنوز تراکنشی ثبت نشده است. از فرم کنار صفحه اولین درآمد یا هزینه را ثبت کن.';list.appendChild(d);return;}
+   [...transactions].sort((a,b)=>b.date.localeCompare(a.date)||b.createdAt-a.createdAt).slice(0,30).forEach(t=>{
+     const row=document.createElement('div');row.className='transaction';
+     const left=document.createElement('div');const title=document.createElement('strong');title.textContent=t.title;
+     const meta=document.createElement('div');meta.className='meta';meta.textContent=t.category+' • '+t.date;left.append(title,meta);
+     const right=document.createElement('div');right.style.textAlign='left';
+     const amount=document.createElement('div');amount.className='amount '+(t.kind==='income'?'income':'expense');amount.textContent=(t.kind==='income'?'+':'−')+' '+money(t.amount);
+     const del=document.createElement('button');del.type='button';del.className='danger';del.style.padding='5px 8px';del.style.marginTop='5px';del.textContent='حذف';
+     del.addEventListener('click',()=>{if(confirm('این تراکنش حذف شود؟')){transactions=transactions.filter(x=>x.id!==t.id);save();}});
+     right.append(amount,del);row.append(left,right);list.appendChild(row);
+   });
+ }
+ ['date','taskDate','goalDate','journalDate'].forEach(id=>{if($(id))$(id).addEventListener('change',updateDateHints)});
+ window.addEventListener('khanehesab:transactions-updated',()=>{
+   try {
+     const latest = JSON.parse(safeGet(STORAGE_KEY, '[]'));
+     if (Array.isArray(latest)) { transactions = latest; render(); }
+   } catch(e) {}
+ });
+ $('transactionForm').addEventListener('submit',e=>{
+   e.preventDefault();
+   const title=$('title').value.trim(),amount=Number($('amount').value),date=$('date').value;
+   if(!title||!Number.isFinite(amount)||amount<=0||!date){alert('لطفاً شرح، مبلغ معتبر و تاریخ را وارد کن.');return;}
+   const selectedKind = $('kind').value === 'income' ? 'income' : 'expense';
+   transactions.push({id:Date.now().toString(36)+Math.random().toString(36).slice(2,7),kind:selectedKind,title,amount,category:$('category').value,date,createdAt:Date.now()});
+   save();
+   $('transactionForm').reset();
+   $('date').value=iranToday();
+   $('kind').value='expense';
+   updateDateHints();
+   $('title').focus();
+ });
+ $('currency').addEventListener('change',()=>{
+   safeSet(CUR_KEY,currency());
+   render();
+ });
+ $('exportBtn').addEventListener('click',()=>{
+   const blob=new Blob([JSON.stringify({app:'KhaneHesab',version:1,currency:currency(),transactions},null,2)],{type:'application/json'});
+   const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='khanehesab-backup.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
+ });
+ $('clearBtn').addEventListener('click',()=>{if(confirm('همه تراکنش‌ها برای همیشه از این مرورگر حذف شوند؟')){transactions=[];save();}});
+ render();
+ if (!storageAvailable) {
+   const status = $('statusMessage');
+   if (status) status.textContent = 'مرورگر ذخیره‌سازی محلی را محدود کرده است. ثبت تراکنش در صفحه انجام می‌شود؛ پس از ثبت، از خروجی پشتیبان JSON استفاده کن.';
+ }
+})();
+
+ (function(){
+ const $=id=>document.getElementById(id);
+ // Life-planner modules
+ const APPKEY='khanehesab_life_v1';
+ const readAll=()=>{try{return JSON.parse(localStorage.getItem(APPKEY)||'{}')}catch(e){return {}}};
+ let life=readAll();
+ const persistLife=()=>{try{localStorage.setItem(APPKEY,JSON.stringify(life));return true}catch(e){return false}};
+ const today=()=>{
+   // Build the current date in Iran's time zone (Asia/Tehran), not UTC.
+   const parts = new Intl.DateTimeFormat('en-CA', {
+     timeZone: 'Asia/Tehran', year: 'numeric', month: '2-digit', day: '2-digit'
+   }).formatToParts(new Date());
+   const p = Object.fromEntries(parts.map(x=>[x.type,x.value]));
+   return `${p.year}-${p.month}-${p.day}`;
+ };
+ ['taskDate','journalDate'].forEach(id=>{if($(id)&&!$(id).value)$(id).value=today()});
+ const navButtons=[...document.querySelectorAll('.navbtn')];
+ navButtons.forEach(btn=>btn.addEventListener('click',()=>{
+   navButtons.forEach(b=>b.classList.toggle('active',b===btn));
+   document.querySelectorAll('.tabcontent').forEach(el=>el.hidden=true);
+   const target=$(btn.dataset.tab+'Tab'); if(target)target.hidden=false;
+ }));
+ const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+ life.tasks=Array.isArray(life.tasks)?life.tasks:[];
+ life.goals=Array.isArray(life.goals)?life.goals:[];
+ life.habits=Array.isArray(life.habits)?life.habits:['پیاده‌روی یا ورزش','مطالعه یا یادگیری','وقت باکیفیت با خانواده','ثبت مخارج','خواب منظم'];
+ life.habitChecks=life.habitChecks||{};
+ life.water=life.water||{};
+ life.journals=life.journals||{};
+ function renderTasks(){
+  const box=$('taskList');box.replaceChildren();
+  const day=$('taskDate').value||today();
+  const tasks=life.tasks.filter(t=>t.date===day);
+  if(!tasks.length){box.innerHTML='<div class="empty">برای این تاریخ هنوز برنامه‌ای ثبت نشده است.</div>';return;}
+  tasks.forEach(t=>{
+   const row=document.createElement('div');row.className='taskrow';
+   const left=document.createElement('div');left.className='taskleft';
+   const cb=document.createElement('input');cb.type='checkbox';cb.checked=!!t.done;cb.setAttribute('aria-label','انجام شد');
+   cb.addEventListener('change',()=>{t.done=cb.checked;persistLife();renderTasks()});
+   const txt=document.createElement('span');txt.innerHTML='<strong>'+esc(t.text)+'</strong><div class="meta">'+esc(t.time||'بدون زمان')+' • '+esc(t.priority)+'</div>';
+   left.append(cb,txt);const del=document.createElement('button');del.className='danger smallbtn';del.textContent='حذف';del.onclick=()=>{life.tasks=life.tasks.filter(x=>x.id!==t.id);persistLife();renderTasks()};
+   row.append(left,del);box.append(row);
+  });
+ }
+ $('taskForm').addEventListener('submit',e=>{e.preventDefault();life.tasks.push({id:Date.now()+Math.random(),text:$('taskText').value.trim(),time:$('taskTime').value,priority:$('taskPriority').value,date:$('taskDate').value||today(),done:false});persistLife();$('taskText').value='';renderTasks()});
+ $('taskDate').addEventListener('change',renderTasks);
+ function renderGoals(){
+  const box=$('goalList');box.replaceChildren();
+  if(!life.goals.length){box.innerHTML='<div class="empty">هنوز هدفی ثبت نشده است. اولین هدف کوچک خودت را اضافه کن.</div>';return;}
+  life.goals.forEach(g=>{
+   const row=document.createElement('div');row.className='goalrow';
+   const left=document.createElement('div');left.className='goalleft';left.style.flex='1';
+   const text=document.createElement('span');text.innerHTML='<strong>'+esc(g.name)+'</strong><div class="meta">'+esc(g.type)+(g.date?' • '+esc(g.date):'')+(g.note?' • '+esc(g.note):'')+'</div><div class="progress"><div style="width:'+g.progress+'%"></div></div><div class="meta">پیشرفت: '+g.progress+'٪</div>';
+   left.append(text);const actions=document.createElement('div');actions.style.display='flex';actions.style.gap='5px';
+   const edit=document.createElement('button');edit.className='secondary smallbtn';edit.textContent='+۱۰٪';edit.onclick=()=>{g.progress=Math.min(100,g.progress+10);persistLife();renderGoals()};
+   const del=document.createElement('button');del.className='danger smallbtn';del.textContent='حذف';del.onclick=()=>{life.goals=life.goals.filter(x=>x.id!==g.id);persistLife();renderGoals()};
+   actions.append(edit,del);row.append(left,actions);box.append(row);
+  });
+ }
+ $('goalForm').addEventListener('submit',e=>{e.preventDefault();life.goals.push({id:Date.now()+Math.random(),name:$('goalName').value.trim(),type:$('goalType').value,date:$('goalDate').value,note:$('goalNote').value.trim(),progress:Math.max(0,Math.min(100,Number($('goalProgress').value)||0))});persistLife();$('goalForm').reset();$('goalProgress').value='0';renderGoals()});
+ function habitKey(){return today()}
+ function renderHabits(){
+  const box=$('habitList');box.replaceChildren();
+  life.habits.forEach((name,i)=>{
+   const row=document.createElement('div');row.className='habitrow';
+   const left=document.createElement('div');left.className='habitleft';const cb=document.createElement('input');cb.type='checkbox';cb.checked=!!(life.habitChecks[habitKey()]||{})[name];
+   cb.addEventListener('change',()=>{life.habitChecks[habitKey()]=life.habitChecks[habitKey()]||{};life.habitChecks[habitKey()][name]=cb.checked;persistLife()});
+   const text=document.createElement('span');text.textContent=name;left.append(cb,text);
+   const del=document.createElement('button');del.className='danger smallbtn';del.textContent='حذف';del.onclick=()=>{life.habits=life.habits.filter((x,j)=>j!==i);persistLife();renderHabits()};
+   row.append(left,del);box.append(row);
+  });
+ }
+ $('habitForm').addEventListener('submit',e=>{e.preventDefault();const name=$('habitName').value.trim();if(name&&!life.habits.includes(name)){life.habits.push(name);persistLife();renderHabits()}$('habitName').value=''});
+ const waterKey=()=>today();
+ function waterCount(){return Math.max(0,Number((life.water||{})[waterKey()]||0))}
+ function renderWater(){
+  const target=Math.max(1,Math.min(30,Number($('waterTarget').value)||8));const count=waterCount();
+  $('waterCount').textContent=count+' از '+target+' لیوان';
+  const box=$('waterCups');box.replaceChildren();
+  for(let i=1;i<=target;i++){const b=document.createElement('button');b.type='button';b.className='cup'+(i<=count?' filled':'');b.title='ثبت '+i+' لیوان';b.setAttribute('aria-label','لیوان '+i);b.onclick=()=>{life.water[waterKey()]=i;persistLife();renderWater()};box.append(b)}
+ }
+ $('waterTarget').addEventListener('change',renderWater);
+ $('addWater').addEventListener('click',()=>{life.water[waterKey()]=waterCount()+1;persistLife();renderWater()});
+ $('removeWater').addEventListener('click',()=>{life.water[waterKey()]=Math.max(0,waterCount()-1);persistLife();renderWater()});
+ $('resetWater').addEventListener('click',()=>{if(confirm('شمارش آب امروز از صفر شروع شود؟')){life.water[waterKey()]=0;persistLife();renderWater()}});
+ function loadJournal(){
+  const key=$('journalDate').value||today(),j=life.journals[key]||{};
+  $('journalMood').value=j.mood||'خوب';$('journalText').value=j.text||'';$('gratitudeText').value=j.gratitude||'';$('tomorrowText').value=j.tomorrow||'';
+  $('journalStatus').textContent=j.saved?'یادداشت ذخیره‌شده بارگذاری شد.':'برای این تاریخ یادداشتی ثبت نشده است.';
+ }
+ $('saveJournal').addEventListener('click',()=>{
+  const key=$('journalDate').value||today();
+  life.journals[key]={mood:$('journalMood').value,text:$('journalText').value,gratitude:$('gratitudeText').value,tomorrow:$('tomorrowText').value,saved:true};
+  const ok=persistLife();$('journalStatus').textContent=ok?'یادداشت روز ذخیره شد.':'ذخیره‌سازی مرورگر در دسترس نیست؛ خروجی پشتیبان لازم است.';
+ });
+ $('loadJournal').addEventListener('click',loadJournal);
+ $('journalDate').addEventListener('change',loadJournal);
+ renderTasks();renderGoals();renderHabits();renderWater();loadJournal();initializeJalaliPickers();
+ })();
+
+</script>
+
+<script>
+/* Reliable standalone Jalali date picker: runs independently of the app's other scripts. */
+(function(){
+  const ids=['date','taskDate','goalDate','journalDate'];
+  const months=['فروردین','اردیبهشت','خرداد','تیر','مرداد','شهریور','مهر','آبان','آذر','دی','بهمن','اسفند'];
+  function el(id){return document.getElementById(id);}
+  function fmtJ(date){
+    const p=new Intl.DateTimeFormat('en-US-u-ca-persian-nu-latn',{timeZone:'UTC',year:'numeric',month:'numeric',day:'numeric'}).formatToParts(date);
+    const o={}; p.forEach(x=>{if(x.type==='year')o.y=+x.value;if(x.type==='month')o.m=+x.value;if(x.type==='day')o.d=+x.value;});
+    return o;
+  }
+  function toJ(iso){
+    if(!iso)return null;const a=iso.split('-').map(Number);
+    if(a.length!==3||!a[0]||!a[1]||!a[2])return null;
+    return fmtJ(new Date(Date.UTC(a[0],a[1]-1,a[2],12)));
+  }
+  function toG(jy,jm,jd){
+    // Find the matching Jalali date around the start of its Gregorian year.
+    const baseYear=jy+621;
+    const start=Date.UTC(baseYear,2,18,12);
+    for(let i=0;i<10;i++){
+      const candidate=new Date(start+i*86400000), p=fmtJ(candidate);
+      if(p.y===jy&&p.m===jm&&p.d===jd){
+        return candidate.getUTCFullYear()+'-'+String(candidate.getUTCMonth()+1).padStart(2,'0')+'-'+String(candidate.getUTCDate()).padStart(2,'0');
+      }
+    }
+    // The Jalali year can start on March 20 or 21; broaden the search defensively.
+    for(let i=-5;i<370;i++){
+      const candidate=new Date(Date.UTC(baseYear,2,20,12)+i*86400000),p=fmtJ(candidate);
+      if(p.y===jy&&p.m===jm&&p.d===jd){
+        return candidate.getUTCFullYear()+'-'+String(candidate.getUTCMonth()+1).padStart(2,'0')+'-'+String(candidate.getUTCDate()).padStart(2,'0');
+      }
+    }
+    return '';
+  }
+  function daysInMonth(y,m){
+    if(m<=6)return 31;if(m<=11)return 30;
+    return toG(y,12,30)?30:29;
+  }
+  function setHint(id,j){
+    const hint=el(id+'Hint');if(!hint)return;
+    const input=el(id), iso=input&&input.value;
+    if(!iso||!j){hint.textContent='میلادی ایران: — | شمسی: —';return;}
+    const a=iso.split('-');
+    hint.textContent='میلادی: '+a[2]+'/'+a[1]+'/'+a[0]+' | شمسی: '+j.y+'/'+String(j.m).padStart(2,'0')+'/'+String(j.d).padStart(2,'0');
+  }
+  function init(id){
+    const input=el(id),root=el(id+'JalaliPicker');if(!input||!root)return;
+    const day=root.querySelector('.jp-day'),month=root.querySelector('.jp-month'),year=root.querySelector('.jp-year');
+    if(!day||!month||!year)return;
+    month.innerHTML=months.map((v,i)=>'<option value="'+(i+1)+'">'+v+'</option>').join('');
+    const nowJ=toJ(input.value)||toJ(new Date().toISOString().slice(0,10))||{y:1405,m:1,d:1};
+    const years=[];for(let y=nowJ.y-20;y<=nowJ.y+30;y++)years.push(y);
+    year.innerHTML=years.map(y=>'<option value="'+y+'">'+y+'</option>').join('');
+    function fillDays(preferred){
+      const y=Number(year.value)||nowJ.y,m=Number(month.value)||1,max=daysInMonth(y,m);
+      day.innerHTML=Array.from({length:max},(_,i)=>'<option value="'+(i+1)+'">'+(i+1)+'</option>').join('');
+      day.value=String(Math.min(max,Math.max(1,Number(preferred)||1)));
+    }
+    function syncFromGregorian(){
+      const j=toJ(input.value);if(!j)return;
+      if(!Array.from(year.options).some(o=>+o.value===j.y))year.add(new Option(String(j.y),String(j.y)));
+      year.value=String(j.y);month.value=String(j.m);fillDays(j.d);setHint(id,j);
+    }
+    function syncToGregorian(){
+      fillDays(day.value);
+      const iso=toG(+year.value,+month.value,+day.value);
+      if(iso)input.value=iso;
+      const j=toJ(input.value);setHint(id,j);
+      input.dispatchEvent(new Event('change',{bubbles:true}));
+    }
+    year.addEventListener('change',()=>{fillDays(day.value);syncToGregorian();});
+    month.addEventListener('change',()=>{fillDays(1);syncToGregorian();});
+    day.addEventListener('change',syncToGregorian);
+    input.addEventListener('change',syncFromGregorian);
+    syncFromGregorian();
+  }
+  function start(){ids.forEach(init);}
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start);else start();
+})();
+</script>
+
+
+<script>
+/* Monthly budgets module - isolated from the rest of the prototype. */
+(function(){
+  const $b = id => document.getElementById(id);
+  const BUDGET_KEY = 'khanehesab_monthly_budgets_v1';
+  const TX_KEY = 'khanehesab_transactions_v1';
+  const categories = ['خوراک','مسکن','قبوض','حمل‌ونقل','درمان','آموزش','تفریح','خرج اضافی','سایر'];
+  function iranISO(){
+    const p = new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Tehran',year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(new Date());
+    const o={};p.forEach(x=>o[x.type]=x.value);return `${o.year}-${o.month}-${o.day}`;
+  }
+  function read(key,fallback){try{const x=localStorage.getItem(key);return x===null?fallback:JSON.parse(x)}catch(e){return fallback}}
+  function write(key,value){try{localStorage.setItem(key,JSON.stringify(value));return true}catch(e){return false}}
+  function currency(){return $b('currency') ? $b('currency').value : 'تومان'}
+  function fmt(n){return new Intl.NumberFormat('fa-IR',{maximumFractionDigits:2}).format(n)+' '+currency()}
+  function monthLabel(month){
+    if(!month)return 'ماه انتخاب‌شده';
+    const [y,m]=month.split('-').map(Number);
+    const d=new Date(Date.UTC(y,m-1,15,12));
+    return new Intl.DateTimeFormat('fa-IR-u-ca-persian',{month:'long',year:'numeric',timeZone:'UTC'}).format(d);
+  }
+  function getTransactions(){const a=read(TX_KEY,[]);return Array.isArray(a)?a:[]}
+  function getBudgets(){const a=read(BUDGET_KEY,[]);return Array.isArray(a)?a:[]}
+  function currentMonth(){return iranISO().slice(0,7)}
+  function render(){
+    const month=$b('budgetMonth').value||currentMonth();
+    const budgets=getBudgets().filter(b=>b.month===month);
+    const tx=getTransactions().filter(t=>t.kind==='expense' && typeof t.date==='string' && t.date.slice(0,7)===month);
+    const totalBudget=budgets.reduce((s,b)=>s+Number(b.amount||0),0);
+    const totalSpent=tx.reduce((s,t)=>s+Number(t.amount||0),0);
+    const remaining=totalBudget-totalSpent;
+    $b('budgetSummary').innerHTML=
+      `<div class="budget-stat"><div class="muted">بودجه تعیین‌شده</div><strong>${fmt(totalBudget)}</strong></div>`+
+      `<div class="budget-stat"><div class="muted">هزینه ثبت‌شده در ماه</div><strong>${fmt(totalSpent)}</strong></div>`+
+      `<div class="budget-stat"><div class="muted">مانده بودجه کلی</div><strong style="color:${remaining<0?'var(--red)':'var(--teal)'}">${fmt(remaining)}</strong></div>`;
+    const list=$b('budgetList');list.replaceChildren();
+    if(!budgets.length){
+      const empty=document.createElement('div');empty.className='empty';empty.textContent='برای '+monthLabel(month)+' هنوز بودجه‌ای ثبت نشده است. یک دسته هزینه و سقف ماهانه انتخاب کن.';list.append(empty);
+    }
+    budgets.forEach(b=>{
+      const spent=tx.filter(t=>t.category===b.category).reduce((s,t)=>s+Number(t.amount||0),0);
+      const ratio=Number(b.amount)>0?spent/Number(b.amount)*100:0;
+      const width=Math.min(100,ratio);
+      const row=document.createElement('div');row.className='budget-item';
+      const top=document.createElement('div');top.className='budget-item-top';
+      const left=document.createElement('div');
+      const title=document.createElement('div');title.className='budget-item-title';title.textContent=b.category;
+      const detail=document.createElement('div');detail.className='budget-item-detail';
+      detail.textContent='هزینه: '+fmt(spent)+' از '+fmt(Number(b.amount))+' • '+(ratio>100?'عبور از بودجه به میزان '+fmt(spent-Number(b.amount)):'مصرف '+new Intl.NumberFormat('fa-IR',{maximumFractionDigits:1}).format(ratio)+'٪ بودجه');
+      left.append(title,detail);
+      const right=document.createElement('div');right.style.textAlign='left';
+      const rem=document.createElement('strong');rem.style.color=spent>Number(b.amount)?'var(--red)':'var(--teal)';rem.textContent=fmt(Number(b.amount)-spent);
+      const remLabel=document.createElement('div');remLabel.className='budget-item-detail';remLabel.textContent=spent>Number(b.amount)?'بیش از سقف':'مانده';
+      right.append(rem,remLabel);top.append(left,right);
+      const track=document.createElement('div');track.className='budget-track';
+      const bar=document.createElement('div');bar.style.width=width+'%';if(ratio>100)bar.className='over';track.append(bar);
+      const actions=document.createElement('div');actions.className='budget-actions';
+      const edit=document.createElement('button');edit.type='button';edit.className='secondary smallbtn';edit.textContent='ویرایش';edit.onclick=()=>{$b('budgetCategory').value=b.category;$b('budgetAmount').value=b.amount;$b('budgetStatus').textContent='مقدار را تغییر بده و دوباره ثبت کن.';$b('budgetAmount').focus()};
+      const del=document.createElement('button');del.type='button';del.className='danger smallbtn';del.textContent='حذف بودجه';del.onclick=()=>{if(confirm('بودجه این دسته برای ماه انتخاب‌شده حذف شود؟')){const all=getBudgets().filter(x=>!(x.month===b.month&&x.category===b.category));write(BUDGET_KEY,all);render()}};
+      actions.append(edit,del);row.append(top,track,actions);list.append(row);
+    });
+    $b('budgetStatus').textContent='گزارش بر اساس تراکنش‌های هزینه‌ای ثبت‌شده در همین ماه محاسبه می‌شود. برای محاسبه دقیق، دسته‌بندی هزینه‌ها باید با دسته بودجه یکسان باشد.';
+  }
+  function init(){
+    if(!$b('budgetMonth')||!$b('budgetForm'))return;
+    $b('budgetMonth').value=currentMonth();
+    $b('budgetForm').addEventListener('submit',e=>{
+      e.preventDefault();
+      const month=$b('budgetMonth').value||currentMonth();
+      const category=$b('budgetCategory').value;
+      const amount=Number($b('budgetAmount').value);
+      if(!Number.isFinite(amount)||amount<=0){$b('budgetStatus').textContent='لطفاً مبلغی بیشتر از صفر وارد کن.';return}
+      const all=getBudgets();
+      const idx=all.findIndex(b=>b.month===month&&b.category===category);
+      const item={month,category,amount};
+      if(idx>=0)all[idx]=item;else all.push(item);
+      if(!write(BUDGET_KEY,all)){$b('budgetStatus').textContent='مرورگر اجازه ذخیره‌سازی نمی‌دهد؛ فایل را با Chrome باز کن.';return}
+      $b('budgetAmount').value='';
+      $b('budgetStatus').textContent='بودجه ذخیره شد.';
+      render();
+    });
+    $b('budgetMonth').addEventListener('change',render);
+    if($b('currency'))$b('currency').addEventListener('change',render);
+    render();
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
+})();
+</script>
+
+
+<script>
+/* Financial reports module - reads existing local transactions, no external chart library. */
+(function(){
+  const $r=id=>document.getElementById(id);
+  const TX_KEY='khanehesab_transactions_v1';
+  function iranMonth(){
+    const p=new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Tehran',year:'numeric',month:'2-digit'}).formatToParts(new Date());
+    const o={};p.forEach(x=>o[x.type]=x.value);return o.year+'-'+o.month;
+  }
+  function readTx(){try{const a=JSON.parse(localStorage.getItem(TX_KEY)||'[]');return Array.isArray(a)?a:[]}catch(e){return []}}
+  function currency(){return $r('currency')?$r('currency').value:'تومان'}
+  function fmt(n){return new Intl.NumberFormat('fa-IR',{maximumFractionDigits:1}).format(n)+' '+currency()}
+  function prevMonth(key,offset){
+    const p=key.split('-').map(Number);const d=new Date(Date.UTC(p[0],p[1]-1-offset,15));
+    return d.getUTCFullYear()+'-'+String(d.getUTCMonth()+1).padStart(2,'0');
+  }
+  function labelMonth(key){
+    const p=key.split('-').map(Number);
+    return new Intl.DateTimeFormat('fa-IR-u-ca-persian',{month:'short',year:'2-digit',timeZone:'UTC'}).format(new Date(Date.UTC(p[0],p[1]-1,15,12)));
+  }
+  function totals(month,tx){
+    const rows=tx.filter(t=>String(t.date||'').slice(0,7)===month);
+    const income=rows.filter(t=>t.kind==='income').reduce((s,t)=>s+Number(t.amount||0),0);
+    const expense=rows.filter(t=>t.kind==='expense').reduce((s,t)=>s+Number(t.amount||0),0);
+    return {income,expense,net:income-expense,rows};
+  }
+  function render(){
+    if(!$r('reportMonth'))return;
+    const month=$r('reportMonth').value||iranMonth();
+    const tx=readTx();
+    const cur=totals(month,tx),prior=totals(prevMonth(month,1),tx);
+    const stats=[
+      ['درآمد ماه',cur.income,'var(--teal)'],
+      ['هزینه ماه',cur.expense,'var(--red)'],
+      ['مانده خالص',cur.net,cur.net<0?'var(--red)':'var(--teal)'],
+      ['خرج‌های اضافی',cur.rows.filter(t=>t.kind==='expense'&&(t.category==='خرج اضافی'||t.extra===true)).reduce((s,t)=>s+Number(t.amount||0),0),'var(--red)']
+    ];
+    $r('reportStats').innerHTML=stats.map(x=>'<div class="report-stat"><div class="muted">'+x[0]+'</div><strong style="color:'+x[2]+'">'+fmt(x[1])+'</strong></div>').join('');
+    let netText=cur.net>=0?'مانده مثبت':'هزینه‌ها بیشتر از درآمد';
+    let expDiff=cur.expense-prior.expense;
+    let expComp=prior.expense===0?(cur.expense===0?'هزینه‌ای در هیچ‌یک از دو ماه ثبت نشده است.':'برای ماه قبل هزینه‌ای ثبت نشده؛ امکان محاسبه درصد تغییر وجود ندارد.'):'هزینه‌ها نسبت به ماه قبل '+(expDiff>0?'افزایش ':expDiff<0?'کاهش ':'بدون تغییر ')+fmt(Math.abs(expDiff))+' داشته‌اند.';
+    $r('reportComparison').textContent='مقایسه با '+labelMonth(prevMonth(month,1))+': درآمد ماه انتخاب‌شده '+fmt(cur.income)+' و هزینه '+fmt(cur.expense)+' است. '+netText+' ('+fmt(cur.net)+'). '+expComp;
+    const expenses={};
+    cur.rows.filter(t=>t.kind==='expense').forEach(t=>{const k=t.category||'سایر';expenses[k]=(expenses[k]||0)+Number(t.amount||0)});
+    const entries=Object.entries(expenses).sort((a,b)=>b[1]-a[1]);
+    const cat=$r('categoryChart');cat.replaceChildren();
+    if(!entries.length){cat.innerHTML='<div class="empty">برای این ماه هزینه‌ای ثبت نشده است.</div>';}
+    else{
+      const max=entries[0][1]||1;
+      entries.forEach(([name,value])=>{
+        const row=document.createElement('div');row.className='category-row';
+        const lab=document.createElement('div');lab.className='category-label';lab.textContent=name;
+        const track=document.createElement('div');track.className='category-track';
+        const bar=document.createElement('div');bar.style.width=(value/max*100)+'%';track.append(bar);
+        const val=document.createElement('div');val.className='category-value';val.textContent=fmt(value);
+        row.append(lab,track,val);cat.append(row);
+      });
+    }
+    const months=Array.from({length:6},(_,i)=>prevMonth(month,5-i));
+    const all=months.map(m=>({month:m,...totals(m,tx)}));
+    const maxVal=Math.max(1,...all.flatMap(x=>[x.income,x.expense]));
+    const trend=$r('trendChart');trend.replaceChildren();
+    all.forEach(item=>{
+      const col=document.createElement('div');col.className='trend-month';
+      const bars=document.createElement('div');bars.className='trend-bars';
+      [['income',item.income],['expense',item.expense]].forEach(([type,val])=>{
+        const bar=document.createElement('div');bar.className='trend-bar '+(type==='income'?'income-bar':'expense-bar');
+        bar.style.height=Math.max(val>0?3:0,val/maxVal*160)+'px';
+        bar.title=(type==='income'?'درآمد: ':'هزینه: ')+fmt(val);
+        bars.append(bar);
+      });
+      const lab=document.createElement('div');lab.className='trend-label';lab.textContent=labelMonth(item.month);
+      col.append(bars,lab);trend.append(col);
+    });
+    $r('reportNote').textContent='گزارش‌ها فقط بر اساس تراکنش‌های موجود در همین مرورگر ساخته می‌شوند. اگر برای یک ماه داده‌ای ثبت نکرده باشی، مقدار آن صفر نمایش داده می‌شود.';
+  }
+  function init(){
+    if(!$r('reportMonth'))return;
+    $r('reportMonth').value=iranMonth();
+    $r('reportMonth').addEventListener('change',render);
+    if($r('currency'))$r('currency').addEventListener('change',render);
+    // Refresh whenever the reports tab is opened or a transaction is submitted.
+    document.querySelectorAll('.navbtn').forEach(b=>b.addEventListener('click',()=>{if(b.dataset.tab==='reports')render()}));
+    const form=$r('transactionForm');if(form)form.addEventListener('submit',()=>setTimeout(render,0));
+    render();
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
+})();
+</script>
+
+
+<script>
+/* Reminders and seven-day habit progress. Runs only while this app page is open. */
+(function(){
+  const $m=id=>document.getElementById(id);
+  const LIFE_KEY='khanehesab_life_v1';
+  const REM_KEY='khanehesab_reminders_v1';
+  function readJSON(key,fallback){try{const v=localStorage.getItem(key);return v===null?fallback:JSON.parse(v)}catch(e){return fallback}}
+  function writeJSON(key,value){try{localStorage.setItem(key,JSON.stringify(value));return true}catch(e){return false}}
+  function tehranISO(){
+    const p=new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Tehran',year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(new Date());
+    const o={};p.forEach(x=>o[x.type]=x.value);return `${o.year}-${o.month}-${o.day}`;
+  }
+  function escapeHTML(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+  function getReminders(){const x=readJSON(REM_KEY,[]);return Array.isArray(x)?x:[]}
+  function setReminders(x){return writeJSON(REM_KEY,x)}
+  function renderReminders(){
+    const box=$m('reminderList');box.replaceChildren();
+    const items=getReminders().sort((a,b)=>a.time.localeCompare(b.time));
+    if(!items.length){box.innerHTML='<div class="empty">هنوز یادآوری نساخته‌ای. از فرم بالا اولین یادآور را اضافه کن.</div>';return}
+    items.forEach(r=>{
+      const row=document.createElement('div');row.className='reminder-row';
+      const info=document.createElement('div');
+      info.innerHTML='<strong>'+escapeHTML(r.title)+'</strong><div class="reminder-meta">'+escapeHTML(r.time)+' • '+escapeHTML(r.type)+' • هر روز</div>';
+      const actions=document.createElement('div');actions.className='reminder-actions';
+      const toggle=document.createElement('button');toggle.type='button';toggle.className=r.enabled?'secondary smallbtn':'smallbtn';toggle.textContent=r.enabled?'فعال':'غیرفعال';
+      toggle.onclick=()=>{const all=getReminders();const item=all.find(x=>x.id===r.id);if(item)item.enabled=!item.enabled;setReminders(all);renderReminders()};
+      const del=document.createElement('button');del.type='button';del.className='danger smallbtn';del.textContent='حذف';
+      del.onclick=()=>{if(confirm('این یادآور حذف شود؟')){setReminders(getReminders().filter(x=>x.id!==r.id));renderReminders()}};
+      actions.append(toggle,del);row.append(info,actions);box.append(row);
+    });
+  }
+  function dateOffset(iso,offset){
+    const [y,m,d]=iso.split('-').map(Number);const dt=new Date(Date.UTC(y,m-1,d+offset,12));
+    return dt.getUTCFullYear()+'-'+String(dt.getUTCMonth()+1).padStart(2,'0')+'-'+String(dt.getUTCDate()).padStart(2,'0');
+  }
+  function renderHabitProgress(){
+    const life=readJSON(LIFE_KEY,{});
+    const habits=Array.isArray(life.habits)?life.habits:[];
+    const checks=life.habitChecks||{};
+    const dates=Array.from({length:7},(_,i)=>dateOffset(tehranISO(),i-6));
+    const totalPossible=habits.length*7;
+    let totalDone=0;
+    const summary=$m('habitWeekSummary');
+    const percent=totalPossible?Math.round((habits.reduce((s,h)=>s+dates.filter(d=>checks[d]&&checks[d][h]).length,0)/totalPossible)*100):0;
+    totalDone=habits.reduce((s,h)=>s+dates.filter(d=>checks[d]&&checks[d][h]).length,0);
+    summary.innerHTML='<div class="habit-week-stat"><div class="muted">پیشرفت کلی ۷ روز</div><strong>'+percent+'٪</strong></div><div class="habit-week-stat"><div class="muted">عادت‌های انجام‌شده</div><strong>'+totalDone+' از '+totalPossible+'</strong></div>';
+    const list=$m('habitWeekList');list.replaceChildren();
+    if(!habits.length){list.innerHTML='<div class="empty">هنوز عادتی تعریف نشده است. ابتدا در بخش «عادت‌ها و آب» عادت اضافه کن.</div>';return}
+    habits.forEach(h=>{
+      const done=dates.filter(d=>checks[d]&&checks[d][h]).length;
+      const row=document.createElement('div');row.className='habit-week-row';
+      const head=document.createElement('div');head.className='habit-week-row-head';
+      const name=document.createElement('strong');name.textContent=h;
+      const count=document.createElement('span');count.textContent=done+' از ۷ روز';
+      head.append(name,count);
+      const dots=document.createElement('div');dots.className='habit-week-dots';
+      dates.forEach(d=>{
+        const dot=document.createElement('div');dot.className='habit-day-dot'+((checks[d]&&checks[d][h])?' done':'');
+        dot.textContent=(checks[d]&&checks[d][h])?'✓':d.slice(8);
+        dot.title=d;dots.append(dot);
+      });
+      row.append(head,dots);list.append(row);
+    });
+  }
+  function notifyDueReminders(){
+    const now=new Date();
+    const p=new Intl.DateTimeFormat('en-GB',{timeZone:'Asia/Tehran',hour:'2-digit',minute:'2-digit',hourCycle:'h23'}).formatToParts(now);
+    const o={};p.forEach(x=>o[x.type]=x.value);
+    const hm=(o.hour||'00')+':'+(o.minute||'00'),today=tehranISO();
+    let all=getReminders(),changed=false;
+    all.forEach(r=>{
+      if(r.enabled&&r.time===hm&&r.lastFiredDate!==today){
+        r.lastFiredDate=today;changed=true;
+        const alert=$m('reminderAlert');alert.hidden=false;alert.textContent='یادآوری: '+r.title+' ('+r.time+')';
+        if('Notification' in window && Notification.permission==='granted'){
+          try{new Notification('خانه‌حساب: یادآوری',{body:r.title})}catch(e){}
+        }
+      }
+    });
+    if(changed)setReminders(all);
+  }
+  function init(){
+    if(!$m('reminderForm'))return;
+    $m('reminderTime').value='09:00';
+    $m('reminderForm').addEventListener('submit',e=>{
+      e.preventDefault();
+      const title=$m('reminderTitle').value.trim(),time=$m('reminderTime').value,type=$m('reminderType').value;
+      if(!title||!time)return;
+      const all=getReminders();all.push({id:Date.now().toString(36)+Math.random().toString(36).slice(2),title,time,type,enabled:true,lastFiredDate:''});
+      if(!setReminders(all)){$m('notificationStatus').textContent='مرورگر اجازه ذخیره‌سازی نمی‌دهد؛ فایل را در Chrome باز کن.';return}
+      $m('reminderTitle').value='';renderReminders();$m('notificationStatus').textContent='یادآور ذخیره شد. برای بررسی زمان آن، صفحه باید باز بماند.';
+    });
+    $m('notificationPermission').addEventListener('click',async()=>{
+      if(!('Notification' in window)){$m('notificationStatus').textContent='این مرورگر اعلان سیستمی را پشتیبانی نمی‌کند؛ یادآور داخل برنامه همچنان قابل استفاده است.';return}
+      try{
+        const permission=await Notification.requestPermission();
+        $m('notificationStatus').textContent=permission==='granted'?'اجازه اعلان داده شد. اعلان‌ها فقط وقتی صفحه باز و مرورگر فعال باشد قابل اتکا هستند.': 'اجازه اعلان داده نشد؛ یادآور داخل برنامه همچنان کار می‌کند.';
+      }catch(e){$m('notificationStatus').textContent='اعلان سیستمی در این حالت مرورگر در دسترس نیست؛ از یادآور داخل برنامه استفاده کن.'}
+    });
+    document.querySelectorAll('.navbtn').forEach(b=>b.addEventListener('click',()=>{if(b.dataset.tab==='reminders')renderHabitProgress()}));
+    renderReminders();renderHabitProgress();notifyDueReminders();
+    setInterval(notifyDueReminders,15000);
+    // Refresh progress when a habit is checked in the other tab.
+    document.querySelectorAll('.navbtn').forEach(b=>b.addEventListener('click',()=>{if(b.dataset.tab==='reminders')renderHabitProgress()}));
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
+})();
+</script>
+
+
+<script>
+/* Unified Gregorian/Jalali calendar. Reads existing app data from local browser storage. */
+(function(){
+  const $c=id=>document.getElementById(id);
+  const KEYS={tx:'khanehesab_transactions_v1',life:'khanehesab_life_v1',rem:'khanehesab_reminders_v1'};
+  const weekdays=['شنبه','یکشنبه','دوشنبه','سه‌شنبه','چهارشنبه','پنجشنبه','جمعه'];
+  const months=['ژانویه','فوریه','مارس','آوریل','مه','ژوئن','ژوئیه','اوت','سپتامبر','اکتبر','نوامبر','دسامبر'];
+  function read(key,fallback){try{const x=localStorage.getItem(key);return x===null?fallback:JSON.parse(x)}catch(e){return fallback}}
+  function iso(y,m,d){return y+'-'+String(m).padStart(2,'0')+'-'+String(d).padStart(2,'0')}
+  function parseISO(s){if(!s)return null;const a=s.split('-').map(Number);return a.length===3&&a.every(Number.isFinite)?{y:a[0],m:a[1],d:a[2]}:null}
+  function utcDate(s){const p=parseISO(s);return p?new Date(Date.UTC(p.y,p.m-1,p.d,12)):null}
+  function jalali(s){
+    const d=utcDate(s);if(!d)return '—';
+    try{
+      const p=new Intl.DateTimeFormat('en-US-u-ca-persian-nu-latn',{timeZone:'UTC',year:'numeric',month:'numeric',day:'numeric'}).formatToParts(d);
+      const o={};p.forEach(x=>{if(x.type==='year')o.y=x.value;if(x.type==='month')o.m=x.value;if(x.type==='day')o.d=x.value});
+      return `${o.y}/${String(o.m).padStart(2,'0')}/${String(o.d).padStart(2,'0')}`;
+    }catch(e){return '—'}
+  }
+  function persianDate(s){
+    const d=utcDate(s);if(!d)return '—';
+    try{return new Intl.DateTimeFormat('fa-IR-u-ca-persian',{year:'numeric',month:'long',day:'numeric',timeZone:'UTC'}).format(d)}catch(e){return jalali(s)}
+  }
+  function todayIran(){
+    const p=new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Tehran',year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(new Date());
+    const o={};p.forEach(x=>o[x.type]=x.value);return iso(o.year,o.month,o.day);
+  }
+  function txs(){const x=read(KEYS.tx,[]);return Array.isArray(x)?x:[]}
+  function life(){const x=read(KEYS.life,{});return x&&typeof x==='object'?x:{}}
+  function reminders(){const x=read(KEYS.rem,[]);return Array.isArray(x)?x:[]}
+  function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+  function fmt(n){return new Intl.NumberFormat('fa-IR',{maximumFractionDigits:2}).format(Number(n)||0)}
+  let selected=todayIran();
+  function monthOf(s){return s.slice(0,7)}
+  function monthShift(s,delta){const p=s.split('-').map(Number);const d=new Date(Date.UTC(p[0],p[1]-1+delta,1,12));return iso(d.getUTCFullYear(),d.getUTCMonth()+1,1).slice(0,7)}
+  function dayHasData(day){
+    const l=life(),t=(l.tasks||[]).some(x=>x.date===day),f=txs().some(x=>x.date===day),r=reminders().some(x=>x.enabled);
+    return {task:t,tx:f,reminder:r};
+  }
+  function entry(text,meta=''){
+    const d=document.createElement('div');d.className='calendar-entry';
+    d.innerHTML='<div>'+esc(text)+'</div>'+(meta?'<div class="muted">'+esc(meta)+'</div>':'');return d;
+  }
+  function fillList(id,items,empty){
+    const box=$c(id);box.replaceChildren();
+    if(!items.length){const d=document.createElement('div');d.className='muted';d.textContent=empty;box.append(d);return}
+    items.forEach(x=>box.append(x));
+  }
+  function renderDay(){
+    const date=selected, l=life(), transactions=txs().filter(t=>t.date===date);
+    const tasks=(Array.isArray(l.tasks)?l.tasks:[]).filter(t=>t.date===date);
+    const activeReminders=reminders().filter(r=>r.enabled);
+    const goals=Array.isArray(l.goals)?l.goals:[];
+    $c('calendarSelectedInput').value=date;
+    $c('calendarSelectedDate').textContent=date+' میلادی • '+persianDate(date)+' شمسی';
+    fillList('calendarTasks',tasks.map(t=>entry((t.done?'✓ ':'○ ')+t.text,(t.time||'بدون ساعت')+' • '+(t.priority||'معمولی'))),'برای این روز برنامه‌ای ثبت نشده است.');
+    fillList('calendarTransactions',transactions.map(t=>entry((t.kind==='income'?'درآمد: ':'هزینه: ')+(t.title||t.description||t.category||'تراکنش'),fmt(t.amount)+' • '+(t.category||'بدون دسته'))),'برای این روز تراکنشی ثبت نشده است.');
+    fillList('calendarReminders',activeReminders.map(r=>entry(r.title,r.time+' • '+(r.type||'یادآور روزانه'))),'یادآور فعالی ثبت نشده است.');
+    fillList('calendarGoals',goals.map(g=>entry(g.name,(g.type||'هدف')+' • پیشرفت '+(Number(g.progress)||0)+'٪')),'هنوز هدفی ثبت نشده است.');
+    const income=transactions.filter(t=>t.kind==='income').reduce((s,t)=>s+Number(t.amount||0),0);
+    const expense=transactions.filter(t=>t.kind==='expense').reduce((s,t)=>s+Number(t.amount||0),0);
+    $c('calendarDaySummary').textContent='خلاصه روز: '+tasks.filter(t=>t.done).length+' کار انجام‌شده از '+tasks.length+' کار • درآمد '+fmt(income)+' • هزینه '+fmt(expense)+' • مانده روز '+fmt(income-expense);
+  }
+  function renderCalendar(){
+    const month=$c('calendarMonth').value||monthOf(selected),parts=month.split('-').map(Number),y=parts[0],m=parts[1];
+    const first=new Date(Date.UTC(y,m-1,1,12)),lastDay=new Date(Date.UTC(y,m,0,12)).getUTCDate();
+    $c('calendarMonthTitle').textContent=months[m-1]+' '+y+' میلادی';
+    const grid=$c('calendarGrid');grid.replaceChildren();
+    weekdays.forEach(w=>{const h=document.createElement('div');h.className='calendar-weekday';h.textContent=w;grid.append(h)});
+    const offset=(first.getUTCDay()+1)%7;
+    const total=Math.ceil((offset+lastDay)/7)*7;
+    const currentMonth=monthOf(selected);
+    for(let i=0;i<total;i++){
+      const dayNum=i-offset+1;
+      let d;
+      if(dayNum<1)d=iso(y,m-1,new Date(Date.UTC(y,m-1,0,12)).getUTCDate()+dayNum);
+      else if(dayNum>lastDay)d=iso(y,m+1,dayNum-lastDay);
+      else d=iso(y,m,dayNum);
+      const p=parseISO(d),outside=monthOf(d)!==month;
+      const cell=document.createElement('button');cell.type='button';cell.className='calendar-cell'+(outside?' outside':'')+(d===selected?' selected':'')+(d===todayIran()?' today':'');
+      const g=document.createElement('span');g.className='cal-greg';g.textContent=String(p.d);
+      const j=document.createElement('span');j.className='cal-jalali';j.textContent=jalali(d);
+      const marks=document.createElement('span');marks.className='cal-markers';const has=dayHasData(d);
+      if(has.task){const a=document.createElement('i');a.className='task-dot';marks.append(a)}
+      if(has.tx){const a=document.createElement('i');a.className='transaction-dot';marks.append(a)}
+      if(has.reminder){const a=document.createElement('i');a.className='reminder-dot';marks.append(a)}
+      cell.append(g,j,marks);cell.onclick=()=>{selected=d;$c('calendarMonth').value=monthOf(d);renderCalendar();renderDay()};grid.append(cell);
+    }
+  }
+  function init(){
+    if(!$c('calendarTab'))return;
+    $c('calendarMonth').value=monthOf(selected);
+    $c('calendarPrev').addEventListener('click',()=>{$c('calendarMonth').value=monthShift($c('calendarMonth').value,-1);renderCalendar()});
+    $c('calendarNext').addEventListener('click',()=>{$c('calendarMonth').value=monthShift($c('calendarMonth').value,1);renderCalendar()});
+    $c('calendarMonth').addEventListener('change',()=>{const month=$c('calendarMonth').value;if(month){selected=month+'-01';renderCalendar();renderDay()}});
+    $c('calendarSelectedInput').addEventListener('change',()=>{if($c('calendarSelectedInput').value){selected=$c('calendarSelectedInput').value;$c('calendarMonth').value=monthOf(selected);renderCalendar();renderDay()}});
+    document.querySelectorAll('.navbtn').forEach(b=>b.addEventListener('click',()=>{if(b.dataset.tab==='calendar'){renderCalendar();renderDay()}}));
+    renderCalendar();renderDay();
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
+})();
+</script>
+
+
+<script>
+/* Debt and receivables module. Payments become cash-flow transactions only when money moves. */
+(function(){
+  const $d=id=>document.getElementById(id);
+  const KEY='khanehesab_debts_v1',TX='khanehesab_transactions_v1';
+  const today=()=>{const p=new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Tehran',year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(new Date());const o={};p.forEach(x=>o[x.type]=x.value);return o.year+'-'+o.month+'-'+o.day};
+  function read(k,f){try{const v=localStorage.getItem(k);return v===null?f:JSON.parse(v)}catch(e){return f}}
+  function write(k,v){try{localStorage.setItem(k,JSON.stringify(v));return true}catch(e){return false}}
+  function currency(){return $d('currency')?$d('currency').value:'تومان'}
+  function money(n){return new Intl.NumberFormat('fa-IR',{maximumFractionDigits:2}).format(n)+' '+currency()}
+  function dateJ(iso){if(!iso)return '—';const p=iso.split('-').map(Number);try{return new Intl.DateTimeFormat('fa-IR-u-ca-persian',{year:'numeric',month:'2-digit',day:'2-digit',timeZone:'UTC'}).format(new Date(Date.UTC(p[0],p[1]-1,p[2],12)))}catch(e){return '—'}}
+  function debts(){const a=read(KEY,[]);return Array.isArray(a)?a:[]}
+  function remaining(x){return Math.max(0,Number(x.amount||0)-Number(x.paid||0))}
+  function render(){
+    const all=debts(),open=all.filter(x=>remaining(x)>0);
+    const payable=open.filter(x=>x.type==='payable').reduce((s,x)=>s+remaining(x),0);
+    const receivable=open.filter(x=>x.type==='receivable').reduce((s,x)=>s+remaining(x),0);
+    const overdue=open.filter(x=>x.dueDate&&x.dueDate<today());
+    $d('debtSummary').innerHTML=[
+      ['بدهی باقی‌مانده',payable,'var(--red)'],
+      ['طلب وصول‌نشده',receivable,'var(--teal)'],
+      ['موارد سررسیدگذشته',overdue.length,'var(--red)']
+    ].map(x=>'<div class="debt-stat"><div class="muted">'+x[0]+'</div><strong style="color:'+x[2]+'">'+(typeof x[1]==='number'&&x[0]!=='موارد سررسیدگذشته'?money(x[1]):new Intl.NumberFormat('fa-IR').format(x[1]))+'</strong></div>').join('');
+    const filter=$d('debtFilter').value,query=$d('debtSearch').value.trim().toLocaleLowerCase();
+    const rows=all.filter(x=>{
+      const rem=remaining(x),late=rem>0&&x.dueDate&&x.dueDate<today();
+      if(filter==='payable'&&x.type!=='payable')return false;
+      if(filter==='receivable'&&x.type!=='receivable')return false;
+      if(filter==='open'&&rem<=0)return false;
+      if(filter==='overdue'&&!late)return false;
+      if(filter==='settled'&&rem>0)return false;
+      return (x.person+' '+x.title+' '+(x.note||'')).toLocaleLowerCase().includes(query);
+    }).sort((a,b)=>(a.dueDate||'9999').localeCompare(b.dueDate||'9999'));
+    const box=$d('debtList');box.replaceChildren();
+    if(!rows.length){const e=document.createElement('div');e.className='empty';e.textContent='موردی برای نمایش نیست. از فرم کنار صفحه یک بدهی یا طلب ثبت کن.';box.append(e);return}
+    rows.forEach(x=>{
+      const rem=remaining(x),ratio=Number(x.amount)>0?Math.min(100,Number(x.paid||0)/Number(x.amount)*100):0;
+      const item=document.createElement('div');item.className='debt-item';
+      const head=document.createElement('div');head.className='debt-item-head';
+      const title=document.createElement('div');title.innerHTML='<strong>'+esc(x.person)+'</strong><div class="debt-meta">'+esc(x.title)+'</div>';
+      const badge=document.createElement('span');badge.className='debt-badge '+(x.type==='receivable'?'receivable':'');badge.textContent=x.type==='payable'?'بدهی من':'طلب من';
+      head.append(title,badge);
+      const meta=document.createElement('div');meta.className='debt-meta';
+      meta.textContent='کل: '+money(x.amount)+' • پرداخت/دریافت‌شده: '+money(x.paid||0)+' • مانده: '+money(rem)+(x.dueDate?' • سررسید میلادی: '+x.dueDate+' / شمسی: '+dateJ(x.dueDate):'')+(x.note?' • '+x.note:'');
+      const track=document.createElement('div');track.className='debt-progress';const bar=document.createElement('div');bar.style.width=ratio+'%';track.append(bar);
+      item.append(head,meta,track);
+      if(rem>0){
+        const row=document.createElement('div');row.className='debt-pay-row';
+        const wrap=document.createElement('div');const label=document.createElement('label');label.textContent=x.type==='payable'?'مبلغ پرداختی':'مبلغ دریافتی';
+        const amount=document.createElement('input');amount.type='number';amount.min='1';amount.max=String(rem);amount.step='any';amount.placeholder='مبلغ پرداخت/دریافت';wrap.append(label,amount);
+        const btn=document.createElement('button');btn.type='button';btn.textContent=x.type==='payable'?'ثبت پرداخت':'ثبت دریافت';
+        btn.onclick=()=>{
+          const value=Number(amount.value);
+          if(!Number.isFinite(value)||value<=0||value>rem){alert('مبلغ باید بیشتر از صفر و حداکثر برابر مانده باشد.');return}
+          const tx=read(TX,[]);if(!Array.isArray(tx)){alert('تراکنش‌های مالی قابل خواندن نیستند؛ ابتدا پشتیبان بگیر.');return}
+          const updated=debts(),target=updated.find(a=>a.id===x.id);if(!target)return;
+          target.paid=Number(target.paid||0)+value;
+          target.payments=Array.isArray(target.payments)?target.payments:[];
+          const date=today();target.payments.push({amount:value,date});
+          const transaction={id:'debt-'+Date.now().toString(36)+Math.random().toString(36).slice(2,6),kind:x.type==='payable'?'expense':'income',title:(x.type==='payable'?'پرداخت بدهی به ':'دریافت طلب از ')+x.person+' - '+x.title,amount:value,category:x.type==='payable'?'پرداخت بدهی':'وصول طلب',date,createdAt:Date.now(),debtRecordId:x.id};
+          tx.push(transaction);
+          if(!write(KEY,updated)){alert('ذخیره بدهی انجام نشد؛ فضای ذخیره‌سازی را بررسی کن.');return}
+          if(!write(TX,tx)){target.paid-=value;target.payments.pop();write(KEY,updated);alert('تراکنش مالی ذخیره نشد؛ از ثبت مجدد خودداری کن و پشتیبان را بررسی کن.');return}
+          window.dispatchEvent(new CustomEvent('khanehesab:transactions-updated'));
+          render();$d('debtStatus').textContent='پرداخت/دریافت ثبت شد و در جریان نقدی مالی هم درج شد.';
+        };
+        row.append(wrap,btn);item.append(row);
+      }else{
+        const done=document.createElement('div');done.className='debt-meta';done.textContent='✓ تسویه کامل';item.append(done);
+      }
+      const actions=document.createElement('div');actions.className='debt-buttons';
+      const del=document.createElement('button');del.type='button';del.className='danger smallbtn';del.textContent='حذف مورد';del.onclick=()=>{
+        if(confirm('این مورد از فهرست بدهی و طلب حذف شود؟ تراکنش‌های پرداخت قبلی برای حفظ سابقه مالی باقی می‌مانند.')){
+          write(KEY,debts().filter(a=>a.id!==x.id));render();
+        }
+      };
+      actions.append(del);item.append(actions);box.append(item);
+    });
+  }
+  function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+  function init(){
+    if(!$d('debtForm'))return;
+    $d('debtForm').addEventListener('submit',e=>{
+      e.preventDefault();
+      const amount=Number($d('debtAmount').value),person=$d('debtPerson').value.trim(),title=$d('debtTitle').value.trim();
+      if(!person||!title||!Number.isFinite(amount)||amount<=0){$d('debtStatus').textContent='نام، شرح و مبلغ معتبر را وارد کن.';return}
+      const all=debts();all.push({id:'d-'+Date.now().toString(36)+Math.random().toString(36).slice(2,6),type:$d('debtType').value,person,title,amount,paid:0,dueDate:$d('debtDueDate').value,note:$d('debtNote').value.trim(),createdAt:Date.now(),payments:[]});
+      if(!write(KEY,all)){$d('debtStatus').textContent='ذخیره نشد؛ فایل را با Chrome باز کن و فضای ذخیره‌سازی را بررسی کن.';return}
+      $d('debtForm').reset();$d('debtStatus').textContent='بدهی/طلب ثبت شد.';render();
+    });
+    ['debtFilter','debtSearch'].forEach(id=>$d(id).addEventListener(id==='debtSearch'?'input':'change',render));
+    if($d('currency'))$d('currency').addEventListener('change',render);
+    document.querySelectorAll('.navbtn').forEach(b=>b.addEventListener('click',()=>{if(b.dataset.tab==='debts')render()}));
+    const due=$d('debtDueDate'),hint=$d('debtDueHint');
+    function updateDue(){if(!due.value){hint.textContent='معادل شمسی: —';return}hint.textContent='معادل شمسی: '+dateJ(due.value)}
+    due.addEventListener('change',updateDue);
+    render();
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
+})();
+</script>
+
+
+<script>
+(function(){
+  window.addEventListener('khanehesab:transactions-updated',function(){
+    try{
+      const saved=JSON.parse(localStorage.getItem('khanehesab_transactions_v1')||'[]');
+      if(!Array.isArray(saved))return;
+      // Refresh page-level transaction UI without a reload; the app's original script exposes its handlers in closure,
+      // so a safe reload is the reliable way to make the finance dashboard and reports read the updated transaction list.
+      // Do not reload automatically; other sections read localStorage when opened or refreshed.
+      const status=document.getElementById('debtStatus');
+      if(status)status.textContent='پرداخت/دریافت ثبت شد و تراکنش مالی به‌روزرسانی شد.';
+    }catch(e){}
+  });
+})();
+</script>
+
+
+<script>
+/* Local JSON backup and restore. Restore is explicit and replaces only known app data keys. */
+(function(){
+  const $p=id=>document.getElementById(id);
+  const KEYS=[
+    'khanehesab_currency_v1',
+    'khanehesab_transactions_v1',
+    'khanehesab_monthly_budgets_v1',
+    'khanehesab_life_v1',
+    'khanehesab_reminders_v1',
+    'khanehesab_debts_v1',
+    'khanehesab_installments_v1',
+    'khanehesab_installment_alert_date_v1'
+  ];
+  let parsedBackup=null;
+  function status(message){$p('backupStatus').textContent=message}
+  function readData(){
+    const data={};
+    KEYS.forEach(k=>{
+      const raw=localStorage.getItem(k);
+      if(raw!==null){try{data[k]=JSON.parse(raw)}catch(e){data[k]=raw}}
+    });
+    return data;
+  }
+  function countOf(value){
+    if(Array.isArray(value))return value.length;
+    if(value&&typeof value==='object')return Object.keys(value).length;
+    return value===undefined?0:1;
+  }
+  function backupObject(){
+    return {
+      format:'khanehesab-backup',
+      formatVersion:1,
+      appVersion:'1.2',
+      createdAt:new Date().toISOString(),
+      timezone:'Asia/Tehran',
+      data:readData()
+    };
+  }
+  function downloadJSON(obj,name){
+    const blob=new Blob([JSON.stringify(obj,null,2)],{type:'application/json;charset=utf-8'});
+    const url=URL.createObjectURL(blob);
+    const a=document.createElement('a');a.href=url;a.download=name;
+    document.body.appendChild(a);a.click();a.remove();
+    setTimeout(()=>URL.revokeObjectURL(url),1000);
+  }
+  function init(){
+    if(!$p('backupExport'))return;
+    $p('backupExport').addEventListener('click',()=>{
+      try{
+        const obj=backupObject();
+        const stamp=new Date().toISOString().replace(/[:.]/g,'-');
+        downloadJSON(obj,'khanehesab-backup-'+stamp+'.json');
+        const total=Object.values(obj.data).reduce((s,v)=>s+countOf(v),0);
+        status('فایل پشتیبان ساخته شد. آن را در پوشه‌ای امن نگه دار. تعداد بخش‌های ذخیره‌شده: '+Object.keys(obj.data).length+'؛ مجموع موارد قابل شمارش: '+total+'.');
+      }catch(e){status('ساخت فایل پشتیبان ناموفق بود. فضای دستگاه یا مجوز دانلود مرورگر را بررسی کن.')}
+    });
+    $p('backupFile').addEventListener('change',async()=>{
+      parsedBackup=null;$p('backupImport').disabled=true;$p('backupPreview').hidden=true;
+      const file=$p('backupFile').files&&$p('backupFile').files[0];if(!file){status('فایلی انتخاب نشده است.');return}
+      try{
+        if(file.size>20*1024*1024){status('فایل بزرگ‌تر از ۲۰ مگابایت است و برای ایمنی پذیرفته نشد.');return}
+        const text=await file.text(),obj=JSON.parse(text);
+        if(!obj||obj.format!=='khanehesab-backup'||!obj.data||typeof obj.data!=='object'||Array.isArray(obj.data)){
+          status('این فایل ساختار پشتیبان خانه‌حساب را ندارد؛ اطلاعات فعلی تغییر نکرده‌اند.');return;
+        }
+        const known=KEYS.filter(k=>Object.prototype.hasOwnProperty.call(obj.data,k));
+        if(!known.length){status('فایل معتبر به نظر نمی‌رسد یا هیچ داده شناخته‌شده‌ای ندارد. اطلاعات فعلی تغییر نکرده‌اند.');return}
+        // Validate each included key as JSON-compatible and verify common collection types.
+        for(const k of known){
+          const v=obj.data[k];
+          if(k==='khanehesab_transactions_v1'||k==='khanehesab_monthly_budgets_v1'||k==='khanehesab_reminders_v1'||k==='khanehesab_debts_v1'){
+            if(!Array.isArray(v))throw new Error('ساختار یکی از فهرست‌های اطلاعاتی صحیح نیست.');
+          }
+          if(k==='khanehesab_life_v1'&&(!v||typeof v!=='object'||Array.isArray(v)))throw new Error('ساختار برنامه روزانه صحیح نیست.');
+        }
+        parsedBackup={obj,known};
+        const preview=$p('backupPreview');preview.hidden=false;
+        preview.textContent='فایل معتبر است. تاریخ ساخت: '+(obj.createdAt||'نامشخص')+'؛ نسخه فایل: '+(obj.appVersion||'نامشخص')+'؛ بخش‌های قابل بازیابی: '+known.length+'. با تأیید بازیابی، داده‌های فعلی همین بخش‌ها جایگزین می‌شوند.';
+        $p('backupImport').disabled=false;
+        status('فایل بررسی شد. برای ادامه روی «بررسی و بازیابی فایل» بزن.');
+      }catch(e){parsedBackup=null;status('خواندن فایل ناموفق بود یا ساختار آن نادرست است. اطلاعات فعلی تغییر نکرده‌اند.')}
+    });
+    $p('backupImport').addEventListener('click',()=>{
+      if(!parsedBackup)return;
+      const ok=confirm('هشدار: داده‌های فعلی در بخش‌های موجود در فایل با نسخه پشتیبان جایگزین می‌شوند. توصیه می‌شود ابتدا از اطلاعات فعلی پشتیبان بگیری. آیا مطمئنی؟');
+      if(!ok)return;
+      try{
+        // Save rollback copy in memory in case any write fails.
+        const before={};parsedBackup.known.forEach(k=>before[k]=localStorage.getItem(k));
+        try{
+          parsedBackup.known.forEach(k=>localStorage.setItem(k,JSON.stringify(parsedBackup.obj.data[k])));
+        }catch(e){
+          parsedBackup.known.forEach(k=>{try{if(before[k]===null)localStorage.removeItem(k);else localStorage.setItem(k,before[k])}catch(_){}});
+          status('بازیابی کامل نشد؛ تلاش شد اطلاعات پیشین برگردانده شوند. فضای ذخیره‌سازی مرورگر را بررسی کن.');
+          return;
+        }
+        status('بازیابی انجام شد. برای اطمینان از تازه‌شدن همه بخش‌ها، صفحه خانه‌حساب را یک‌بار ببند و دوباره باز کن.');
+        $p('backupPreview').hidden=true;$p('backupImport').disabled=true;$p('backupFile').value='';parsedBackup=null;
+      }catch(e){status('بازیابی انجام نشد؛ اطلاعات فعلی را بررسی کن.')}
+    });
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
+})();
+</script>
+
+
+<script>
+/* Home dashboard: read-only summary from the app's existing local storage. */
+(function(){
+  const $h=id=>document.getElementById(id);
+  const KEYS={tx:'khanehesab_transactions_v1',life:'khanehesab_life_v1',rem:'khanehesab_reminders_v1',debts:'khanehesab_debts_v1'};
+  function read(k,f){try{const v=localStorage.getItem(k);return v===null?f:JSON.parse(v)}catch(e){return f}}
+  function tehranISO(){const p=new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Tehran',year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(new Date());const o={};p.forEach(x=>o[x.type]=x.value);return o.year+'-'+o.month+'-'+o.day}
+  function fmt(n){const cur=$h('currency')?$h('currency').value:'تومان';return new Intl.NumberFormat('fa-IR',{maximumFractionDigits:2}).format(Number(n)||0)+' '+cur}
+  function safeText(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+  function empty(text){const d=document.createElement('div');d.className='dashboard-empty';d.textContent=text;return d}
+  function entry(title,meta,status,statusClass=''){
+    const d=document.createElement('div');d.className='dashboard-entry';
+    const main=document.createElement('div');main.className='dashboard-entry-main';
+    const t=document.createElement('div');t.textContent=title;main.append(t);
+    if(meta){const m=document.createElement('div');m.className='dashboard-entry-meta';m.textContent=meta;main.append(m)}
+    d.append(main);
+    if(status){const p=document.createElement('span');p.className='dashboard-pill '+statusClass;p.textContent=status;d.append(p)}
+    return d;
+  }
+  function render(){
+    if(!$h('dashboardTab'))return;
+    const today=tehranISO(),month=today.slice(0,7);
+    const date=new Date();$h('dashboardDate').textContent=new Intl.DateTimeFormat('fa-IR-u-ca-persian',{dateStyle:'full',timeZone:'Asia/Tehran'}).format(date)+' • نمای کلی امور مالی و برنامه روزانه';
+    const tx=read(KEYS.tx,[]);const transactions=Array.isArray(tx)?tx:[];
+    const monthTx=transactions.filter(t=>String(t.date||'').slice(0,7)===month);
+    const income=monthTx.filter(t=>t.kind==='income').reduce((s,t)=>s+Number(t.amount||0),0);
+    const expense=monthTx.filter(t=>t.kind==='expense').reduce((s,t)=>s+Number(t.amount||0),0);
+    $h('dashIncome').textContent=fmt(income);$h('dashExpense').textContent=fmt(expense);$h('dashNet').textContent=fmt(income-expense);
+    $h('dashNet').style.color=income-expense<0?'var(--red)':'var(--teal)';
+    const debtData=read(KEYS.debts,[]);const debts=Array.isArray(debtData)?debtData:[];
+    const open=debts.filter(d=>Math.max(0,Number(d.amount||0)-Number(d.paid||0))>0);
+    $h('dashDebt').textContent=fmt(open.filter(d=>d.type==='payable').reduce((s,d)=>s+Math.max(0,Number(d.amount||0)-Number(d.paid||0)),0));
+    $h('dashReceivable').textContent=fmt(open.filter(d=>d.type==='receivable').reduce((s,d)=>s+Math.max(0,Number(d.amount||0)-Number(d.paid||0)),0));
+    const life=read(KEYS.life,{}),tasks=Array.isArray(life.tasks)?life.tasks:[];
+    const todayTasks=tasks.filter(t=>t.date===today),done=todayTasks.filter(t=>t.done).length;
+    $h('dashTasks').textContent=done+' از '+todayTasks.length;
+    const taskBox=$h('dashTaskList');taskBox.replaceChildren();
+    if(!todayTasks.length)taskBox.append(empty('برای امروز برنامه‌ای ثبت نشده است.'));
+    else todayTasks.slice(0,6).forEach(t=>taskBox.append(entry(t.text||'کار روزانه',t.time||'امروز',t.done?'انجام شد':'در انتظار',t.done?'':'pending')));
+    const reminders=read(KEYS.rem,[]);const active=(Array.isArray(reminders)?reminders:[]).filter(r=>r.enabled);
+    const reminderBox=$h('dashReminderList');reminderBox.replaceChildren();
+    if(!active.length)reminderBox.append(empty('یادآور فعالی ثبت نشده است.'));
+    else active.slice().sort((a,b)=>String(a.time).localeCompare(String(b.time))).slice(0,6).forEach(r=>reminderBox.append(entry(r.title||'یادآور',r.type||'روزانه',r.time||'هر روز')));
+    const goals=Array.isArray(life.goals)?life.goals:[];
+    const goalBox=$h('dashGoalList');goalBox.replaceChildren();
+    if(!goals.length)goalBox.append(empty('هنوز هدفی ثبت نشده است.'));
+    else goals.slice(0,6).forEach(g=>goalBox.append(entry(g.name||g.title||'هدف',g.deadline?'مهلت: '+g.deadline:'هدف شخصی',Math.max(0,Math.min(100,Number(g.progress)||0))+'٪')));
+    const habits=Array.isArray(life.habits)?life.habits:[];
+    const checks=life.habitChecks||{},todayChecks=checks[today]||{};
+    const habitBox=$h('dashHabitList');habitBox.replaceChildren();
+    if(!habits.length)habitBox.append(empty('هنوز عادتی تعریف نشده است.'));
+    else habits.slice(0,8).forEach(h=>{
+      const isDone=!!todayChecks[h];
+      habitBox.append(entry(h,'وضعیت امروز',isDone?'انجام شد':'انجام نشده',isDone?'':'pending'));
+    });
+  }
+  function init(){
+    if(!$h('dashboardTab'))return;
+    $h('dashboardRefresh').addEventListener('click',render);
+    if($h('currency'))$h('currency').addEventListener('change',render);
+    document.querySelectorAll('.navbtn').forEach(b=>b.addEventListener('click',()=>{if(b.dataset.tab==='dashboard')render()}));
+    document.querySelectorAll('[data-goto]').forEach(b=>b.addEventListener('click',()=>{
+      const target=b.getAttribute('data-goto'),nav=document.querySelector('.navbtn[data-tab="'+target+'"]');if(nav)nav.click();
+    }));
+    window.addEventListener('khanehesab:transactions-updated',render);
+    render();
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
+})();
+</script>
+
+
+<script>
+/* Installment and due-date manager. Reminder banners are shown while this page is open. */
+(function(){
+  const $i=id=>document.getElementById(id);
+  const KEY='khanehesab_installments_v1',TX='khanehesab_transactions_v1';
+  function read(k,f){try{const v=localStorage.getItem(k);return v===null?f:JSON.parse(v)}catch(e){return f}}
+  function write(k,v){try{localStorage.setItem(k,JSON.stringify(v));return true}catch(e){return false}}
+  function today(){const p=new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Tehran',year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(new Date());const o={};p.forEach(x=>o[x.type]=x.value);return o.year+'-'+o.month+'-'+o.day}
+  function jalali(iso){if(!iso)return '—';const a=iso.split('-').map(Number);try{return new Intl.DateTimeFormat('fa-IR-u-ca-persian',{year:'numeric',month:'long',day:'numeric',timeZone:'UTC'}).format(new Date(Date.UTC(a[0],a[1]-1,a[2],12)))}catch(e){return '—'}}
+  function money(n){const cur=$i('currency')?$i('currency').value:'تومان';return new Intl.NumberFormat('fa-IR',{maximumFractionDigits:2}).format(Number(n)||0)+' '+cur}
+  function all(){const a=read(KEY,[]);return Array.isArray(a)?a:[]}
+  function remaining(x){return Math.max(0,Number(x.amount||0)-Number(x.paid||0))}
+  function status(x){if(remaining(x)<=0)return 'paid';if(x.dueDate<today())return 'overdue';if(x.dueDate===today())return 'today';return 'upcoming'}
+  function render(){
+    const rows=all(),open=rows.filter(x=>remaining(x)>0);
+    const dueToday=open.filter(x=>x.dueDate===today()).reduce((s,x)=>s+remaining(x),0);
+    const late=open.filter(x=>x.dueDate<today()).reduce((s,x)=>s+remaining(x),0);
+    const next=open.filter(x=>x.dueDate>=today()).reduce((s,x)=>s+remaining(x),0);
+    $i('instSummary').innerHTML=[
+      ['سررسید امروز',dueToday,'var(--red)'],['سررسیدهای عقب‌افتاده',late,'var(--red)'],['مبالغ سررسیددار آینده',next,'var(--teal)']
+    ].map(x=>'<div class="inst-stat"><div class="muted">'+x[0]+'</div><strong style="color:'+x[2]+'">'+money(x[1])+'</strong></div>').join('');
+    const filter=$i('instFilter').value,q=$i('instSearch').value.trim().toLocaleLowerCase();
+    const shown=rows.filter(x=>{
+      const st=status(x);
+      if(filter!=='all'&&st!==filter)return false;
+      return (x.person+' '+x.title+' '+(x.note||'')).toLocaleLowerCase().includes(q);
+    }).sort((a,b)=>a.dueDate.localeCompare(b.dueDate));
+    const box=$i('instList');box.replaceChildren();
+    if(!shown.length){const e=document.createElement('div');e.className='empty';e.textContent='سررسیدی برای نمایش وجود ندارد؛ از فرم کنار صفحه یک مورد ثبت کن.';box.append(e);return}
+    shown.forEach(x=>{
+      const st=status(x),rem=remaining(x),item=document.createElement('div');item.className='inst-item';
+      const head=document.createElement('div');head.className='inst-item-head';
+      const info=document.createElement('div');const name=document.createElement('strong');name.textContent=x.person;
+      const title=document.createElement('div');title.className='inst-meta';title.textContent=x.title;info.append(name,title);
+      const chip=document.createElement('span');chip.className='inst-chip '+(x.type==='receivable'?'incoming ':'')+(st==='paid'?'paid':st==='overdue'?'late':'');
+      chip.textContent=st==='paid'?'تسویه‌شده':st==='overdue'?'عقب‌افتاده':st==='today'?'سررسید امروز':x.type==='payable'?'پرداختی':'دریافتی';head.append(info,chip);
+      const meta=document.createElement('div');meta.className='inst-meta';meta.textContent='مبلغ: '+money(x.amount)+' • مانده: '+money(rem)+' • سررسید: '+x.dueDate+' میلادی ('+jalali(x.dueDate)+')'+(x.note?' • '+x.note:'');
+      item.append(head,meta);
+      if(rem>0){
+        const btn=document.createElement('button');btn.type='button';btn.textContent=x.type==='payable'?'ثبت پرداخت قسط':'ثبت دریافت';btn.style.marginTop='10px';
+        btn.onclick=()=>{
+          const value=Number(prompt('مبلغ '+(x.type==='payable'?'پرداختی':'دریافتی')+' را وارد کن. مانده: '+money(rem),String(rem)));
+          if(!Number.isFinite(value)||value<=0||value>rem){alert('مبلغ معتبر وارد کن؛ مبلغ باید بیشتر از صفر و حداکثر برابر مانده باشد.');return}
+          const installments=all(),target=installments.find(z=>z.id===x.id);if(!target)return;
+          const tx=read(TX,[]);if(!Array.isArray(tx)){alert('فهرست تراکنش‌ها قابل خواندن نیست.');return}
+          target.paid=Number(target.paid||0)+value;target.payments=Array.isArray(target.payments)?target.payments:[];target.payments.push({amount:value,date:today()});
+          tx.push({id:'inst-'+Date.now().toString(36),kind:x.type==='payable'?'expense':'income',title:(x.type==='payable'?'پرداخت قسط ':'دریافت مبلغ سررسید از ')+x.person+' - '+x.title,amount:value,category:x.type==='payable'?'پرداخت قسط':'وصول سررسید',date:today(),createdAt:Date.now(),installmentId:x.id});
+          if(!write(KEY,installments)){alert('ذخیره وضعیت قسط ناموفق بود.');return}
+          if(!write(TX,tx)){target.paid-=value;target.payments.pop();write(KEY,installments);alert('ثبت تراکنش ناموفق بود؛ از ثبت دوباره خودداری کن و اطلاعات را بررسی کن.');return}
+          window.dispatchEvent(new CustomEvent('khanehesab:transactions-updated'));render();
+          $i('instStatus').textContent='پرداخت/دریافت ثبت شد و در تراکنش‌های مالی هم درج شد.';
+        };
+        item.append(btn);
+      }
+      const del=document.createElement('button');del.type='button';del.className='danger smallbtn';del.textContent='حذف سررسید';del.style.margin='10px 0 0 8px';
+      del.onclick=()=>{if(confirm('این سررسید حذف شود؟ تراکنش‌های قبلی آن برای حفظ سابقه مالی باقی می‌مانند.')){write(KEY,all().filter(z=>z.id!==x.id));render()}};
+      item.append(del);box.append(item);
+    });
+  }
+  function checkDue(){
+    const now=today(),due=all().filter(x=>remaining(x)>0&&x.dueDate<=now);
+    if(!due.length)return;
+    const key='khanehesab_installment_alert_date_v1';
+    const last=read(key,'');
+    if(last===now)return;
+    const text=due.filter(x=>x.dueDate===now).length+' مورد سررسید امروز و '+due.filter(x=>x.dueDate<now).length+' مورد عقب‌افتاده داری.';
+    const statusBox=$i('instStatus');if(statusBox)statusBox.textContent='یادآوری سررسید: '+text;
+    write(key,now);
+  }
+  function init(){
+    if(!$i('instForm'))return;
+    $i('instDue').addEventListener('change',()=>{$i('instDueJalali').textContent='معادل شمسی: '+jalali($i('instDue').value)});
+    $i('instForm').addEventListener('submit',e=>{
+      e.preventDefault();
+      const amount=Number($i('instAmount').value),person=$i('instPerson').value.trim(),title=$i('instTitle').value.trim(),dueDate=$i('instDue').value;
+      if(!person||!title||!Number.isFinite(amount)||amount<=0||!dueDate){$i('instStatus').textContent='لطفاً اطلاعات معتبر و تاریخ سررسید را وارد کن.';return}
+      const rows=all();rows.push({id:'i-'+Date.now().toString(36)+Math.random().toString(36).slice(2,5),type:$i('instType').value,person,title,amount,paid:0,dueDate,note:$i('instNote').value.trim(),createdAt:Date.now(),payments:[]});
+      if(!write(KEY,rows)){$i('instStatus').textContent='ذخیره نشد؛ فضای ذخیره‌سازی مرورگر را بررسی کن.';return}
+      $i('instForm').reset();$i('instDueJalali').textContent='معادل شمسی: —';$i('instStatus').textContent='سررسید ثبت شد.';render();
+    });
+    ['instFilter','instSearch'].forEach(id=>$i(id).addEventListener(id==='instSearch'?'input':'change',render));
+    if($i('currency'))$i('currency').addEventListener('change',render);
+    document.querySelectorAll('.navbtn').forEach(b=>b.addEventListener('click',()=>{if(b.dataset.tab==='installments'){render();checkDue()}}));
+    render();checkDue();
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
+})();
+</script>
+
+
+<script>
+/* Password-encrypted transfer backup using Web Crypto AES-GCM + PBKDF2. */
+(function(){
+  const $s=id=>document.getElementById(id);
+  const KEYS=[
+    'khanehesab_currency_v1',
+    'khanehesab_transactions_v1',
+    'khanehesab_monthly_budgets_v1',
+    'khanehesab_life_v1',
+    'khanehesab_reminders_v1',
+    'khanehesab_debts_v1',
+    'khanehesab_installments_v1',
+    'khanehesab_installment_alert_date_v1'
+  ];
+  const enc=new TextEncoder(),dec=new TextDecoder();
+  let selectedFile=null;
+  function status(t){$s('secureStatus').textContent=t}
+  function dataSnapshot(){
+    const data={};
+    KEYS.forEach(k=>{const raw=localStorage.getItem(k);if(raw!==null){try{data[k]=JSON.parse(raw)}catch(e){data[k]=raw}}});
+    return {format:'khanehesab-encrypted-transfer',formatVersion:1,appVersion:'1.5',createdAt:new Date().toISOString(),data};
+  }
+  function b64(bytes){let bin='';bytes.forEach(b=>bin+=String.fromCharCode(b));return btoa(bin)}
+  function unb64(str){const bin=atob(str);return Uint8Array.from(bin,c=>c.charCodeAt(0))}
+  async function derive(password,salt){
+    const material=await crypto.subtle.importKey('raw',enc.encode(password),'PBKDF2',false,['deriveKey']);
+    return crypto.subtle.deriveKey({name:'PBKDF2',salt,iterations:250000,hash:'SHA-256'},material,{name:'AES-GCM',length:256},false,['encrypt','decrypt']);
+  }
+  function download(text,name){
+    const blob=new Blob([text],{type:'application/json'});
+    const url=URL.createObjectURL(blob),a=document.createElement('a');
+    a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();
+    setTimeout(()=>URL.revokeObjectURL(url),1500);
+  }
+  async function exportEncrypted(){
+    const password=$s('secureBackupPassword').value;
+    if(password.length<10){status('برای امنیت بیشتر، رمز عبور حداقل ۱۰ نویسه‌ای وارد کن.');return}
+    if(!crypto||!crypto.subtle){status('رمزگذاری امن در این مرورگر فعال نیست. فایل را در نسخه به‌روز Chrome یا Edge باز کن.');return}
+    try{
+      const salt=crypto.getRandomValues(new Uint8Array(16)),iv=crypto.getRandomValues(new Uint8Array(12));
+      const key=await derive(password,salt);
+      const cipher=await crypto.subtle.encrypt({name:'AES-GCM',iv},key,enc.encode(JSON.stringify(dataSnapshot())));
+      const file={format:'khanehesab-encrypted',version:1,kdf:'PBKDF2-SHA256',iterations:250000,cipher:'AES-256-GCM',salt:b64(salt),iv:b64(iv),payload:b64(new Uint8Array(cipher))};
+      download(JSON.stringify(file), 'khanehesab-secure-'+new Date().toISOString().slice(0,10)+'.khbackup');
+      status('فایل رمزگذاری‌شده ساخته شد. آن را به دستگاه دیگر منتقل کن و رمز را جداگانه و امن نگه دار.');
+    }catch(e){status('ساخت فایل رمزگذاری‌شده ناموفق بود. پشتیبانی مرورگر از رمزگذاری را بررسی کن.')}
+  }
+  function validateData(obj){
+    if(!obj||obj.format!=='khanehesab-encrypted-transfer'||!obj.data||typeof obj.data!=='object'||Array.isArray(obj.data))throw new Error('bad format');
+    const keys=KEYS.filter(k=>Object.prototype.hasOwnProperty.call(obj.data,k));
+    if(!keys.length)throw new Error('empty');
+    for(const k of keys){
+      const v=obj.data[k];
+      if(['khanehesab_transactions_v1','khanehesab_monthly_budgets_v1','khanehesab_reminders_v1','khanehesab_debts_v1','khanehesab_installments_v1'].includes(k)&&!Array.isArray(v))throw new Error('bad list');
+      if(k==='khanehesab_life_v1'&&(!v||typeof v!=='object'||Array.isArray(v)))throw new Error('bad life');
+    }
+    return keys;
+  }
+  async function importEncrypted(){
+    const password=$s('secureBackupPassword').value;
+    if(password.length<10){status('رمز عبور فایل را وارد کن.');return}
+    if(!selectedFile){status('ابتدا فایل رمزگذاری‌شده را انتخاب کن.');return}
+    if(selectedFile.size>25*1024*1024){status('حجم فایل بیش از حد مجاز است.');return}
+    if(!crypto||!crypto.subtle){status('رمزگشایی امن در این مرورگر فعال نیست. از Chrome یا Edge به‌روز استفاده کن.');return}
+    try{
+      const file=JSON.parse(await selectedFile.text());
+      if(file.format!=='khanehesab-encrypted'||file.version!==1||file.cipher!=='AES-256-GCM'||file.kdf!=='PBKDF2-SHA256')throw new Error('bad file');
+      const key=await derive(password,unb64(file.salt));
+      const plain=await crypto.subtle.decrypt({name:'AES-GCM',iv:unb64(file.iv)},key,unb64(file.payload));
+      const obj=JSON.parse(dec.decode(plain)),keys=validateData(obj);
+      const preview='فایل با موفقیت رمزگشایی و بررسی شد. '+keys.length+' بخش اطلاعاتی پیدا شد. بازیابی، اطلاعات فعلی همین بخش‌ها را جایگزین می‌کند.';
+      if(!confirm(preview+'\nقبل از ادامه از اطلاعات فعلی پشتیبان بگیر. آیا بازیابی انجام شود؟'))return;
+      const before={};keys.forEach(k=>before[k]=localStorage.getItem(k));
+      try{keys.forEach(k=>localStorage.setItem(k,JSON.stringify(obj.data[k])))}
+      catch(e){keys.forEach(k=>{try{if(before[k]===null)localStorage.removeItem(k);else localStorage.setItem(k,before[k])}catch(_){}});throw new Error('storage')}
+      status('بازیابی امن انجام شد. صفحه را ببند و دوباره باز کن تا همه بخش‌ها تازه‌سازی شوند.');
+    }catch(e){status('رمز اشتباه است، فایل آسیب دیده یا ساختار آن معتبر نیست. اطلاعات فعلی تغییر نکرده‌اند.')}
+  }
+  function init(){
+    if(!$s('secureExport'))return;
+    $s('secureExport').addEventListener('click',exportEncrypted);
+    $s('secureImport').addEventListener('click',importEncrypted);
+    $s('secureBackupFile').addEventListener('change',e=>{selectedFile=e.target.files&&e.target.files[0]||null;status(selectedFile?'فایل انتخاب شد. رمز عبور همان فایل را وارد کن.':'فایلی انتخاب نشده است.')});
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
+})();
+</script>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+/* KhaneHesab cloud sync: explicit first transfer, then automatic two-way polling. */
+(function(){
+  const PROJECT_URL='https://yzzqufmthxnxfbrbbhmg.supabase.co';
+  const PUBLISHABLE_KEY='sb_publishable_KVqEtO44lqaBm0jKSNClKw_XTVOffJR';
+  const DATA_KEYS=[
+    'khanehesab_currency_v1',
+    'khanehesab_transactions_v1',
+    'khanehesab_monthly_budgets_v1',
+    'khanehesab_life_v1',
+    'khanehesab_reminders_v1',
+    'khanehesab_debts_v1',
+    'khanehesab_installments_v1',
+    'khanehesab_installment_alert_date_v1'
+  ];
+  const SYNC_FLAG='khanehesab_cloud_sync_enabled_v1';
+  const DIRTY_FLAG='khanehesab_cloud_sync_dirty_v1';
+  const LAST_SYNC='khanehesab_cloud_last_sync_at_v1';
+  const $=id=>document.getElementById(id);
+  const status=message=>{const el=$('cloudStatus');if(el)el.textContent=message};
+  if(!window.supabase||!window.supabase.createClient){status('کتابخانه اتصال ابری بارگذاری نشد. اتصال اینترنت را بررسی کن.');return;}
+  const client=window.supabase.createClient(PROJECT_URL,PUBLISHABLE_KEY);
+  let currentUser=null,cloudHasData=false,syncEnabled=false,suppressStorageEvents=false;
+  let syncTimer=null,pollTimer=null,syncInFlight=false,localRevision=0,lastCloudUpdatedAt='';
+
+  function snapshot(){
+    const data={};
+    DATA_KEYS.forEach(key=>{const raw=localStorage.getItem(key);if(raw!==null){try{data[key]=JSON.parse(raw)}catch(e){data[key]=raw}}});
+    return {format:'khanehesab-cloud-data',version:1,updatedAt:new Date().toISOString(),data};
+  }
+  function hasLocalData(){return Object.keys(snapshot().data).length>0;}
+  function setButtons(){
+    const signed=!!currentUser;
+    $('cloudSignIn').disabled=signed;$('cloudSignUp').disabled=signed;
+    $('cloudUpload').disabled=!signed;$('cloudDownload').disabled=!signed||!cloudHasData;
+    $('cloudSignOut').disabled=!signed;
+    $('cloudEmail').disabled=signed;$('cloudPassword').disabled=signed;
+    $('cloudUser').hidden=!signed;
+    if(signed)$('cloudUser').textContent='واردشده با: '+currentUser.email;
+  }
+  function stopAutoSync(){
+    syncEnabled=false;
+    if(pollTimer)clearInterval(pollTimer);
+    pollTimer=null;
+  }
+  async function fetchCloud(){
+    if(!currentUser)return {data:null,error:new Error('not signed in')};
+    return await client.from('user_app_data').select('app_data,updated_at').eq('user_id',currentUser.id).maybeSingle();
+  }
+  function applyCloudPayload(row,quiet=false){
+    if(!row||!row.app_data||!row.app_data.data)return false;
+    const cloudData=row.app_data.data;
+    suppressStorageEvents=true;
+    try{
+      DATA_KEYS.forEach(key=>{
+        if(Object.prototype.hasOwnProperty.call(cloudData,key))localStorage.setItem(key,JSON.stringify(cloudData[key]));
+        else localStorage.removeItem(key);
+      });
+    }catch(e){
+      suppressStorageEvents=false;
+      status('دریافت اطلاعات ناموفق بود؛ فضای ذخیره‌سازی دستگاه را بررسی کن.');
+      return false;
+    }
+    suppressStorageEvents=false;
+    cloudHasData=true;
+    lastCloudUpdatedAt=row.updated_at||'';
+    localStorage.setItem(LAST_SYNC,lastCloudUpdatedAt);
+    localStorage.setItem(SYNC_FLAG,'1');
+    localStorage.removeItem(DIRTY_FLAG);
+    if(!quiet){
+      status('اطلاعات ابری دریافت شد؛ همگام‌سازی خودکار این دستگاه فعال است.');
+      setTimeout(()=>location.reload(),500);
+    }
+    return true;
+  }
+  function startAutoSync(){
+    if(!currentUser||syncEnabled)return;
+    syncEnabled=true;
+    localStorage.setItem(SYNC_FLAG,'1');
+    lastCloudUpdatedAt=localStorage.getItem(LAST_SYNC)||'';
+    if(pollTimer)clearInterval(pollTimer);
+    pollTimer=setInterval(checkForCloudChanges,5000);
+    status('همگام‌سازی خودکار فعال است؛ تغییرات این دستگاه و دستگاه دیگر به‌طور خودکار منتقل می‌شوند.');
+  }
+  async function inspectCloud(){
+    if(!currentUser)return;
+    status('در حال بررسی فضای ابری...');
+    const {data,error}=await fetchCloud();
+    if(error){cloudHasData=false;setButtons();status('ورود انجام شد، اما خواندن فضای ابری ممکن نیست: '+error.message+'؛ جدول user_app_data و دسترسی‌های آن باید بررسی شود.');return;}
+    cloudHasData=!!(data&&data.app_data&&data.app_data.data);
+    setButtons();
+    if(localStorage.getItem(SYNC_FLAG)==='1'){
+      lastCloudUpdatedAt=localStorage.getItem(LAST_SYNC)||'';
+      startAutoSync();
+      if(localStorage.getItem(DIRTY_FLAG)==='1'){
+        status('در حال ارسال تغییرات ذخیره‌نشده این دستگاه به ابر...');
+        await saveToCloud(false);
+      }else if(cloudHasData){
+        await checkForCloudChanges(true);
+      }
+      return;
+    }
+    if(cloudHasData){
+      status('حساب متصل است و اطلاعات ابری موجود است. برای راه‌اندازی اولیه روی این دستگاه، «دریافت اطلاعات از ابر» را بزن.');
+    }else{
+      status(hasLocalData()?'حساب متصل است. برای راه‌اندازی اولیه، یک‌بار «ارسال اطلاعات این دستگاه به ابر» را بزن.':'حساب متصل است؛ هنوز اطلاعاتی در ابر یا این دستگاه وجود ندارد.');
+    }
+  }
+  async function signIn(){
+    const email=$('cloudEmail').value.trim(),password=$('cloudPassword').value;
+    if(!email||!password){status('ایمیل و رمز عبور را وارد کن.');return;}
+    status('در حال ورود...');
+    const {data,error}=await client.auth.signInWithPassword({email,password});
+    if(error){status('ورود انجام نشد: '+error.message);return;}
+    currentUser=data.user;setButtons();await inspectCloud();
+  }
+  async function signUp(){
+    const email=$('cloudEmail').value.trim(),password=$('cloudPassword').value;
+    if(!email||password.length<8){status('ایمیل معتبر و رمز عبور حداقل ۸ نویسه‌ای وارد کن.');return;}
+    status('در حال ساخت حساب...');
+    const {data,error}=await client.auth.signUp({email,password});
+    if(error){status('ساخت حساب انجام نشد: '+error.message);return;}
+    if(data.session){currentUser=data.user;setButtons();await inspectCloud();}
+    else{status('حساب ساخته شد. ایمیل تأیید Supabase را باز کن و لینک تأیید را بزن؛ سپس با همین ایمیل و رمز وارد شو.');}
+  }
+  async function saveToCloud(showMessage=true){
+    if(!currentUser||syncInFlight)return false;
+    syncInFlight=true;
+    const revisionAtStart=localRevision;
+    const payload=snapshot();
+    const {data,error}=await client.from('user_app_data')
+      .upsert({user_id:currentUser.id,app_data:payload,updated_at:new Date().toISOString()},{onConflict:'user_id'})
+      .select('updated_at').single();
+    syncInFlight=false;
+    if(error){if(showMessage)status('ذخیره ابری انجام نشد: '+error.message);return false;}
+    cloudHasData=true;
+    lastCloudUpdatedAt=data&&data.updated_at?data.updated_at:new Date().toISOString();
+    localStorage.setItem(LAST_SYNC,lastCloudUpdatedAt);
+    if(revisionAtStart===localRevision){localStorage.removeItem(DIRTY_FLAG);}
+    else{localStorage.setItem(DIRTY_FLAG,'1');scheduleSync();}
+    setButtons();
+    if(showMessage)status('اطلاعات با موفقیت در ابر ذخیره شد؛ همگام‌سازی خودکار فعال است.');
+    startAutoSync();
+    return true;
+  }
+  async function loadFromCloud(){
+    if(!currentUser)return;
+    status('در حال دریافت اطلاعات از ابر...');
+    const {data,error}=await fetchCloud();
+    if(error){status('دریافت اطلاعات انجام نشد: '+error.message);return;}
+    if(!data||!data.app_data||!data.app_data.data){status('هنوز اطلاعاتی در فضای ابری ذخیره نشده است.');return;}
+    if(!confirm('اطلاعات فعلی این دستگاه با نسخه ذخیره‌شده در ابر جایگزین می‌شود. برای جلوگیری از ازدست‌رفتن داده‌ها، ابتدا از بخش پشتیبان‌گیری نسخه پشتیبان بگیر. ادامه می‌دهی؟'))return;
+    if(applyCloudPayload(data,false))startAutoSync();
+  }
+  async function checkForCloudChanges(silent=false){
+    if(!currentUser||!syncEnabled||document.visibilityState==='hidden'||syncInFlight)return;
+    if(localStorage.getItem(DIRTY_FLAG)==='1'){
+      await saveToCloud(false);
+      return;
+    }
+    const {data,error}=await fetchCloud();
+    if(error){if(!silent)status('بررسی تغییرات ابری ناموفق بود: '+error.message);return;}
+    if(!data||!data.app_data||!data.app_data.data)return;
+    const remoteTime=data.updated_at||'';
+    if(remoteTime&&remoteTime!==lastCloudUpdatedAt&&(!lastCloudUpdatedAt||Date.parse(remoteTime)>Date.parse(lastCloudUpdatedAt))){
+      if(localStorage.getItem(DIRTY_FLAG)==='1')return;
+      status('تغییرات دستگاه دیگر دریافت شد؛ در حال به‌روزرسانی...');
+      applyCloudPayload(data,false);
+    }
+  }
+  function scheduleSync(){
+    if(!currentUser||!syncEnabled||suppressStorageEvents)return;
+    localRevision++;
+    localStorage.setItem(DIRTY_FLAG,'1');
+    clearTimeout(syncTimer);
+    syncTimer=setTimeout(()=>saveToCloud(false),900);
+  }
+  const originalSet=Storage.prototype.setItem,originalRemove=Storage.prototype.removeItem,originalClear=Storage.prototype.clear;
+  Storage.prototype.setItem=function(key,value){const result=originalSet.call(this,key,value);if(this===localStorage&&DATA_KEYS.includes(String(key)))scheduleSync();return result;};
+  Storage.prototype.removeItem=function(key){const result=originalRemove.call(this,key);if(this===localStorage&&DATA_KEYS.includes(String(key)))scheduleSync();return result;};
+  Storage.prototype.clear=function(){const result=originalClear.call(this);if(this===localStorage)scheduleSync();return result;};
+  $('cloudSignIn').addEventListener('click',signIn);
+  $('cloudSignUp').addEventListener('click',signUp);
+  $('cloudUpload').addEventListener('click',async()=>{
+    const warning=cloudHasData?'نسخه موجود در ابر با اطلاعات این دستگاه جایگزین می‌شود. مطمئنی؟':'اطلاعات فعلی این دستگاه به فضای ابری حساب شما ارسال می‌شود. ادامه می‌دهی؟';
+    if(!confirm(warning))return;
+    status('در حال ارسال اطلاعات به ابر...');
+    await saveToCloud(true);
+  });
+  $('cloudDownload').addEventListener('click',loadFromCloud);
+  $('cloudSignOut').addEventListener('click',async()=>{
+    stopAutoSync();clearTimeout(syncTimer);await client.auth.signOut();currentUser=null;cloudHasData=false;
+    localStorage.removeItem(SYNC_FLAG);localStorage.removeItem(DIRTY_FLAG);setButtons();
+    status('از حساب خارج شدی. اطلاعات محلی این دستگاه پاک نشده است.');
+  });
+  document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'&&syncEnabled)checkForCloudChanges(true)});
+  window.addEventListener('online',()=>{if(syncEnabled)checkForCloudChanges(true)});
+  client.auth.onAuthStateChange((event,session)=>{
+    if(event==='SIGNED_OUT'){stopAutoSync();currentUser=null;cloudHasData=false;setButtons();}
+    else if(session&&session.user){currentUser=session.user;setButtons();if(event==='INITIAL_SESSION'||event==='SIGNED_IN')setTimeout(()=>inspectCloud(),0);}
+  });
+  client.auth.getSession().then(({data,error})=>{
+    if(error){status('بررسی نشست کاربری ناموفق بود: '+error.message);return;}
+    if(data.session){currentUser=data.session.user;setButtons();inspectCloud();}else{setButtons();}
+  });
+})();
+</script>
+
+<script>
+if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost')) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./service-worker.js').catch(() => {});
+  });
+}
+</script>
+
+</body>
+</html>
