@@ -1,0 +1,17 @@
+{
+  "name": "khanehesab-family-finance",
+  "version": "1.0.0",
+  "private": true,
+  "description": "KhaneHesab family finance PWA and Capacitor wrapper",
+  "scripts": {
+    "cap:sync": "npx cap sync",
+    "cap:android": "npx cap add android",
+    "cap:ios": "npx cap add ios"
+  },
+  "dependencies": {
+    "@capacitor/core": "^7.0.0"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^7.0.0"
+  }
+}

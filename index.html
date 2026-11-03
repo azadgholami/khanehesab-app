@@ -231,6 +231,7 @@ textarea{width:100%;padding:12px;border:1px solid #cbd3d2;border-radius:9px;font
 .cloud-user{font-size:12px;color:#176b68;margin-top:7px;overflow-wrap:anywhere}
 @media(max-width:650px){.cloud-fields{grid-template-columns:1fr}.cloud-actions{display:grid;grid-template-columns:1fr 1fr}.cloud-actions button{min-width:0;width:100%}}
 
+#installAppBtn{font-size:13px;padding:9px 13px}#installAppBtn:disabled{opacity:.75;cursor:default}
 </style>
 
 <meta name="theme-color" content="#17283f">
@@ -240,7 +241,7 @@ textarea{width:100%;padding:12px;border:1px solid #cbd3d2;border-radius:9px;font
 
 </head>
 <body>
-<header><div class="brand">خانه‌حساب <span style="color:#d8c58f">•</span> Family Finance</div><p>نسخه آزمایشی رایگان مدیریت مالی خانواده</p></header>
+<header><div class="brand">خانه‌حساب <span style="color:#d8c58f">•</span> Family Finance</div><p>مدیریت مالی خانواده</p><div class="actions" style="margin-top:12px"><button id="installAppBtn" class="secondary" type="button" style="background:#f2ead6;color:#17283f;border:0">نصب خانه‌حساب روی گوشی</button></div></header>
 <main>
 
   <section class="cloud-panel" aria-label="حساب و همگام‌سازی ابری">
@@ -2164,6 +2165,37 @@ textarea{width:100%;padding:12px;border:1px solid #cbd3d2;border-radius:9px;font
   client.auth.getSession().then(({data,error})=>{
     if(error){status('بررسی نشست کاربری ناموفق بود: '+error.message);return;}
     if(data.session){currentUser=data.session.user;setButtons();inspectCloud();}else{setButtons();}
+  });
+})();
+</script>
+
+<script>
+/* KhaneHesab PWA install experience */
+(function(){
+  let deferredPrompt=null;
+  const btn=document.getElementById('installAppBtn');
+  if(!btn)return;
+  const isIOS=/iphone|ipad|ipod/i.test(navigator.userAgent);
+  const isStandalone=window.matchMedia('(display-mode: standalone)').matches||window.navigator.standalone===true;
+  if(isStandalone){btn.textContent='خانه‌حساب نصب شده است';btn.disabled=true;return;}
+  window.addEventListener('beforeinstallprompt',function(event){
+    event.preventDefault();deferredPrompt=event;btn.hidden=false;
+  });
+  btn.addEventListener('click',async function(){
+    if(deferredPrompt){
+      deferredPrompt.prompt();
+      try{await deferredPrompt.userChoice;}catch(e){}
+      deferredPrompt=null;
+      return;
+    }
+    if(isIOS){
+      alert('برای نصب خانه‌حساب در آیفون: دکمه Share را در Safari بزن، سپس Add to Home Screen را انتخاب کن.');
+    }else{
+      alert('اگر گزینه نصب نمایش داده نمی‌شود، از منوی مرورگر گزینه Install app یا Add to Home Screen را انتخاب کن. در صورت نبودن این گزینه، صفحه را با Chrome باز کن.');
+    }
+  });
+  window.addEventListener('appinstalled',function(){
+    btn.textContent='خانه‌حساب نصب شده است';btn.disabled=true;
   });
 })();
 </script>
