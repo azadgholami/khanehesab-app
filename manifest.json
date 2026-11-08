@@ -1,0 +1,24 @@
+{
+ "name": "خانه‌حساب",
+ "short_name": "خانه‌حساب",
+ "start_url": "./",
+ "scope": "./",
+ "display": "standalone",
+ "background_color": "#17283f",
+ "theme_color": "#17283f",
+ "lang": "fa",
+ "dir": "rtl",
+ "icons": [
+  {
+   "src": "icon-192.png",
+   "sizes": "192x192",
+   "type": "image/png"
+  },
+  {
+   "src": "icon-512.png",
+   "sizes": "512x512",
+   "type": "image/png",
+   "purpose": "any maskable"
+  }
+ ]
+}
