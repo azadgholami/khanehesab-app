@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>خانه‌حساب | حریم خصوصی و شرایط استفاده</title>
+<style>
+:root{--bg:#f3f1ec;--card:#fff;--ink:#17283f;--mut:#6b7686;--line:#e4e0d8;--gold:#e0a63a}
+@media (prefers-color-scheme:dark){:root{--bg:#0f1b2b;--card:#182b44;--ink:#eef1f5;--mut:#9aa7b8;--line:#263a57}}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:Tahoma,"Segoe UI",system-ui,sans-serif;line-height:1.9}
+main{max-width:760px;margin:0 auto;padding:18px 16px 60px}
+.bar{display:flex;gap:8px;margin-bottom:14px}.bar button{flex:1;font:inherit;border:1px solid var(--line);background:var(--card);color:var(--ink);padding:10px;border-radius:12px;cursor:pointer}
+.bar button.on{background:var(--gold);border-color:var(--gold);color:#17283f;font-weight:700}
+section{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px;margin-bottom:16px}
+h1{font-size:22px;margin:4px 0 12px}h2{font-size:17px;margin:20px 0 6px}p,li{font-size:15px}ul{padding-inline-start:20px;margin:6px 0}
+.note{color:var(--mut);font-size:13px}.en{display:none}body.en .fa{display:none}body.en .en{display:block}body.en li.en{display:list-item}
+a{color:inherit}
+</style>
+</head>
+<body>
+<main>
+<div class="bar"><button id="bf" class="on" onclick="L('fa')">فارسی</button><button id="be" onclick="L('en')">English</button></div>
+
+<section id="privacy">
+<div class="fa">
+<h1>حریم خصوصی</h1>
+<p class="note">آخرین به‌روزرسانی: آبان ۱۴۰۵</p>
+<p>خانه‌حساب یک برنامه‌ی مدیریت مالی خانواده است. این صفحه توضیح می‌دهد چه اطلاعاتی نگه داشته می‌شود، کجا، و چه اختیاری روی آن داری.</p>
+<h2>چه اطلاعاتی نگه داشته می‌شود</h2>
+<ul>
+<li><b>اطلاعاتی که خودت وارد می‌کنی:</b> تراکنش‌ها، بدهی و طلب، حساب‌ها، بودجه، اقساط، هدف‌ها، عادت‌ها، یادآورها، یادداشت‌ها و عکس رسیدها.</li>
+<li><b>اطلاعات حساب (فقط اگر وارد شوی):</b> ایمیل و رمز عبور. رمز عبور را سرویس ورود به‌صورت رمزگذاری‌شده نگه می‌دارد و ما آن را نمی‌بینیم.</li>
+<li><b>وضعیت اشتراک:</b> نسخه‌ی رایگان یا حرفه‌ای و تاریخ پایان.</li>
+</ul>
+<h2>اطلاعات کجا ذخیره می‌شود</h2>
+<ul>
+<li><b>روی دستگاه تو:</b> همه‌ی اطلاعات اول در حافظه‌ی مرورگر/برنامه‌ی همین دستگاه ذخیره می‌شود. بدون ورود به حساب، هیچ اطلاعاتی از دستگاه تو خارج نمی‌شود.</li>
+<li><b>روی سرور (فقط با ورود به حساب و نسخه‌ی حرفه‌ای):</b> یک نسخه‌ی همگام‌شده روی پایگاه‌داده‌ی Supabase در لندن (منطقه‌ی eu-west-2) نگه داشته می‌شود. قوانین دسترسی طوری تنظیم شده که هر کاربر فقط اطلاعات خودش را ببیند.</li>
+</ul>
+<h2>سرویس‌های دیگری که درگیرند</h2>
+<ul>
+<li><b>Supabase:</b> ورود به حساب و پایگاه‌داده.</li>
+<li><b>GitHub Pages:</b> میزبانی فایل‌های برنامه. ممکن است آدرس IP تو را در گزارش‌های خود ثبت کند.</li>
+<li><b>Google Fonts:</b> دریافت فونت. ممکن است آدرس IP تو را ببیند.</li>
+<li><b>فقط وقتی خودت بزنی:</b> ابزار خواندن رسید (از jsDelivr بارگذاری می‌شود)، به‌روزرسانی نرخ ارز (از open.er-api.com)، و ثبت صوتی (توسط سرویس گفتار مرورگر یا سیستم‌عامل تو، مثلاً اپل یا گوگل).</li>
+</ul>
+<h2>چه کارهایی نمی‌کنیم</h2>
+<ul>
+<li>تبلیغ نمایش نمی‌دهیم و ابزار آمار و ردیابی رفتار کاربر نداریم.</li>
+<li>اطلاعات تو را نمی‌فروشیم و برای تبلیغ به کسی نمی‌دهیم.</li>
+</ul>
+<h2>امنیت</h2>
+<ul>
+<li>ارتباط با سرور از طریق HTTPS است.</li>
+<li>«قفل برنامه» فقط صفحه‌ی برنامه را می‌پوشاند و اطلاعات روی دستگاه را رمزنگاری نمی‌کند.</li>
+<li>هیچ سامانه‌ای کاملاً بی‌خطر نیست. پیشنهاد می‌کنیم هر چند وقت از اطلاعاتت پشتیبان بگیری (بخش «بیشتر»).</li>
+</ul>
+<h2>اختیارات تو</h2>
+<ul>
+<li><b>دیدن و گرفتن نسخه:</b> خروجی CSV و پشتیبان از بخش «بیشتر».</li>
+<li><b>پاک کردن اطلاعات دستگاه:</b> «بیشتر ← حریم خصوصی و داده‌ها ← پاک‌کردن داده‌های این دستگاه».</li>
+<li><b>حذف حساب و اطلاعات ابری:</b> «بیشتر ← حریم خصوصی و داده‌ها ← حذف حساب». همه‌ی اطلاعات ابری و ایمیل تو برای همیشه پاک می‌شود.</li>
+</ul>
+<h2>کودکان</h2>
+<p>این برنامه برای افراد زیر ۱۶ سال طراحی نشده است.</p>
+<h2>تغییرات</h2>
+<p>اگر این متن تغییر مهمی کند، تاریخ بالای صفحه به‌روز می‌شود.</p>
+<p class="contact-fa"></p>
+</div>
+<div class="en">
+<h1>Privacy</h1>
+<p class="note">Last updated: November 2026</p>
+<p>Khaneh-Hesab is a family finance app. This page explains what data is kept, where, and what control you have.</p>
+<h2>What data is kept</h2>
+<ul>
+<li><b>Data you enter:</b> transactions, debts and credits, accounts, budgets, installments, goals, habits, reminders, notes and receipt photos.</li>
+<li><b>Account data (only if you sign in):</b> email and password. The sign-in service stores your password in hashed form; we cannot see it.</li>
+<li><b>Subscription status:</b> free or Pro, and the end date.</li>
+</ul>
+<h2>Where it is stored</h2>
+<ul>
+<li><b>On your device:</b> everything is first stored in this device's browser/app storage. Without signing in, no data leaves your device.</li>
+<li><b>On our server (only when signed in with Pro):</b> a synced copy is kept in a Supabase database in London (eu-west-2). Access rules ensure each user can only read their own data.</li>
+</ul>
+<h2>Other services involved</h2>
+<ul>
+<li><b>Supabase:</b> sign-in and database.</li>
+<li><b>GitHub Pages:</b> hosts the app files and may log your IP address.</li>
+<li><b>Google Fonts:</b> font delivery; may see your IP address.</li>
+<li><b>Only when you tap them:</b> the receipt-reading tool (loaded from jsDelivr), exchange-rate update (open.er-api.com), and voice entry (handled by your browser's or operating system's speech service, e.g. Apple or Google).</li>
+</ul>
+<h2>What we do not do</h2>
+<ul>
+<li>We show no ads and use no analytics or behavior tracking.</li>
+<li>We do not sell your data or share it for advertising.</li>
+</ul>
+<h2>Security</h2>
+<ul>
+<li>Communication with the server uses HTTPS.</li>
+<li>The "app lock" only covers the app screen; it does not encrypt data stored on the device.</li>
+<li>No system is perfectly safe. We recommend backing up your data regularly (More tab).</li>
+</ul>
+<h2>Your choices</h2>
+<ul>
+<li><b>Get a copy:</b> CSV export and backup in the More tab.</li>
+<li><b>Erase device data:</b> More → Privacy and data → Erase this device's data.</li>
+<li><b>Delete your account and cloud data:</b> More → Privacy and data → Delete account. Your cloud data and email are permanently removed.</li>
+</ul>
+<h2>Children</h2>
+<p>The app is not designed for people under 16.</p>
+<h2>Changes</h2>
+<p>If this text changes materially, the date above is updated.</p>
+<p class="contact-en"></p>
+</div>
+</section>
+
+<section id="terms">
+<div class="fa">
+<h1>شرایط استفاده</h1>
+<ul>
+<li><b>ابزار کمکی است، نه مشاوره.</b> خانه‌حساب برای ثبت و دیدن وضعیت مالی است و جایگزین مشاور مالی، حسابدار، حقوقی یا مالیاتی نیست.</li>
+<li><b>صحت اعداد.</b> مبلغ به حروف، تبدیل ارز و نرخ‌ها ممکن است اشتباه یا قدیمی باشند. برای کار رسمی (چک، قرارداد، فاکتور رسمی) خودت دوباره بررسی کن.</li>
+<li><b>پشتیبان‌گیری.</b> مسئولیت نگه‌داری نسخه‌ی پشتیبان از اطلاعاتت با خودت است. دسترسی دائمی به سرویس ابری تضمین نمی‌شود.</li>
+<li><b>حساب.</b> رمز عبور را محرمانه نگه دار. هر کاری با حساب تو انجام شود، به عهده‌ی توست.</li>
+<li><b>نسخه‌ی حرفه‌ای.</b> با کد فعال‌سازی برای مدت مشخص فعال می‌شود. هر کد یک بار قابل استفاده است. شرایط بازپرداخت در زمان خرید اعلام می‌شود.</li>
+<li><b>استفاده‌ی مجاز.</b> از برنامه برای کار غیرقانونی یا آسیب به سرویس استفاده نکن.</li>
+<li><b>«همان‌گونه که هست».</b> تا حدی که قانون اجازه می‌دهد، برنامه بدون تضمین ارائه می‌شود و سازنده مسئول خسارت ناشی از خطا یا قطعی سرویس نیست.</li>
+<li><b>تغییر و پایان.</b> ممکن است امکانات یا این شرایط تغییر کند. می‌توانی هر زمان حسابت را حذف کنی.</li>
+</ul>
+</div>
+<div class="en">
+<h1>Terms of use</h1>
+<ul>
+<li><b>A tool, not advice.</b> Khaneh-Hesab helps you record and view your finances. It is not a substitute for a financial, accounting, legal or tax professional.</li>
+<li><b>Accuracy.</b> Amounts in words, currency conversions and rates may be wrong or outdated. Double-check before using them for official purposes (cheques, contracts, formal invoices).</li>
+<li><b>Backups.</b> You are responsible for keeping backups of your data. Continuous availability of the cloud service is not guaranteed.</li>
+<li><b>Account.</b> Keep your password confidential. You are responsible for activity on your account.</li>
+<li><b>Pro version.</b> Activated with a code for a set period. Each code can be used once. Refund terms are stated at the time of purchase.</li>
+<li><b>Acceptable use.</b> Do not use the app for unlawful purposes or to harm the service.</li>
+<li><b>"As is".</b> To the extent permitted by law, the app is provided without warranty and the author is not liable for loss caused by errors or outages.</li>
+<li><b>Changes and ending.</b> Features or these terms may change. You can delete your account at any time.</li>
+</ul>
+</div>
+</section>
+</main>
+<script>
+const CONTACT='';
+function L(l){document.body.classList.toggle('en',l=='en');document.documentElement.lang=l;document.documentElement.dir=l=='en'?'ltr':'rtl';document.getElementById('bf').className=l=='fa'?'on':'';document.getElementById('be').className=l=='en'?'on':'';try{localStorage.setItem('kh_pl',l)}catch(e){}}
+if(CONTACT){document.querySelector('.contact-fa').textContent='تماس: '+CONTACT;document.querySelector('.contact-en').textContent='Contact: '+CONTACT}
+let l0='fa';try{l0=localStorage.getItem('kh_pl')||((navigator.language||'').startsWith('fa')?'fa':'en')}catch(e){}L(l0);
+</script>
+</body>
+</html>
