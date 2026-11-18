@@ -28,7 +28,7 @@ a{color:inherit}
 <p>خانه‌حساب یک برنامه‌ی مدیریت مالی خانواده است. این صفحه توضیح می‌دهد چه اطلاعاتی نگه داشته می‌شود، کجا، و چه اختیاری روی آن داری.</p>
 <h2>چه اطلاعاتی نگه داشته می‌شود</h2>
 <ul>
-<li><b>اطلاعاتی که خودت وارد می‌کنی:</b> تراکنش‌ها، بدهی و طلب، حساب‌ها، بودجه، اقساط، هدف‌ها، عادت‌ها، یادآورها، یادداشت‌ها و عکس رسیدها.</li>
+<li><b>اطلاعاتی که خودت وارد می‌کنی:</b> تراکنش‌ها، حال و هوای روزانه (اختیاری)، بدهی و طلب، حساب‌ها، بودجه، اقساط، هدف‌ها، عادت‌ها، یادآورها، یادداشت‌ها و عکس رسیدها.</li>
 <li><b>اطلاعات حساب (فقط اگر وارد شوی):</b> ایمیل و رمز عبور. رمز عبور را سرویس ورود به‌صورت رمزگذاری‌شده نگه می‌دارد و ما آن را نمی‌بینیم.</li>
 <li><b>وضعیت اشتراک:</b> نسخه‌ی رایگان یا حرفه‌ای و تاریخ پایان.</li>
 </ul>
@@ -36,6 +36,12 @@ a{color:inherit}
 <ul>
 <li><b>روی دستگاه تو:</b> همه‌ی اطلاعات اول در حافظه‌ی مرورگر/برنامه‌ی همین دستگاه ذخیره می‌شود. بدون ورود به حساب، هیچ اطلاعاتی از دستگاه تو خارج نمی‌شود.</li>
 <li><b>روی سرور (فقط با ورود به حساب و نسخه‌ی حرفه‌ای):</b> یک نسخه‌ی همگام‌شده روی پایگاه‌داده‌ی Supabase در لندن (منطقه‌ی eu-west-2) نگه داشته می‌شود. قوانین دسترسی طوری تنظیم شده که هر کاربر فقط اطلاعات خودش را ببیند.</li>
+</ul>
+<h2>دفتر مشترک خانواده (اختیاری)</h2>
+<ul>
+<li>اگر دفتر مشترک بسازی یا به آن بپیوندی، همه‌ی اعضا همه‌ی تراکنش‌ها، رسیدها و سایر اطلاعات آن دفتر را می‌بینند و می‌توانند ثبت کنند. اعضا ایمیل یکدیگر را هم می‌بینند. حال و هوای روزانه‌ی تو فقط وقتی برای اعضا نمایش داده می‌شود که خودت گزینه‌ی نمایش را روشن کنی.</li>
+<li>مدیر دفتر می‌تواند اعضا را حذف کند یا دفتر را پاک کند. اگر مدیر حسابش را حذف کند، دفتر پاک می‌شود.</li>
+<li>اطلاعات دفتر مشترک روی دستگاه هر عضو هم می‌ماند.</li>
 </ul>
 <h2>سرویس‌های دیگری که درگیرند</h2>
 <ul>
@@ -73,7 +79,7 @@ a{color:inherit}
 <p>Khaneh-Hesab is a family finance app. This page explains what data is kept, where, and what control you have.</p>
 <h2>What data is kept</h2>
 <ul>
-<li><b>Data you enter:</b> transactions, debts and credits, accounts, budgets, installments, goals, habits, reminders, notes and receipt photos.</li>
+<li><b>Data you enter:</b> transactions, daily mood (optional), debts and credits, accounts, budgets, installments, goals, habits, reminders, notes and receipt photos.</li>
 <li><b>Account data (only if you sign in):</b> email and password. The sign-in service stores your password in hashed form; we cannot see it.</li>
 <li><b>Subscription status:</b> free or Pro, and the end date.</li>
 </ul>
@@ -81,6 +87,12 @@ a{color:inherit}
 <ul>
 <li><b>On your device:</b> everything is first stored in this device's browser/app storage. Without signing in, no data leaves your device.</li>
 <li><b>On our server (only when signed in with Pro):</b> a synced copy is kept in a Supabase database in London (eu-west-2). Access rules ensure each user can only read their own data.</li>
+</ul>
+<h2>Shared family book (optional)</h2>
+<ul>
+<li>If you create or join a shared book, all members can see and add every transaction, receipt and other data in that book. Members also see each other's email addresses. Your daily mood is shown to members only if you turn the sharing option on.</li>
+<li>The book's owner can remove members or delete the book. If the owner deletes their account, the book is deleted.</li>
+<li>Shared-book data also stays on each member's device.</li>
 </ul>
 <h2>Other services involved</h2>
 <ul>
@@ -144,9 +156,9 @@ a{color:inherit}
 </section>
 </main>
 <script>
-const CONTACT='';
+const TG='https://t.me/Azad_gholami',WA='https://wa.me/qr/HJUIPPJQK7OTF1';
 function L(l){document.body.classList.toggle('en',l=='en');document.documentElement.lang=l;document.documentElement.dir=l=='en'?'ltr':'rtl';document.getElementById('bf').className=l=='fa'?'on':'';document.getElementById('be').className=l=='en'?'on':'';try{localStorage.setItem('kh_pl',l)}catch(e){}}
-if(CONTACT){document.querySelector('.contact-fa').textContent='تماس: '+CONTACT;document.querySelector('.contact-en').textContent='Contact: '+CONTACT}
+document.querySelector('.contact-fa').innerHTML='تماس: <a href="'+TG+'">تلگرام</a> • <a href="'+WA+'">واتساپ</a>';document.querySelector('.contact-en').innerHTML='Contact: <a href="'+TG+'">Telegram</a> • <a href="'+WA+'">WhatsApp</a>';
 let l0='fa';try{l0=localStorage.getItem('kh_pl')||((navigator.language||'').startsWith('fa')?'fa':'en')}catch(e){}L(l0);
 </script>
 </body>
