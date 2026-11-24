@@ -67,8 +67,8 @@ const save=()=>{const j=JSON.stringify(S);idbSet(j);if(AU)schedSync();try{if(j.l
 const f=n=>Number(n||0).toLocaleString('fa-IR')+' '+S.cur;
 const esc=s=>String(s||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const today=()=>{const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')};
-const GL={fa:'en-GB',en:'en-GB',ar:'ar-EG',tr:'tr-TR',fr:'fr-FR',de:'de-DE'};
-const fd=d=>{try{const x=new Date(d),G=x.toLocaleDateString(GL[LG]||'en-GB',{day:'numeric',month:'short',year:'numeric',timeZone:'UTC'});return (LG=='fa'?x.toLocaleDateString('fa-IR',{timeZone:'UTC'})+' ('+G+')':G+' ('+g2j(...T3(d)).join('/')+')')+' • '+x.toLocaleDateString(LG+'-u-ca-islamic-umalqura',{day:'numeric',month:'long',year:'numeric',timeZone:'UTC'})}catch(e){return d}};
+const GL={fa:'en-GB',en:'en-GB',ar:'ar-EG',tr:'tr-TR',fr:'fr-FR',de:'de-DE',ckb:'fa-IR'};
+const fd=d=>{try{const x=new Date(d),G=x.toLocaleDateString(GL[LG]||'en-GB',{day:'numeric',month:'short',year:'numeric',timeZone:'UTC'});return (FA()?x.toLocaleDateString('fa-IR',{timeZone:'UTC'})+' ('+G+')':G+' ('+g2j(...T3(d)).join('/')+')')+' • '+x.toLocaleDateString((LG=='ckb'?'ar':LG)+'-u-ca-islamic-umalqura',{day:'numeric',month:'long',year:'numeric',timeZone:'UTC'})}catch(e){return d}};
 let UD=null;function tt(m,u){let e=$('#tst');if(!e){e=document.createElement('div');e.id='tst';e.style.cssText='position:fixed;left:12px;right:12px;bottom:calc(84px + env(safe-area-inset-bottom,0px));background:var(--navy);color:#fff;border-radius:14px;padding:12px 16px;z-index:20;display:flex;justify-content:space-between;align-items:center;max-width:616px;margin:0 auto';document.body.appendChild(e)}e.innerHTML='<span>'+m+'</span>'+(u?'<button class="btn gold" style="min-height:36px;padding:6px 12px" onclick="undo()">بازگردانی</button>':'');e.style.display='flex';clearTimeout(tt.t);tt.t=setTimeout(()=>e.style.display='none',4000)}
 function undo(){if(UD){UD.a.splice(UD.i,0,UD.x);UD=null;save();render();$('#tst').style.display='none'}}
 const CATS=['خوراک','مسکن','قبوض','حمل‌ونقل','درمان','آموزش','تفریح','پس‌انداز','حقوق','فروش','سایر'];
@@ -129,9 +129,9 @@ const P2=n=>String(n).padStart(2,'0'),T3=s=>s.split('-').map(Number);
 function g2j(gy,gm,gd){const g=[0,31,59,90,120,151,181,212,243,273,304,334],y=gm>2?gy+1:gy;let n=355666+365*gy+Math.floor((y+3)/4)-Math.floor((y+99)/100)+Math.floor((y+399)/400)+gd+g[gm-1],jy=-1595+33*Math.floor(n/12053);n%=12053;jy+=4*Math.floor(n/1461);n%=1461;if(n>365){jy+=Math.floor((n-1)/365);n=(n-1)%365}return[jy,n<186?1+Math.floor(n/31):7+Math.floor((n-186)/30),1+(n<186?n%31:(n-186)%30)]}
 function j2g(jy,jm,jd){jy+=1595;let n=-355668+365*jy+Math.floor(jy/33)*8+Math.floor((jy%33+3)/4)+jd+(jm<7?(jm-1)*31:(jm-7)*30+186),gy=400*Math.floor(n/146097);n%=146097;if(n>36524){gy+=100*Math.floor(--n/36524);n%=36524;if(n>=365)n++}gy+=4*Math.floor(n/1461);n%=1461;if(n>365){gy+=Math.floor((n-1)/365);n=(n-1)%365}let gd=n+1;const s=[0,31,(gy%4==0&&gy%100!=0)||gy%400==0?29:28,31,30,31,30,31,31,30,31,30,31];let gm=0;for(;gm<13&&gd>s[gm];gm++)gd-=s[gm];return[gy,gm,gd]}
 function jd(id,v){return `<div id="${id}w">${jin(id,v)}</div>`}
-function TG(id,fa){const a=`<button class="${fa?'on':''}" onclick="jc('${id}','fa')">شمسی</button>`,b=`<button class="${fa?'':'on'}" onclick="jc('${id}','en')">میلادی</button>`;return `<div class="seg" style="margin-bottom:6px">${LG=='fa'?a+b:b+a}</div>`}
+function TG(id,fa){const a=`<button class="${fa?'on':''}" onclick="jc('${id}','fa')">شمسی</button>`,b=`<button class="${fa?'':'on'}" onclick="jc('${id}','en')">میلادی</button>`;return `<div class="seg" style="margin-bottom:6px">${FA()?a+b:b+a}</div>`}
 function jc(id,m){S.dc=m;save();const e=$('#'+id),v=e?e.value:'';$('#'+id+'w').innerHTML=jin(id,v)}
-function jin(id,v){const md=S.dc||(LG=='fa'?'fa':'en');if(md=='hj')return HJ(id,v);if(md=='en')return TGm(id,'en')+`<input type="date" id="${id}" value="${v}">`;const p=v?g2j(...T3(v)):[0,0,0],y0=g2j(...T3(today()))[0],o=(x,t,s)=>`<option value="${x}" ${x==s?'selected':''}>${t}</option>`;let Y=o(0,'سال',p[0]),M=o(0,'ماه',p[1]),D=o(0,'روز',p[2]);for(let y=y0-3;y<=y0+10;y++)Y+=o(y,y.toLocaleString('fa-IR',{useGrouping:false}),p[0]);(LG=='fa'?MN:MNe).forEach((n,i)=>M+=o(i+1,n,p[1]));for(let d=1;d<=31;d++)D+=o(d,d.toLocaleString('fa-IR'),p[2]);return TGm(id,'fa')+`<div class="row"><select id="${id}y" onchange="ju('${id}')">${Y}</select><select id="${id}m" onchange="ju('${id}')">${M}</select><select id="${id}d" onchange="ju('${id}')">${D}</select></div><input type="hidden" id="${id}" value="${v}"><small class="note" id="${id}g">${v?'میلادی: '+v:''}</small>`}
+function jin(id,v){const md=S.dc||(FA()?'fa':'en');if(md=='hj')return HJ(id,v);if(md=='en')return TGm(id,'en')+`<input type="date" id="${id}" value="${v}">`;const p=v?g2j(...T3(v)):[0,0,0],y0=g2j(...T3(today()))[0],o=(x,t,s)=>`<option value="${x}" ${x==s?'selected':''}>${t}</option>`;let Y=o(0,'سال',p[0]),M=o(0,'ماه',p[1]),D=o(0,'روز',p[2]);for(let y=y0-3;y<=y0+10;y++)Y+=o(y,y.toLocaleString('fa-IR',{useGrouping:false}),p[0]);(FA()?MN:MNe).forEach((n,i)=>M+=o(i+1,n,p[1]));for(let d=1;d<=31;d++)D+=o(d,d.toLocaleString('fa-IR'),p[2]);return TGm(id,'fa')+`<div class="row"><select id="${id}y" onchange="ju('${id}')">${Y}</select><select id="${id}m" onchange="ju('${id}')">${M}</select><select id="${id}d" onchange="ju('${id}')">${D}</select></div><input type="hidden" id="${id}" value="${v}"><small class="note" id="${id}g">${v?'میلادی: '+v:''}</small>`}
 function ju(id){const y=+$('#'+id+'y').value,m=+$('#'+id+'m').value,d=+$('#'+id+'d').value;if(!y||!m||!d){$('#'+id).value='';$('#'+id+'g').textContent='';return}const g=j2g(y,m,d),v=g[0]+'-'+P2(g[1])+'-'+P2(g[2]);$('#'+id).value=v;$('#'+id+'g').textContent='میلادی: '+v}
 const EXP=CATS.filter(c=>!['حقوق','فروش','پس‌انداز'].includes(c)),sm_=(a,t)=>a.filter(x=>x.t==t).reduce((s,x)=>s+x.a,0);
 function sb(c,v){S.bud=S.bud||{};S.bud[c]=+v;save();render()}
@@ -140,8 +140,8 @@ function rep(){const n=new Date(),D=[];for(let i=5;i>=0;i--){const d=new Date(n.
 let CY=0,CM=0,CS='';
 function cn(n){CM+=n;if(CM>12){CM=1;CY++}if(CM<1){CM=12;CY--}render()}
 function evs(){const e={},a=(d,t)=>{if(d)(e[d]=e[d]||[]).push(t)};S.tx.forEach(t=>a(t.d,(t.t=='in'?'＋ ':'− ')+t.n+' '+f(t.a)));S.db.forEach(d=>a(d.due,'سررسید '+d.k+': '+d.w));Object.entries(S.m||{}).forEach(([k,L])=>L.forEach(x=>a(x.d,MODS[k][0]+' '+x.t)));return e}
-function cal(){const J=g2j(...T3(today()));if(!CY){CY=J[0];CM=J[1]}const e=evs(),len=CM<7?31:CM<12?30:(g2j(...j2g(CY,12,30))[1]==12?30:29),g1=j2g(CY,CM,1),off=(new Date(g1[0],g1[1]-1,g1[2]).getDay()+1)%7;let c='';for(let i=0;i<off;i++)c+='<div></div>';for(let d=1;d<=len;d++){const g=j2g(CY,CM,d),k=g[0]+'-'+P2(g[1])+'-'+P2(g[2]);c+=`<button onclick="CS='${k}';render()" style="font:inherit;color:inherit;border:1px solid var(--line);border-radius:10px;background:${k==CS?'var(--gold)':k==today()?'var(--bg)':'none'};padding:8px 0;cursor:pointer">${d.toLocaleString('fa-IR')}${e[k]?'<div style="font-size:9px;color:var(--in)">●</div>':''}</button>`}return BK+`<div class="card" style="margin-top:12px"><div style="display:flex;justify-content:space-between;align-items:center"><button class="x" onclick="cn(-1)">▶</button><b>${(LG=='fa'?MN:MNe)[CM-1]} ${CY.toLocaleString('fa-IR',{useGrouping:false})}</b><button class="x" onclick="cn(1)">◀</button></div><div style="display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-top:10px;text-align:center">${'ش ی د س چ پ ج'.split(' ').map(x=>`<small class="note">${x}</small>`).join('')}${c}</div></div>${CS?`<div class="card"><b>${fd(CS)}</b>${(e[CS]||['رویدادی نیست.']).map(x=>`<div class="it">${esc(x)}</div>`).join('')}</div>`:''}`}
-const LGS={fa:'فارسی',en:'English',ar:'العربية',tr:'Türkçe',fr:'Français',de:'Deutsch'};let LG=S.lg||'fa';
+function cal(){const J=g2j(...T3(today()));if(!CY){CY=J[0];CM=J[1]}const e=evs(),len=CM<7?31:CM<12?30:(g2j(...j2g(CY,12,30))[1]==12?30:29),g1=j2g(CY,CM,1),off=(new Date(g1[0],g1[1]-1,g1[2]).getDay()+1)%7;let c='';for(let i=0;i<off;i++)c+='<div></div>';for(let d=1;d<=len;d++){const g=j2g(CY,CM,d),k=g[0]+'-'+P2(g[1])+'-'+P2(g[2]);c+=`<button onclick="CS='${k}';render()" style="font:inherit;color:inherit;border:1px solid var(--line);border-radius:10px;background:${k==CS?'var(--gold)':k==today()?'var(--bg)':'none'};padding:8px 0;cursor:pointer">${d.toLocaleString('fa-IR')}${e[k]?'<div style="font-size:9px;color:var(--in)">●</div>':''}</button>`}return BK+`<div class="card" style="margin-top:12px"><div style="display:flex;justify-content:space-between;align-items:center"><button class="x" onclick="cn(-1)">▶</button><b>${(FA()?MN:MNe)[CM-1]} ${CY.toLocaleString('fa-IR',{useGrouping:false})}</b><button class="x" onclick="cn(1)">◀</button></div><div style="display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-top:10px;text-align:center">${'ش ی د س چ پ ج'.split(' ').map(x=>`<small class="note">${x}</small>`).join('')}${c}</div></div>${CS?`<div class="card"><b>${fd(CS)}</b>${(e[CS]||['رویدادی نیست.']).map(x=>`<div class="it">${esc(x)}</div>`).join('')}</div>`:''}`}
+const LGS={fa:'فارسی',en:'English',ar:'العربية',tr:'Türkçe',fr:'Français',de:'Deutsch',ckb:'کوردی (سۆرانی)'};let LG=S.lg||'fa';
 const MNe=['Farvardin','Ordibehesht','Khordad','Tir','Mordad','Shahrivar','Mehr','Aban','Azar','Dey','Bahman','Esfand'];
 const DICT=`مانده این ماه|Balance this month|رصيد هذا الشهر|Bu ayın bakiyesi
 درآمد|Income|الدخل|Gelir
@@ -251,16 +251,372 @@ const DICT=`مانده این ماه|Balance this month|رصيد هذا الشه
 پ|Thu|خم|Per
 ج|Fri|جم|Cum`.split('\n').map(l=>l.split('|'));
 const IX={en:1,ar:2,tr:3,fr:4,de:5},NOSUB=['روز','سال','ماه','شرح'],MAP=new Map(DICT.map(r=>[r[0],r])),LONG=DICT.filter(r=>r[0].length>=3&&!NOSUB.includes(r[0])).sort((a,b)=>b[0].length-a[0].length);
-function trn(s){const i=IX[LG],z=s.replace(/\u200c/g,''),r=MAP.get(z.trim());let o=r?(r[i]||r[1]):LONG.reduce((a,r)=>a.includes(r[0])?a.split(r[0]).join(r[i]||r[1]):a,z);return r?o:o.replace(/[۰-۹]/g,d=>LG=='ar'?'٠١٢٣٤٥٦٧٨٩'[d.charCodeAt(0)-1776]:String(d.charCodeAt(0)-1776)).replace(/٬/g,{ar:'٬',de:'.',fr:' '}[LG]||',').replace(/٫/g,{de:',',fr:','}[LG]||'.')}
-let BZ=0;function applyLang(){const d=document.documentElement;d.lang=LG;d.dir=LG=='fa'||LG=='ar'?'rtl':'ltr';if(LG=='fa')return;const w=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT),L=[];let n;while(n=w.nextNode()){if(!/^(SCRIPT|STYLE)$/.test(n.parentNode.tagName))L.push(n)}L.forEach(n=>{const v=trn(n.nodeValue);if(v!==n.nodeValue)n.nodeValue=v});document.querySelectorAll('[placeholder],[aria-label]').forEach(e=>['placeholder','aria-label'].forEach(a=>{const v=e.getAttribute(a);if(v){const x=trn(v);if(x!==v)e.setAttribute(a,x)}}))}
+const FA=()=>LG=='fa'||LG=='ckb';const CKM=new Map(),CKL=[];`مانده این ماه|ماوەی ئەم مانگە
+درآمد|داهات
+هزینه|خەرجی
+بدهی باقیمانده|قەرزی ماوە
+طلب وصولنشده|داواکاریی وەرنەگیراو
+هزینهها به تفکیک دسته|خەرجییەکان بەپێی هاوپۆل
+هنوز هزینهای این ماه ثبت نشده.|هێشتا هیچ خەرجییەک لەم مانگەدا تۆمار نەکراوە.
+آخرین تراکنشها|دوایین مامەڵەکان
+با دکمه ＋ اولین درآمد یا هزینه را ثبت کن.|بە دوگمەی ＋ یەکەم داهات یان خەرجی تۆمار بکە.
+همه تراکنشها|هەموو مامەڵەکان
+تراکنشی ثبت نشده. با ＋ شروع کن و عکس رسید را هم ضمیمه کن.|هیچ مامەڵەیەک تۆمار نەکراوە. بە ＋ دەست پێ بکە و وێنەی وەسڵیش زیاد بکە.
+بدهیها و طلبها|قەرز و داواکارییەکان
+بدهی یا طلبی ثبت نشده. با ＋ اضافه کن و رسیدش را بگذار.|هیچ قەرز یان داواکارییەک تۆمار نەکراوە. بە ＋ زیادی بکە و وەسڵەکەی دابنێ.
+بدهی (من بدهکارم)|قەرز (من قەرزارم)
+طلب (او بدهکار است)|داواکاری (ئەو قەرزارە)
+ثبت بدهی یا طلب|تۆمارکردنی قەرز یان داواکاری
+ثبت تراکنش|تۆمارکردنی مامەڵە
+تاریخ سررسید (اختیاری)|بەرواری کۆتایی (ئارەزوومەندانە)
+تاریخ سررسید|بەرواری کۆتایی
+سررسید|کۆتایی مۆڵەت
+تسویه شد|پارەکە دراوەتەوە
+بدهی|قەرز
+طلب|داواکاری
+نام شخص|ناوی کەس
+شرح|ڕوونکردنەوە
+مبلغ|بڕ
+دسته|هاوپۆل
+تاریخ|بەروار
+رسید (عکس)|وەسڵ (وێنە)
+رسیدهای ثبتشده:|وەسڵە تۆمارکراوەکان:
+رسید|وەسڵ
+ذخیره|پاشەکەوت
+انصراف|پاشگەزبوونەوە
+بستن|داخستن
+بازگشت|گەڕانەوە
+عنوان|ناونیشان
+خانه|ماڵ
+تراکنشها|مامەڵەکان
+بدهی و طلب|قەرز و داواکاری
+بیشتر|زیاتر
+پشتیبانگیری و انتقال به دستگاه دیگر|یەدەگگرتن و گواستنەوە بۆ ئامێری تر
+گرفتن پشتیبان|وەرگرتنی یەدەگ
+بازیابی از فایل|گەڕاندنەوە لە فایل
+واحد پول|یەکەی پارە
+ابزارها|ئامرازەکان
+آب امروز|ئاوی ئەمڕۆ
+لیوان|پەرداخ
+برنامه روزانه|پلانی ڕۆژانە
+اقساط|قیستەکان
+هدفها|ئامانجەکان
+عادتها|خووەکان
+یادآورها|بیرخەرەوەکان
+شرح روز|ڕوونکردنەوەی ڕۆژ
+بودجه ماهانه|بودجەی مانگانە
+گزارشها|ڕاپۆرتەکان
+تقویم|ڕۆژژمێر
+کار جدید|کاری نوێ
+قسط جدید|قیستی نوێ
+هدف جدید|ئامانجی نوێ
+عادت جدید|خوویەکی نوێ
+یادآور جدید|بیرخەرەوەی نوێ
+یادداشت جدید|تێبینیی نوێ
+سال|ساڵ
+ماه|مانگ
+روز|ڕۆژ
+میلادی|زایینی
+شمسی|هەتاوی
+خوراک|خۆراک
+مسکن|نیشتەجێبوون
+قبوض|پسوولەکان
+حملونقل|گواستنەوە
+درمان|چارەسەر
+آموزش|پەروەردە
+تفریح|کات بەسەربردن
+پسانداز|پاشەکەوتی پارە
+حقوق|مووچە
+فروش|فرۆشتن
+سایر|هیتر
+تومان|تمەن
+ریال|ڕیاڵ
+یورو €|یۆرۆ €
+دلار $|دۆلار $
+حساب|هەژمار
+حسابها|هەژمارەکان
+مجموع دارایی|کۆی سەروەت
+موجودی اولیه|ماوەی سەرەتایی
+انتقال|گواستنەوە
+از|لە
+به|بۆ
+نام را وارد کن.|ناوەکە بنووسە.
+مبلغ را وارد کن.|بڕەکە بنووسە.
+حساب کاربری|هەژماری بەکارهێنەر
+ورود / ثبتنام|چوونەژوورەوە / خۆتۆمارکردن
+ایمیل|ئیمەیڵ
+رمز عبور|وشەی نهێنی
+ورود به حساب|چوونە ناو هەژمار
+ساخت حساب|دروستکردنی هەژمار
+فراموشی رمز|وشەی نهێنیم بیرچووە
+خروج|چوونەدەرەوە
+همگامسازی حالا|ئێستا هاوکات بکە
+نسخه حرفهای|وەشانی پڕۆ
+نسخه رایگان|وەشانی بێبەرامبەر
+ارتقا به حرفهای|بەرزکردنەوە بۆ پڕۆ
+کد فعالسازی|کۆدی چالاککردن
+فعالسازی|چالاککردن
+حریم خصوصی|تایبەتمەندی
+شرایط استفاده|مەرجەکانی بەکارهێنان
+حذف حساب|سڕینەوەی هەژمار
+پشتیبانی|پشتگیری
+دفتر مشترک خانواده|دەفتەری هاوبەشی خێزان
+مدیر|بەڕێوەبەر
+عضو|ئەندام
+کد دعوت|کۆدی بانگهێشت
+ساخت|دروستکردن
+پیوستن|پەیوەستبوون
+حذف|سڕینەوە
+ورود|چوونەژوورەوە
+رمز اشتباه است|وشەی نهێنی هەڵەیە
+وارد شدی|چوویتە ژوورەوە
+از حساب خارج شدی|لە هەژمار دەرچووی
+امروز چطور بود؟|ئەمڕۆ چۆن بوو؟
+احساسات روزانه|هەستی ڕۆژانە
+ظاهر و راهنما|ڕواڵەت و ڕێنمایی
+خودکار|خۆکار
+روشن|ڕووناک
+تیره|تاریک
+شروع|دەستپێکردن
+فهمیدم|تێگەیشتم
+جستجو…|گەڕان…
+ثبت صوتی|تۆمارکردنی دەنگی
+ویرایش|دەستکاری
+بودجه|بودجە
+گزارش|ڕاپۆرت
+هزینه این ماه|خەرجیی ئەم مانگە
+ذخیره شد|پاشەکەوت کرا
+حذف شد|سڕایەوە
+بازگردانی|گەڕاندنەوە
+شنبه|شەممە
+یکشنبه|یەکشەممە
+دوشنبه|دووشەممە
+سهشنبه|سێشەممە
+چهارشنبه|چوارشەممە
+پنجشنبه|پێنجشەممە
+جمعه|هەینی
+عالی|نایاب
+خوب|باش
+عاشقانه|خۆشەویستانە
+هیجانزده|پڕ لە هەیجان
+معمولی|ئاسایی
+خسته|ماندوو
+نگران|نیگەران
+ناراحت|دڵتەنگ
+غمگین|غەمبار
+عصبانی|توڕە
+بیمار|نەخۆش
+به خانهحساب خوش آمدی|بەخێربێیت بۆ خانەحیساب
+درآمد و هزینه، بدهی و طلب، رسیدها و اقساط را یکجا مدیریت کن. اطلاعات فقط روی دستگاه خودت میماند.|داهات و خەرجی، قەرز و داواکاری، وەسڵ و قیستەکان لە یەک شوێن بەڕێوە ببە. زانیارییەکان تەنیا لەسەر ئامێری خۆت دەمێننەوە.
+ثبت صوتی کردی هنوز آماده نیست|تۆمارکردنی دەنگی کوردی هێشتا ئامادە نییە
+یک فایل پشتیبان بگیر و در گوشی یا رایانه دیگر (اندروید، آیفون یا ویندوز) وارد کن. رسیدها هم داخل فایل هستند.|فایلێکی یەدەگ بگرە و لە مۆبایل یان کۆمپیوتەرێکی تر (ئەندرۆید، ئایفۆن یان ویندۆز) بیکەرەوە. وەسڵەکانیش لە ناو فایلەکەدان.
+اطلاعات فعلاً فقط روی همین دستگاه ذخیره میشود. همگامسازی خودکار ابری در مرحله بعد اضافه میشود.|زانیارییەکان ئێستا تەنیا لەسەر ئەم ئامێرە خەزن دەکرێن. هاوکاتکردنی خۆکاری ئەبری لە قۆناغی داهاتوودا زیاد دەکرێت.
+مورد|بابەت
+روی لیوان بزن تا ثبت شود. ۸ لیوان هدف روزانه است.|لەسەر پەرداخەکە دابگرە تا تۆمار بێت. ۸ پەرداخ ئامانجی ڕۆژانەیە.
+خالی است. با ＋ اضافه کن.|بەتاڵە. بە ＋ زیادی بکە.
+روز انجام شده|ڕۆژی ئەنجامدراو
+میلادی:|زایینی:
+سقف ماهانه|سنووری مانگانە
+سقف هر دسته را بنویس تا خرج واقعی این ماه با آن مقایسه شود.|سنووری هەر هاوپۆلێک بنووسە تا خەرجیی ڕاستەقینەی ئەم مانگە لەگەڵی بەراورد بکرێت.
+گزارش شش ماه اخیر|ڕاپۆرتی شەش مانگی ڕابردوو
+سبز درآمد، قرمز هزینه|سەوز داهات، سوور خەرجی
+رویدادی نیست.|هیچ ڕووداوێک نییە.
+نام یا شرح و مبلغ را وارد کن.|ناو یان ڕوونکردنەوە و بڕەکە بنووسە.
+عنوان را وارد کن.|ناونیشانەکە بنووسە.
+این فایل پشتیبان معتبر نیست.|ئەم فایلە یەدەگە بەکارنایە.
+حافظه پر است. پشتیبان بگیر و چند رسید قدیمی را حذف کن.|بیرگە پڕە. یەدەگ بگرە و چەند وەسڵی کۆن بسڕەوە.
+＋ حساب جدید|＋ هەژماری نوێ
+⇄ انتقال بین حسابها|⇄ گواستنەوە لە نێوان هەژمارەکان
+انتقال بین حسابها|گواستنەوە لە نێوان هەژمارەکان
+انتقالها|گواستنەوەکان
+حساب جدید|هەژماری نوێ
+نام حساب|ناوی هەژمار
+این نام تکراری است.|ئەم ناوە دووبارەیە.
+حداقل یک حساب لازم است.|لانیکەم یەک هەژمار پێویستە.
+مبلغ را وارد کن و دو حساب متفاوت انتخاب کن.|بڕەکە بنووسە و دوو هەژماری جیاواز هەڵبژێرە.
+تراکنشهای تکرارشونده|مامەڵە دووبارەبووەوەکان
+قاعده جدید|یاسای نوێ
+＋ قاعده جدید|＋ یاسای نوێ
+تکرار|دووبارەبوونەوە
+روزانه|ڕۆژانە
+هفتگی|هەفتانە
+ماهانه|مانگانە
+سالانه|ساڵانە
+بعدی|داهاتوو
+تاریخ شروع|بەرواری دەستپێک
+قاعدهای ثبت نشده. مثلاً اجاره یا حقوق ماهانه را اضافه کن.|هیچ یاسایەک تۆمار نەکراوە. بۆ نموونە کرێ یان مووچەی مانگانە زیاد بکە.
+تراکنش تکرارشونده ثبت شد|مامەڵەی دووبارەبووەوە تۆمار کرا
+پرداخت|پارەدان
+پرداختشده|پارەدراو
+باقیمانده|ماوە
+مبلغ پرداخت|بڕی پارەدان
+ثبت پرداخت|تۆمارکردنی پارەدان
+تسویه کامل|پارەدانی تەواو
+مبدل ارز|گۆڕەرەوەی دراو
+تبدیل|گۆڕین
+نرخها (هر ۱ دلار)|نرخەکان (بۆ هەر ۱ دۆلار)
+بهروزرسانی آنلاین|نوێکردنەوەی ئۆنلاین
+نرخ تومان و ریال بازار آزاد را خودت وارد کن؛ نرخ آنلاین رسمی است و با بازار فرق دارد.|نرخی تمەن و ڕیاڵی بازاڕی ئازاد خۆت بنووسە؛ نرخی ئۆنلاین فەرمییە و لەگەڵ بازاڕ جیاوازە.
+نرخ هر دو ارز را وارد کن.|نرخی هەردوو دراوەکە بنووسە.
+نرخها بهروز شد|نرخەکان نوێ کرانەوە
+اتصال به سرویس نرخ ممکن نیست.|پەیوەندی بە خزمەتگوزاریی نرخ ناکرێت.
+ابزارهای پیشرفته|ئامرازە پێشکەوتووەکان
+خروجی CSV|دەرچووی CSV
+ورودی CSV|هاتووی CSV
+فعالسازی قفل برنامه|چالاککردنی قفڵی بەرنامە
+تغییر رمز|گۆڕینی وشەی نهێنی
+حذف رمز|سڕینەوەی وشەی نهێنی
+رمز فعلی|وشەی نهێنیی ئێستا
+رمز را وارد کن|وشەی نهێنی بنووسە
+قفل فعال شد|قفڵ چالاک کرا
+رمز جدید|وشەی نهێنیی نوێ
+تکرار رمز|دووبارەکردنەوەی وشەی نهێنی
+رمزها یکسان نیستند|وشە نهێنییەکان وەک یەک نین
+رمز حداقل ۴ رقم باشد|وشەی نهێنی لانیکەم ۴ ژمارە بێت
+این قفل فقط نمایش برنامه را محافظت میکند و اطلاعات را رمزنگاری نمیکند.|ئەم قفڵە تەنیا پیشاندانی بەرنامەکە دەپارێزێت و زانیارییەکان ڕەمزنووس ناکات.
+خواندن مبلغ از رسید|خوێندنەوەی بڕ لە وەسڵ
+اول عکس رسید را انتخاب کن.|سەرەتا وێنەی وەسڵەکە هەڵبژێرە.
+در حال خواندن رسید…|وەسڵەکە دەخوێنرێتەوە…
+مبلغی پیدا نشد.|هیچ بڕێک نەدۆزرایەوە.
+مبلغ خوانده شد|بڕەکە خوێندرایەوە
+لطفاً بررسی کن|تکایە بیپشکنە
+خواندن رسید در این محیط ممکن نیست.|خوێندنەوەی وەسڵ لەم ژینگەیەدا ناکرێت.
+بارگذاری ابزار خواندن رسید ناموفق بود.|بارکردنی ئامرازی خوێندنەوەی وەسڵ سەرکەوتوو نەبوو.
+مرورگر از ثبت صوتی پشتیبانی نمیکند|وێبگەڕ پشتگیری لە تۆمارکردنی دەنگی ناکات
+ثبت صوتی انجام نشد|تۆمارکردنی دەنگی ئەنجام نەدرا
+تراکنش وارد شد|مامەڵەکە تۆمار کرا
+بودجه این دسته تمام شد|بودجەی ئەم هاوپۆلە تەواو بوو
+بیش از ۸۰٪ بودجه این دسته خرج شد|زیاتر لە ۸۰٪ی بودجەی ئەم هاوپۆلە خەرج کرا
+آخرین همگامسازی|دوایین هاوکاتکردن
+همگامسازی نشده|هاوکات نەکراوە
+همگامسازی شد|هاوکات کرا
+همگامسازی انجام نشد|هاوکاتکردن ئەنجام نەدرا
+برای همگامسازی بین دستگاهها وارد شو. اطلاعات تو روی پروژه Supabase خودت نگه داشته میشود.|بۆ هاوکاتکردن لە نێوان ئامێرەکان بچۆ ژوورەوە. زانیارییەکانت لەسەر پڕۆژەی Supabase ی خۆت دەهێڵرێنەوە.
+ایمیل تأیید ارسال شد. لینک آن را باز کن و دوباره وارد شو.|ئیمەیڵی پشتڕاستکردنەوە نێردرا. بەستەرەکەی بکەرەوە و دووبارە بچۆ ژوورەوە.
+لینک بازیابی به ایمیلت ارسال شد|بەستەری گەڕاندنەوە بۆ ئیمەیڵەکەت نێردرا
+ایمیل و رمز را وارد کن.|ئیمەیڵ و وشەی نهێنی بنووسە.
+رمز حداقل ۶ کاراکتر باشد|وشەی نهێنی لانیکەم ۶ نووسە بێت
+رمز عبور جدید|وشەی نهێنیی نوێ
+تکرار رمز عبور|دووبارەکردنەوەی وشەی نهێنی
+برای حساب|بۆ هەژماری
+ذخیره رمز|پاشەکەوتکردنی وشەی نهێنی
+رمز عوض شد و وارد شدی|وشەی نهێنی گۆڕدرا و چوویتە ژوورەوە
+حساب تأیید شد و وارد شدی|هەژمار پشتڕاست کرایەوە و چوویتە ژوورەوە
+ایمیل یا رمز اشتباه است. اگر رمز را فراموش کردهای، «فراموشی رمز» را بزن.|ئیمەیڵ یان وشەی نهێنی هەڵەیە. ئەگەر وشەی نهێنیت بیرچووە، «وشەی نهێنیم بیرچووە» دابگرە.
+ارسال ایمیل بیش از حد مجاز شد؛ حدود یک ساعت صبر کن.|ناردنی ئیمەیڵ لە ڕادەی ڕێگەپێدراو تێپەڕی؛ نزیکەی کاتژمێرێک بوەستە.
+این ایمیل قبلاً ثبت شده؛ «ورود به حساب» را بزن.|ئەم ئیمەیڵە پێشتر تۆمار کراوە؛ «چوونە ناو هەژمار» دابگرە.
+کد بازیابی دارم|کۆدی گەڕاندنەوەم هەیە
+بازیابی رمز با کد|گەڕاندنەوەی وشەی نهێنی بە کۆد
+کدی که به ایمیلت رسیده را بنویس.|ئەو کۆدەی بۆ ئیمەیڵەکەت هاتووە بینووسە.
+کد بازیابی|کۆدی گەڕاندنەوە
+تأیید و تغییر رمز|پشتڕاستکردنەوە و گۆڕینی وشەی نهێنی
+ایمیل، کد و رمز جدید (حداقل ۶ کاراکتر) را وارد کن.|ئیمەیڵ، کۆد و وشەی نهێنیی نوێ (لانیکەم ۶ نووسە) بنووسە.
+کد و لینک بازیابی به ایمیلت ارسال شد|کۆد و بەستەری گەڕاندنەوە بۆ ئیمەیڵەکەت نێردرا
+کد یا لینک نامعتبر یا منقضی است؛ یک ایمیل تازه بخواه.|کۆد یان بەستەر نادروستە یان بەسەرچووە؛ ئیمەیڵێکی تازە داوا بکە.
+همگامسازی ابری بین دستگاهها|هاوکاتکردنی ئەبری لە نێوان ئامێرەکان
+رسید نامحدود (رایگان: تا|وەسڵی بێسنوور (بێبەرامبەر: تا
+چند حساب و انتقال (رایگان: فقط یک حساب)|چەند هەژمار و گواستنەوە (بێبەرامبەر: تەنیا یەک هەژمار)
+برای خرید کد فعالسازی با پشتیبانی تماس بگیر.|بۆ کڕینی کۆدی چالاککردن پەیوەندی بە پشتگیرییەوە بکە.
+نسخه حرفهای تو فعال است.|وەشانی پڕۆی تۆ چالاکە.
+نسخه حرفهای فعال شد|وەشانی پڕۆ چالاک کرا
+کد نامعتبر یا استفادهشده است.|کۆد نادروستە یان پێشتر بەکارهاتووە.
+کد را وارد کن.|کۆدەکە بنووسە.
+برای استفاده از نسخه حرفهای اول وارد حساب شو.|بۆ بەکارهێنانی وەشانی پڕۆ سەرەتا بچۆ ناو هەژمار.
+برای نسخه حرفهای و همگامسازی بین دستگاهها وارد شو. اطلاعات تو روی پروژه Supabase خودت نگه داشته میشود.|بۆ وەشانی پڕۆ و هاوکاتکردن لە نێوان ئامێرەکان بچۆ ژوورەوە. زانیارییەکانت لەسەر پڕۆژەی Supabase ی خۆت دەهێڵرێنەوە.
+در نسخه رایگان فقط یک حساب دارید.|لە وەشانی بێبەرامبەردا تەنیا یەک هەژمارت هەیە.
+در نسخه رایگان تا ۲۰ رسید میتوانی ثبت کنی.|لە وەشانی بێبەرامبەردا دەتوانیت تا ۲۰ وەسڵ تۆمار بکەیت.
+تلگرام|تێلێگرام
+واتساپ|واتسئاپ
+حریم خصوصی و دادهها|تایبەتمەندی و داتاکان
+پاککردن دادههای این دستگاه|سڕینەوەی داتاکانی ئەم ئامێرە
+حساب و همه دادههای ابری (تراکنشها، رسیدها، اشتراک) برای همیشه پاک میشود و برگشتپذیر نیست. دادههای روی همین گوشی میمانند.|هەژمار و هەموو داتا ئەبرییەکان (مامەڵەکان، وەسڵەکان، بەشداریکردن) بۆ هەتاهەتایە دەسڕێنەوە و ناگەڕێنەوە. داتاکانی سەر ئەم مۆبایلە دەمێننەوە.
+برای تأیید، کلمه «حذف» را بنویس|بۆ پشتڕاستکردنەوە، وشەی «حذف» بنووسە
+حذف دائمی|سڕینەوەی هەتاهەتایی
+کلمه «حذف» را بنویس.|وشەی «حذف» بنووسە.
+حساب حذف شد|هەژمار سڕایەوە
+همه اطلاعات روی همین دستگاه پاک میشود و از حساب خارج میشوی. دادههای ابری (اگر داری) میمانند و با ورود دوباره برمیگردند. اگر مطمئن نیستی، اول پشتیبان بگیر.|هەموو زانیارییەکانی ئەم ئامێرە دەسڕێنەوە و لە هەژمار دەردەچیت. داتا ئەبرییەکان (ئەگەر هەتبێت) دەمێننەوە و بە چوونەژوورەوەی دووبارە دەگەڕێنەوە. ئەگەر دڵنیا نیت، سەرەتا یەدەگ بگرە.
+برای تأیید، کلمه «پاک» را بنویس|بۆ پشتڕاستکردنەوە، وشەی «پاک» بنووسە
+کلمه «پاک» را بنویس.|وشەی «پاک» بنووسە.
+پاک کن|بیسڕەوە
+دادههای این دستگاه پاک شد|داتاکانی ئەم ئامێرە سڕانەوە
+اطلاعات روی همین دستگاه ذخیره میشود. با ورود به حساب (نسخه حرفهای) روی سرور همگام میشود.|زانیارییەکان لەسەر ئەم ئامێرە خەزن دەکرێن. بە چوونە ناو هەژمار (وەشانی پڕۆ) لەسەر سێرڤەر هاوکات دەکرێن.
+بررسی وضعیت اشتراک|پشکنینی بارودۆخی بەشداریکردن
+نسخه حرفهای فعال است|وەشانی پڕۆ چالاکە
+اتصال به سرور ممکن نیست؛ VPN را روشن کن و دوباره امتحان کن.|پەیوەندی بە سێرڤەرەوە ناکرێت؛ VPN بکەرەوە و دووبارە تاقی بکەرەوە.
+اشتراک حرفهای برای این حساب پیدا نشد.|بەشداریکردنی پڕۆ بۆ ئەم هەژمارە نەدۆزرایەوە.
+نسخه حرفهای از طریق دفتر مشترک|وەشانی پڕۆ لە ڕێگەی دەفتەری هاوبەشەوە
+نفر|کەس
+اشتراک مدیر تمام شده|بەشداریی بەڕێوەبەر تەواو بووە
+کد دعوت (به همسر یا فرزندت بده):|کۆدی بانگهێشت (بیدە بە هاوسەر یان منداڵەکانت):
+کد جدید|کۆدی نوێ
+حذف دفتر|سڕینەوەی دەفتەر
+خروج از دفتر|دەرچوون لە دەفتەر
+دفتر مالی را با همسر یا خانوادهات مشترک کن. همه از هر دستگاهی هزینهها و رسیدها را میبینند و ثبت میکنند.|دەفتەری دارایی لەگەڵ هاوسەر یان خێزانەکەت هاوبەش بکە. هەمووان لە هەر ئامێرێکەوە خەرجی و وەسڵەکان دەبینن و تۆمار دەکەن.
+ساخت دفتر مشترک|دروستکردنی دەفتەری هاوبەش
+پیوستن با کد|پەیوەستبوون بە کۆد
+ساخت دفتر مشترک فقط در نسخه حرفهای ممکن است.|دروستکردنی دەفتەری هاوبەش تەنیا لە وەشانی پڕۆدا دەکرێت.
+اطلاعات این دستگاه به دفتر مشترک میرود و همه اعضا آن را میبینند. تا ۶ نفر میتوانند عضو شوند و نسخه حرفهای تو (مدیر) برای همه کار میکند.|زانیارییەکانی ئەم ئامێرە دەچنە دەفتەری هاوبەشەوە و هەموو ئەندامان دەیبینن. تا ۶ کەس دەتوانن ئەندام بن و وەشانی پڕۆی تۆ (بەڕێوەبەر) بۆ هەمووان کار دەکات.
+نام دفتر|ناوی دەفتەر
+دفتر مشترک ساخته شد|دەفتەری هاوبەش دروست کرا
+پیوستن به دفتر مشترک|پەیوەستبوون بە دەفتەری هاوبەش
+اطلاعات فعلی این دستگاه با دفتر مشترک ادغام میشود و همه اعضا آن را میبینند. مدیر دفتر هم ایمیل تو را میبیند.|زانیارییەکانی ئێستای ئەم ئامێرە لەگەڵ دەفتەری هاوبەش تێکەڵ دەکرێن و هەموو ئەندامان دەیبینن. بەڕێوەبەری دەفتەرەکەش ئیمەیڵەکەت دەبینێت.
+به دفتر مشترک پیوستی|پەیوەست بووی بە دەفتەری هاوبەش
+دیگر با دفتر مشترک همگام نمیشوی. اطلاعات فعلی روی این دستگاه میماند.|چیتر لەگەڵ دەفتەری هاوبەش هاوکات نابیت. زانیارییەکانی ئێستا لەسەر ئەم ئامێرە دەمێننەوە.
+از دفتر خارج شدی|لە دەفتەر دەرچووی
+حذف دفتر مشترک|سڕینەوەی دەفتەری هاوبەش
+دفتر و دادههای ابری آن برای همه اعضا پاک میشود. اطلاعات روی دستگاه هر کس میماند.|دەفتەر و داتا ئەبرییەکانی بۆ هەموو ئەندامان دەسڕێنەوە. زانیارییەکانی سەر ئامێری هەرکەس دەمێننەوە.
+دفتر حذف شد|دەفتەر سڕایەوە
+حذف عضو|سڕینەوەی ئەندام
+عضو حذف شد|ئەندام سڕایەوە
+کد دعوت جدید ساخته شد|کۆدی بانگهێشتی نوێ دروست کرا
+کد دعوت نامعتبر است.|کۆدی بانگهێشت نادروستە.
+قبلاً عضو یک دفتر هستی.|پێشتر ئەندامی دەفتەرێکیت.
+ظرفیت دفتر (۶ نفر) پر است.|توانای دەفتەر (۶ کەس) پڕە.
+مدیر نمیتواند خارج شود؛ دفتر را حذف کن.|بەڕێوەبەر ناتوانێت دەربچێت؛ دەفتەرەکە بسڕەوە.
+ساخت دفتر فقط در نسخه حرفهای ممکن است.|دروستکردنی دەفتەر تەنیا لە وەشانی پڕۆدا دەکرێت.
+یک خط دربارهی امروز…|یەک دێڕ دەربارەی ئەمڕۆ…
+اول احساست را انتخاب کن.|سەرەتا هەستەکەت هەڵبژێرە.
+۳۰ روز اخیر|۳۰ ڕۆژی ڕابردوو
+بیشتر چه حسی داشتی؟|زۆرتر چ هەستێکت هەبوو؟
+ارتباط حس و خرج|پەیوەندیی هەست و خەرجی
+میانگین خرج روزهای خوب:|تێکڕای خەرجیی ڕۆژە باشەکان:
+میانگین خرج روزهای ناخوش:|تێکڕای خەرجیی ڕۆژە ناخۆشەکان:
+بعد از چند روز ثبت احساس، اینجا ارتباط حس و خرجت را میبینی.|دوای چەند ڕۆژ تۆمارکردنی هەست، لێرە پەیوەندیی هەست و خەرجییەکەت دەبینیت.
+سررسیدهای نزدیک|کۆتایی مۆڵەتە نزیکەکان
+گذشته|ڕابردوو
+پشتیبانگیری|یەدەگگرتن
+مدتی است از اطلاعاتت پشتیبان نگرفتهای.|ماوەیەکە یەدەگی زانیارییەکانت نەگرتووە.
+نسبت به ماه قبل|بەراورد بە مانگی ڕابردوو
+میانگین هزینه روزانه|تێکڕای خەرجیی ڕۆژانە
+پیشبینی پایان ماه|پێشبینیی کۆتایی مانگ
+هزینه روزانه این ماه|خەرجیی ڕۆژانەی ئەم مانگە
+روند ۶ ماه|ڕەوتی ۶ مانگ
+مانده هر ماه|ماوەی هەر مانگ
+پرخرجترین دستهها|زۆرخەرجترین هاوپۆلەکان
+راهنمای سریع|ڕێنمایی خێرا
+دکمه طلایی: ثبت هزینه، درآمد، رسید و فاکتور|دوگمەی زێڕین: تۆمارکردنی خەرجی، داهات، وەسڵ و فاکتور
+در کادر مبلغ میتوانی عملیات بنویسی؛ مثلاً ۲۵۰۰۰ × ۳|لە خانەی بڕ دەتوانیت کرداری ژمارەیی بنووسیت؛ بۆ نموونە ۲۵۰۰۰ × ۳
+هر روز در صفحه خانه احساست را ثبت کن|هەموو ڕۆژێک لە پەڕەی ماڵ هەستەکەت تۆمار بکە
+در «بیشتر ← بودجه» برای هر دسته سقف بگذار|لە «زیاتر ← بودجە» بۆ هەر هاوپۆلێک سنوور دابنێ
+با نسخه حرفهای همهچیز بین دستگاهها همگام میشود|بە وەشانی پڕۆ هەموو شتێک لە نێوان ئامێرەکان هاوکات دەبێت
+دفتر مشترک را با خانوادهات بساز|دەفتەری هاوبەش لەگەڵ خێزانەکەت دروست بکە
+آیکن خرید (خودکار از روی نام؛ برای تغییر بزن)|ئایکۆنی کڕین (خۆکار لە ناوەوە؛ بۆ گۆڕین دابگرە)
+کدام روز هفته بیشتر خرج میکنی؟|کام ڕۆژی هەفتە زۆرتر خەرج دەکەیت؟
+سهم هر دسته از هزینهها|بەشی هەر هاوپۆلێک لە خەرجییەکان
+خرج هر عضو این ماه|خەرجیی هەر ئەندامێک لەم مانگەدا
+نامشخص|نادیار
+من|من
+احساسم را به اعضای دفتر نشان بده|هەستەکەم بە ئەندامانی دەفتەر پیشان بدە`.split('\n').forEach(l=>{const p=l.split('|');if(p.length==2){const k=p[0].replace(/\u200c/g,'').trim();CKM.set(k,p[1].trim());if(k.length>=8)CKL.push([k,p[1].trim()])}});CKL.sort((a,b)=>b[0].length-a[0].length);function trnK(s){const z=s.replace(/\u200c/g,''),r=CKM.get(z.trim());if(r)return r;const o=CKL.reduce((a,r)=>a.includes(r[0])?a.split(r[0]).join(r[1]):a,z);return o===z?s:o}
+function trn(s){if(LG=='ckb')return trnK(s);const i=IX[LG],z=s.replace(/\u200c/g,''),r=MAP.get(z.trim());let o=r?(r[i]||r[1]):LONG.reduce((a,r)=>a.includes(r[0])?a.split(r[0]).join(r[i]||r[1]):a,z);return r?o:o.replace(/[۰-۹]/g,d=>LG=='ar'?'٠١٢٣٤٥٦٧٨٩'[d.charCodeAt(0)-1776]:String(d.charCodeAt(0)-1776)).replace(/٬/g,{ar:'٬',de:'.',fr:' '}[LG]||',').replace(/٫/g,{de:',',fr:','}[LG]||'.')}
+let BZ=0;function applyLang(){const d=document.documentElement;d.lang=LG;d.dir=FA()||LG=='ar'?'rtl':'ltr';if(LG=='fa')return;const w=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT),L=[];let n;while(n=w.nextNode()){if(!/^(SCRIPT|STYLE)$/.test(n.parentNode.tagName))L.push(n)}L.forEach(n=>{const v=trn(n.nodeValue);if(v!==n.nodeValue)n.nodeValue=v});document.querySelectorAll('[placeholder],[aria-label]').forEach(e=>['placeholder','aria-label'].forEach(a=>{const v=e.getAttribute(a);if(v){const x=trn(v);if(x!==v)e.setAttribute(a,x)}}))}
 new MutationObserver(()=>{if(!BZ){BZ=1;requestAnimationFrame(()=>{BZ=0;applyLang()})}}).observe(document.body,{childList:true,subtree:true,characterData:true});
 const MH=['محرم','صفر','ربیع‌الاول','ربیع‌الثانی','جمادی‌الاول','جمادی‌الثانی','رجب','شعبان','رمضان','شوال','ذی‌القعده','ذی‌الحجه'],MHe=['Muharram','Safar','Rabi I','Rabi II','Jumada I','Jumada II','Rajab','Shaban','Ramadan','Shawwal','Dhu al-Qadah','Dhu al-Hijjah'];
 let HF;try{HF=new Intl.DateTimeFormat('en-u-ca-islamic-umalqura',{day:'numeric',month:'numeric',year:'numeric',timeZone:'UTC'})}catch(e){}
 function g2h_(t){if(!HF)return[0,0,0];const p=HF.formatToParts(new Date(t)),g=k=>+p.find(x=>x.type==k).value;return[g('year'),g('month'),g('day')]}
 function g2h(iso){return g2h_(Date.parse(iso+'T00:00:00Z'))}
 function h2g(y,m,d){const b=Date.UTC(Math.round(y*0.970229+621.5744),0,1);for(let i=-420;i<=840;i++){const t=b+i*864e5,p=g2h_(t);if(p[0]==y&&p[1]==m&&p[2]==d)return new Date(t).toISOString().slice(0,10)}return ''}
-function TGm(id,m){const B=(k,t)=>`<button class="${m==k?'on':''}" onclick="jc('${id}','${k}')">${t}</button>`,a=[B('fa','شمسی'),B('en','میلادی'),B('hj','هجری')];if(LG!='fa')[a[0],a[1]]=[a[1],a[0]];return `<div class="seg" style="margin-bottom:6px">${a.join('')}</div>`}
-function HJ(id,v){const h=v?g2h(v):[0,0,0],hy=g2h(today())[0],o=(x,t,s)=>`<option value="${x}" ${x==s?'selected':''}>${t}</option>`;let Y=o(0,'سال',h[0]),M=o(0,'ماه',h[1]),D=o(0,'روز',h[2]);for(let y=hy-3;y<=hy+10;y++)Y+=o(y,y.toLocaleString('fa-IR',{useGrouping:false}),h[0]);(LG=='fa'?MH:MHe).forEach((n,i)=>M+=o(i+1,n,h[1]));for(let d=1;d<=30;d++)D+=o(d,d.toLocaleString('fa-IR'),h[2]);return TGm(id,'hj')+`<div class="row"><select id="${id}y" onchange="jh('${id}')">${Y}</select><select id="${id}m" onchange="jh('${id}')">${M}</select><select id="${id}d" onchange="jh('${id}')">${D}</select></div><input type="hidden" id="${id}" value="${v}"><small class="note" id="${id}g">${v?'میلادی: '+v:''}</small>`}
+function TGm(id,m){const B=(k,t)=>`<button class="${m==k?'on':''}" onclick="jc('${id}','${k}')">${t}</button>`,a=[B('fa','شمسی'),B('en','میلادی'),B('hj','هجری')];if(!FA())[a[0],a[1]]=[a[1],a[0]];return `<div class="seg" style="margin-bottom:6px">${a.join('')}</div>`}
+function HJ(id,v){const h=v?g2h(v):[0,0,0],hy=g2h(today())[0],o=(x,t,s)=>`<option value="${x}" ${x==s?'selected':''}>${t}</option>`;let Y=o(0,'سال',h[0]),M=o(0,'ماه',h[1]),D=o(0,'روز',h[2]);for(let y=hy-3;y<=hy+10;y++)Y+=o(y,y.toLocaleString('fa-IR',{useGrouping:false}),h[0]);(FA()?MH:MHe).forEach((n,i)=>M+=o(i+1,n,h[1]));for(let d=1;d<=30;d++)D+=o(d,d.toLocaleString('fa-IR'),h[2]);return TGm(id,'hj')+`<div class="row"><select id="${id}y" onchange="jh('${id}')">${Y}</select><select id="${id}m" onchange="jh('${id}')">${M}</select><select id="${id}d" onchange="jh('${id}')">${D}</select></div><input type="hidden" id="${id}" value="${v}"><small class="note" id="${id}g">${v?'میلادی: '+v:''}</small>`}
 function jh(id){const y=+$('#'+id+'y').value,m=+$('#'+id+'m').value,d=+$('#'+id+'d').value,v=y&&m&&d?h2g(y,m,d):'';$('#'+id).value=v;$('#'+id+'g').textContent=v?'میلادی: '+v:''}
 {const R=['هجری','Hijri','هجري','Hicri','Hégirien','Hidschri'];DICT.push(R);MAP.set(R[0],R);LONG.push(R);LONG.sort((a,b)=>b[0].length-a[0].length)}
 `Balance this month|Solde du mois|Saldo diesen Monat
@@ -368,18 +724,18 @@ Wed|Mer|Mi
 Thu|Jeu|Do
 Fri|Ven|Fr`.split('\n').forEach(l=>{const p=l.split('|'),r=DICT.find(x=>x[1]==p[0]);if(r){r[4]=p[1];r[5]=p[2]}});
 const CA={};
-function cmode(){return S.ck||(LG=='fa'?'fa':'en')}
+function cmode(){return S.ck||(FA()?'fa':'en')}
 function cn(n){const c=CA[cmode()];c[1]+=n;if(c[1]>12){c[1]=1;c[0]++}if(c[1]<1){c[1]=12;c[0]--}render()}
 function cal(){const m=cmode(),isoj=g=>g[0]+'-'+P2(g[1])+'-'+P2(g[2]);if(!CA[m]){const t=today();CA[m]=m=='fa'?g2j(...T3(t)).slice(0,2):m=='hj'?g2h(t).slice(0,2):[+t.slice(0,4),+t.slice(5,7)]}
 const [y,mo]=CA[m],e=evs();let first,len,title;
-if(m=='fa'){first=isoj(j2g(y,mo,1));len=mo<7?31:mo<12?30:(g2j(...j2g(y,12,30))[1]==12?30:29);title=(LG=='fa'?MN:MNe)[mo-1]+' '+y.toLocaleString('fa-IR',{useGrouping:false})}
-else if(m=='hj'){first=h2g(y,mo,1);const nx=mo==12?h2g(y+1,1,1):h2g(y,mo+1,1);len=Math.round((Date.parse(nx)-Date.parse(first))/864e5)||30;title=(LG=='fa'?MH:MHe)[mo-1]+' '+y.toLocaleString('fa-IR',{useGrouping:false})}
+if(m=='fa'){first=isoj(j2g(y,mo,1));len=mo<7?31:mo<12?30:(g2j(...j2g(y,12,30))[1]==12?30:29);title=(FA()?MN:MNe)[mo-1]+' '+y.toLocaleString('fa-IR',{useGrouping:false})}
+else if(m=='hj'){first=h2g(y,mo,1);const nx=mo==12?h2g(y+1,1,1):h2g(y,mo+1,1);len=Math.round((Date.parse(nx)-Date.parse(first))/864e5)||30;title=(FA()?MH:MHe)[mo-1]+' '+y.toLocaleString('fa-IR',{useGrouping:false})}
 else{first=y+'-'+P2(mo)+'-01';len=new Date(Date.UTC(y,mo,0)).getUTCDate();title=new Date(Date.UTC(y,mo-1,1)).toLocaleDateString(GL[LG]||'en-GB',{month:'long',year:'numeric',timeZone:'UTC'})}
-const wd=new Date(first+'T00:00:00Z').getUTCDay(),mon=['fr','de','tr'].includes(LG),sat=m!='en',off=sat?(wd+1)%7:mon?(wd+6)%7:wd,rtl=LG=='fa'||LG=='ar';
+const wd=new Date(first+'T00:00:00Z').getUTCDay(),mon=['fr','de','tr'].includes(LG),sat=m!='en',off=sat?(wd+1)%7:mon?(wd+6)%7:wd,rtl=FA()||LG=='ar';
 const lb=sat?'ش ی د س چ پ ج'.split(' '):[...Array(7)].map((_,i)=>new Date(Date.UTC(2024,0,7+(mon?i+1:i))).toLocaleDateString(GL[LG]||'en-GB',{weekday:'short',timeZone:'UTC'}));
 let c='';for(let i=0;i<off;i++)c+='<div></div>';
 for(let d=1;d<=len;d++){const k=new Date(Date.parse(first)+(d-1)*864e5).toISOString().slice(0,10);c+=`<button onclick="CS='${k}';render()" style="font:inherit;color:inherit;border:1px solid var(--line);border-radius:10px;background:${k==CS?'var(--gold)':k==today()?'var(--bg)':'none'};padding:8px 0;cursor:pointer">${d.toLocaleString('fa-IR')}${e[k]?'<div style="font-size:9px;color:var(--in)">●</div>':''}</button>`}
-const ks=LG=='fa'?['fa','en','hj']:['en','fa','hj'],nm={fa:'شمسی',en:'میلادی',hj:'هجری'},sg=`<div class="seg" style="margin:12px 0">${ks.map(k=>`<button class="${m==k?'on':''}" onclick="S.ck='${k}';save();render()">${nm[k]}</button>`).join('')}</div>`;
+const ks=FA()?['fa','en','hj']:['en','fa','hj'],nm={fa:'شمسی',en:'میلادی',hj:'هجری'},sg=`<div class="seg" style="margin:12px 0">${ks.map(k=>`<button class="${m==k?'on':''}" onclick="S.ck='${k}';save();render()">${nm[k]}</button>`).join('')}</div>`;
 return BK+sg+`<div class="card"><div style="display:flex;justify-content:space-between;align-items:center"><button class="x" onclick="cn(${rtl?-1:-1})">${rtl?'▶':'◀'}</button><b>${title}</b><button class="x" onclick="cn(1)">${rtl?'◀':'▶'}</button></div><div style="display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-top:10px;text-align:center">${(mon&&!sat?lb:lb).map(x=>`<small class="note">${x}</small>`).join('')}${c}</div></div>${CS?`<div class="card"><b>${fd(CS)}</b>${(e[CS]||['رویدادی نیست.']).map(x=>`<div class="it">${esc(x)}</div>`).join('')}</div>`:''}`}
 {const add=(...r)=>{DICT.push(r);MAP.set(r[0],r);LONG.push(r)};add('هشدار','Alarm','تنبيه','Alarm','Alarme','Alarm');add('باشه','OK','حسنًا','Tamam','OK','OK');add('ساعت (برای هشدار)','Time (for alarm)','الوقت (للتنبيه)','Saat (alarm için)','Heure (pour l alarme)','Uhrzeit (für Alarm)');add('فعالسازی هشدار','Enable alarms','تفعيل التنبيهات','Alarmları aç','Activer les alarmes','Alarme aktivieren');add('هشدار فعال شد','Alarms enabled','تم تفعيل التنبيهات','Alarmlar açıldı','Alarmes activées','Alarme aktiviert');add('اجازه اعلان داده نشد','Notification permission denied','لم يتم منح إذن الإشعارات','Bildirim izni verilmedi','Autorisation refusée','Berechtigung abgelehnt');add('این مرورگر اعلان پشتیبانی نمیکند','This browser does not support notifications','هذا المتصفح لا يدعم الإشعارات','Bu tarayıcı bildirimleri desteklemiyor','Ce navigateur ne gère pas les notifications','Dieser Browser unterstützt keine Benachrichtigungen');LONG.sort((a,b)=>b[0].length-a[0].length)}
 function askN(){try{if('Notification' in window){Notification.requestPermission().then(p=>tt(p=='granted'?'هشدار فعال شد':'اجازه اعلان داده نشد'))}else tt('این مرورگر اعلان پشتیبانی نمی‌کند')}catch(e){tt('این مرورگر اعلان پشتیبانی نمی‌کند')}}
@@ -426,7 +782,7 @@ function w3fa(n){const p=[];if(n>=100)p.push(F100[Math.floor(n/100)]);n%=100;if(
 function wfa(n){if(!n)return 'صفر';const p=[];let i=0;while(n>0){const g=n%1000;if(g)p.unshift(g==1&&i==1?'هزار':w3fa(g)+(SC[i]?' '+SC[i]:''));n=Math.floor(n/1000);i++}return p.join(' و ')}
 function w3en(n){const p=[];if(n>=100)p.push(E1[Math.floor(n/100)]+' hundred');n%=100;if(n)p.push(n<20?E1[n]:E10[Math.floor(n/10)]+(n%10?'-'+E1[n%10]:''));return p.join(' ')}
 function wen(n){if(!n)return 'zero';const p=[];let i=0;while(n>0){const g=n%1000;if(g)p.unshift(w3en(g)+(SE[i]?' '+SE[i]:''));n=Math.floor(n/1000);i++}return p.join(' ')}
-function wd(v){v=Math.abs(+v);if(!isFinite(v)||v>=1e15)return '';const fa=LG=='fa',n=CN[S.cur]||[S.cur,S.cur],i=Math.floor(v),fr=Math.round((v-i)*100);let s=fa?wfa(i):wen(i);if(fr)s+=fa?' ممیز '+wfa(fr)+' صدم':' and '+fr+'/100';return s+' '+(fa?n[0]:n[1])}
+function wd(v){v=Math.abs(+v);if(!isFinite(v)||v>=1e15)return '';const fa=FA(),n=CN[S.cur]||[S.cur,S.cur],i=Math.floor(v),fr=Math.round((v-i)*100);let s=fa?wfa(i):wen(i);if(fr)s+=fa?' ممیز '+wfa(fr)+' صدم':' and '+fr+'/100';return s+' '+(fa?n[0]:n[1])}
 function ce(id){const t=$('#'+id).value,v=ev(t),o=[];if(isFinite(v)&&/[+\-*\/×÷−x%()]/.test(t))o.push('= '+v.toLocaleString('fa-IR'));if(isFinite(v)&&v>0)o.push(wd(v));$('#'+id+'r').textContent=o.join(' • ')}
 {const add=(...r)=>{DICT.push(r);MAP.set(r[0],r);LONG.push(r)};[['پوند £','Pound £'],['درهم AED','Dirham AED'],['لیر ₺','Lira ₺'],['دلار کانادا CA$','Canadian Dollar CA$'],['دلار استرالیا A$','Australian Dollar A$'],['فرانک CHF','Franc CHF'],['روپیه ₹','Rupee ₹'],['ین ¥','Yen ¥'],['به حروف','In words']].forEach(r=>add(...r));LONG.sort((a,b)=>b[0].length-a[0].length)}
 const CN2={'تومان':['تومان','Toman','Tomans','Toman'],'ریال':['ريال','Riyal','Rials','Rial'],'یورو €':['يورو','Euro','Euros','Euro'],'دلار $':['دولار أمريكي','Amerikan Doları','Dollars américains','US-Dollar'],'پوند £':['جنيه إسترليني','Sterlin','Livres sterling','Pfund Sterling'],'درهم AED':['درهم إماراتي','Dirhem','Dirhams','Dirham'],'لیر ₺':['ليرة تركية','Türk Lirası','Livres turques','Türkische Lira'],'دلار کانادا CA$':['دولار كندي','Kanada Doları','Dollars canadiens','Kanadische Dollar'],'دلار استرالیا A$':['دولار أسترالي','Avustralya Doları','Dollars australiens','Australische Dollar'],'فرانک CHF':['فرنك سويسري','İsviçre Frangı','Francs suisses','Schweizer Franken'],'روپیه ₹':['روبية','Rupi','Roupies','Rupien'],'ین ¥':['ين','Yen','Yens','Yen']};
@@ -445,7 +801,7 @@ const AR1=['','واحد','اثنان','ثلاثة','أربعة','خمسة','ست
 function ar2(n){if(n<=10)return AR1[n];if(n<20)return AR11[n-11];const o=n%10;return (o?AR1[o]+' و':'')+ART[Math.floor(n/10)]}
 function w3ar(n){const h=Math.floor(n/100),r=n%100,p=[];if(h)p.push(AR100[h]);if(r)p.push(ar2(r));return p.join(' و')}
 function war(n){if(!n)return 'صفر';const p=[];let i=0;while(n>0){const g=n%1000;if(g)p.unshift(i?(g==1?SA[i]:g==2?SA2[i]:g<=10?w3ar(g)+' '+SA3[i]:w3ar(g)+' '+SA[i]):w3ar(g));n=Math.floor(n/1000);i++}return p.join(' و')}
-function wd(v){v=Math.abs(+v);if(!isFinite(v)||v>=1e15)return '';const W={fa:wfa,en:wen,ar:war,tr:wtr,fr:wfr,de:wde}[LG]||wen,i=Math.floor(v),fr=Math.round((v-i)*100),c=CN[S.cur]||[S.cur,S.cur],k={fa:0,en:1,ar:2,tr:3,fr:4,de:5}[LG]||1,cn=k<2?c[k]:((CN2[S.cur]||[])[k-2]||c[1]);let s=W(i);if(fr)s+=LG=='fa'?' ممیز '+wfa(fr)+' صدم':' '+({en:'and',ar:'و',tr:'ve',fr:'et',de:'und'}[LG]||'and')+' '+fr+'/100';return s+' '+cn}
+function wd(v){v=Math.abs(+v);if(!isFinite(v)||v>=1e15)return '';const W={fa:wfa,ckb:wfa,en:wen,ar:war,tr:wtr,fr:wfr,de:wde}[LG]||wen,i=Math.floor(v),fr=Math.round((v-i)*100),c=CN[S.cur]||[S.cur,S.cur],k={fa:0,en:1,ar:2,tr:3,fr:4,de:5}[LG]||1,cn=k<2?c[k]:((CN2[S.cur]||[])[k-2]||c[1]);let s=W(i);if(fr)s+=FA()?' ممیز '+wfa(fr)+' صدم':' '+({en:'and',ar:'و',tr:'ve',fr:'et',de:'und'}[LG]||'and')+' '+fr+'/100';return s+' '+cn}
 let DBH;const idb=()=>DBH||(DBH=new Promise((res,rej)=>{try{const q=indexedDB.open('khanehesab',1);q.onupgradeneeded=()=>q.result.createObjectStore('s');q.onsuccess=()=>res(q.result);q.onerror=()=>rej()}catch(e){rej()}}));
 function idbSet(v){idb().then(d=>{d.transaction('s','readwrite').objectStore('s').put(v,'S')}).catch(()=>{})}
 function idbGet(){return idb().then(d=>new Promise(r=>{const q=d.transaction('s').objectStore('s').get('S');q.onsuccess=()=>r(q.result);q.onerror=()=>r(null)})).catch(()=>null)}
@@ -498,7 +854,7 @@ function pinOk(){const a=$('#pn1').value,b=$('#pn2').value;if(a.length<4)return 
 function pinRm(){$('#shb').innerHTML=`<h2 style="margin-top:0">حذف رمز</h2><label>رمز فعلی</label>${PW('pn0','inputmode="numeric"')}<div class="row" style="margin-top:18px"><button class="btn" onclick="pinDel()">حذف</button><button class="btn alt" onclick="shut()">انصراف</button></div>`;$('#sh').classList.add('show')}
 function pinDel(){sha($('#pn0').value).then(h=>{if(h!=S.pin)return tt('رمز اشتباه است');delete S.pin;save();shut();render()})}
 function onb(){const L=Object.entries(LGS).map(([k,v])=>`<option value="${k}" ${LG==k?'selected':''}>${v}</option>`).join(''),C=Object.keys(CN).map(c=>`<option ${S.cur==c?'selected':''}>${c}</option>`).join('');$('#shb').innerHTML=`<div style="font-size:44px;text-align:center">🏠</div><h2 style="text-align:center">به خانه‌حساب خوش آمدی</h2><p class="note" style="text-align:center">درآمد و هزینه، بدهی و طلب، رسیدها و اقساط را یک‌جا مدیریت کن. اطلاعات فقط روی دستگاه خودت می‌ماند.</p><label>زبان | Language</label><select onchange="setLang(this.value);onb()">${L}</select><label>واحد پول</label><select onchange="S.cur=this.value;save()">${C}</select><button class="btn" style="width:100%;margin-top:16px" onclick="S.ob=1;save();shut();render();tips()">شروع</button>`;$('#sh').classList.add('show')}
-function mic(){const R=window.SpeechRecognition||window.webkitSpeechRecognition;if(!R)return tt('مرورگر از ثبت صوتی پشتیبانی نمی‌کند');try{const r=new R();r.lang={fa:'fa-IR',en:'en-US',ar:'ar-SA',tr:'tr-TR',fr:'fr-FR',de:'de-DE'}[LG]||'en-US';r.onresult=e=>{const t=e.results[0][0].transcript,m=t.replace(/[٬,]/g,'').match(/[\d۰-۹٠-٩]+(?:\.\d+)?/);$('#f1').value=t;if(m&&!$('#f2').value){$('#f2').value=ev(m[0]);ce('f2')}};r.onerror=()=>tt('ثبت صوتی انجام نشد');r.start()}catch(e){tt('ثبت صوتی انجام نشد')}}
+function mic(){if(LG=='ckb')return tt('ثبت صوتی کردی هنوز آماده نیست');const R=window.SpeechRecognition||window.webkitSpeechRecognition;if(!R)return tt('مرورگر از ثبت صوتی پشتیبانی نمی‌کند');try{const r=new R();r.lang={fa:'fa-IR',en:'en-US',ar:'ar-SA',tr:'tr-TR',fr:'fr-FR',de:'de-DE'}[LG]||'en-US';r.onresult=e=>{const t=e.results[0][0].transcript,m=t.replace(/[٬,]/g,'').match(/[\d۰-۹٠-٩]+(?:\.\d+)?/);$('#f1').value=t;if(m&&!$('#f2').value){$('#f2').value=ev(m[0]);ce('f2')}};r.onerror=()=>tt('ثبت صوتی انجام نشد');r.start()}catch(e){tt('ثبت صوتی انجام نشد')}}
 function ocr(){const f=$('#f5').files[0];if(!f)return tt('اول عکس رسید را انتخاب کن.');tt('در حال خواندن رسید…');const go=()=>Tesseract.recognize(f,'eng').then(r=>{const n=(r.data.text.match(/\d[\d,.\s]{2,}\d/g)||[]).map(x=>+x.replace(/[,\s]/g,'')).filter(x=>x>0&&x<1e12);if(!n.length)return tt('مبلغی پیدا نشد.');const m=Math.max(...n);$('#f2').value=m;ce('f2');tt('مبلغ خوانده شد: '+m.toLocaleString('fa-IR')+' — لطفاً بررسی کن')}).catch(()=>tt('خواندن رسید در این محیط ممکن نیست.'));if(window.Tesseract)return go();const s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/tesseract.js@5.1.1/dist/tesseract.min.js';s.onload=go;s.onerror=()=>tt('بارگذاری ابزار خواندن رسید ناموفق بود.');document.head.appendChild(s)}
 function more2(){return `<h2>ابزارهای پیشرفته</h2><div class="card"><div class="row"><button class="btn alt" onclick="csvExp()">⬇ خروجی CSV</button><button class="btn alt" onclick="$('#csvi').click()">⬆ ورودی CSV</button></div><input type="file" id="csvi" accept=".csv" hidden onchange="csvImp(this.files[0])"><div class="row" style="margin-top:10px">${S.pin?'<button class="btn alt" onclick="pinSet()">🔒 تغییر رمز</button><button class="btn alt" onclick="pinRm()">حذف رمز</button>':'<button class="btn" onclick="pinSet()">🔒 فعال‌سازی قفل برنامه</button>'}</div></div>`}
 {const add=(...r)=>{DICT.push(r);MAP.set(r[0],r);LONG.push(r)};`حساب|Account
@@ -889,7 +1245,7 @@ window.addEventListener('online',()=>{if(AU)famGet().then(()=>sync())});
 نامشخص|Unknown
 من|Me
 احساسم را به اعضای دفتر نشان بده|Show my mood to the book members`.split('\n').forEach(l=>{const p=l.split('|');add(p[0],p[1])});LONG.sort((a,b)=>b[0].length-a[0].length)}
-function setLang(v){S.lg=v;LG=v;S.dc=v=='fa'?'fa':'en';save();render();applyLang()}
+function setLang(v){S.lg=v;LG=v;S.dc=(v=='fa'||v=='ckb')?'fa':'en';save();render();applyLang()}
 $('#fab').onclick=open_;$('#sh').onclick=e=>{if(e.target.id=='sh')shut()};setTimeout(boot,0);
 render();
 </script>
